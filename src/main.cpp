@@ -43,15 +43,18 @@ int main( int argc, char* args[] )
 		log(LOG_ERR) << "Game failed during initialization\n" << SDL_GetError();
 		close();
 	}else{
+		log(LOG_INFO) << "Initialization successful\n";
 		bool quit = false;
 		SDL_Event e;
 
 		// MAIN LOOP
+		log(LOG_INFO) << "Setup finished starting game loop\n";
 		while(!quit){
 			// Check all events
 			while(SDL_PollEvent(&e) != 0){
 				if(e.type == SDL_QUIT){
 					quit = true;
+					log(LOG_INFO) << "Quit requested exiting loop\n";
 				}else if (e.type = SDL_KEYDOWN){
 					// keyboard check
 					switch (e.key.keysym.sym){
@@ -95,7 +98,10 @@ bool init(){
 		}
 		gScreenSurface = SDL_GetWindowSurface(gWindow);
 	}
-	loadPlayerMedia();
+	if(!loadPlayerMedia()){
+		log(LOG_WARN) << "Player media failed to load\n";
+		success = false;
+	}
 	return success;
 }
 
@@ -109,17 +115,21 @@ bool loadPlayerMedia(){
 	playerSurfaceList[playerDef] = loadSurface("res/player-placeholder.bmp");
 	for(const auto& image: playerSurfaceList){
 		if(image == NULL){
-			return 0;
+			return false;
 		}
 	}
+	return true;
 }
 
 void close(){
 	// Dealocate surface
 	SDL_FreeSurface(playerSurface);
-	for(const auto& image: playerSurfaceList){
-		SDL_FreeSurface(image);
+	cerr << "0\n";
+	for (int i = 0; i < keysNr; ++i) {
+		cerr << "3";
+		SDL_FreeSurface(playerSurfaceList[i]);
 	}
+	cerr << "2\n";
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
 
@@ -129,8 +139,15 @@ void close(){
 SDL_Surface* loadSurface(string path){
 	LOG_INIT_CERR();
 	SDL_Surface* surface = SDL_LoadBMP(path.c_str());
+	SDL_Surface* optimized = NULL;
 	if(surface == NULL){
-		log(LOG_WARN) << "Some media failed to load (" << path << ") " << SDL_GetError() << "\n";
+		log(LOG_WARN) << "Media failed to load (" << path << ") " << SDL_GetError() << "\n";
+	}else{
+		optimized = SDL_ConvertSurface(surface, gScreenSurface->format, 0);
+		if(optimized == NULL){
+			log(LOG_WARN) << "Media failed to optimize (" <<  path << ") " << SDL_GetError() << "\n";
+		}
 	}
-	return surface;
+	SDL_FreeSurface(surface);
+	return optimized;
 }

@@ -1,5 +1,5 @@
 # General information
-This project is Built on Simple DirectMedia Layer (Sam Lantinga slouken@libsdl.org) by Michał Kozłowski (https://github.com/M1chol)
+This project is Built on Simple DirectMedia Layer (Sam Lantinga slouken@libsdl.org)
    
 ## Thanks to
 Mr. Foo' for providing great way to begin developing with SDL (https://lazyfoo.net/tutorials/SDL)   
@@ -20,3 +20,5 @@ Misc
 `LICENSE.txt` - license file of the project   
 `Makefile` - make file of the project 
 `NOTICE.txt` - notice file for license   
+   
+ Michał Kozłowski 2024

@@ -1,4 +1,5 @@
 // credit Bastian Schiffthaler https://github.com/bschiffthaler/BSlogger
+// modified by Michał Kozłowski (M1chol)
 
 #pragma once
 
