@@ -1,6 +1,7 @@
-## development at early stages
+## development in early stages
 
 license files available in /legal
+documentation avaiable in /doc
 
 Source-avaiable Space Invaders style c++ game
 

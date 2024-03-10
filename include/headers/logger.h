@@ -30,11 +30,11 @@
 
 #ifdef BSLOG_NO_COLORS
 
-#define BSLOG_TIME "[ TIME    ]"
-#define BSLOG_DEBUG "[ DEBUG   ]"
-#define BSLOG_ERROR "[ ERROR   ]"
+#define BSLOG_TIME "[   TIME  ]"
+#define BSLOG_DEBUG "[  DEBUG  ]"
+#define BSLOG_ERROR "[  ERROR  ]"
 #define BSLOG_WARNING "[ WARNING ]"
-#define BSLOG_INFO "[ INFO    ]"
+#define BSLOG_INFO "[  INFO   ]"
 
 #else
 
@@ -152,7 +152,7 @@ logger::logger(std::ostream& f, unsigned ll, std::string n)
 logger& logger::operator()(unsigned ll) {
   _message_level = ll;
   if (_message_level <= _loglevel()) {
-    _fac << prep_level(*this) << prep_time(*this) << prep_name(*this) << ": ";
+    _fac << prep_level(*this) << prep_time(*this) << ": ";// prep_name(*this) << ": ";
   }
   return *this;
 }
@@ -199,7 +199,7 @@ std::string prep_time(logger& l) {
   if (t->tm_mon + 1 < 10) M = "0" + M;
 
   std::string ret =
-      "[ " + Y + "-" + M + "-" + D + "T" + h + ":" + m + ":" + s + " ]";
+      "[ " + Y + "-" + M + "-" + D + " " + h + ":" + m + ":" + s + " ]";
 
   return ret;
 }
