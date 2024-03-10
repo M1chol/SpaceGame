@@ -1,0 +1,3 @@
+This product includes software developed by
+Bastian Schiffthaler (https://github.com/bschiffthaler/BSlogger)
+

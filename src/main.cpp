@@ -29,11 +29,22 @@ int main( int argc, char* args[] )
 		}else{
 			SDL_BlitSurface(HelloWorld, NULL, gScreenSurface, NULL);
 			SDL_UpdateWindowSurface(gWindow);
-			//Hack to get window to stay up
-   			SDL_Event e; bool quit = false; while( quit == false ){ while( SDL_PollEvent( &e ) ){ if( e.type == SDL_QUIT ) quit = true; } }
 		}
 	}
 
+	bool quit = false;
+	SDL_Event e;
+
+	// MAIN LOOP
+	while(!quit){
+		// Check all events
+		while(SDL_PollEvent(&e) != 0){
+			if(e.type == SDL_QUIT){
+				quit = true;
+			}
+		}
+
+	}
 	close();
 	return 0;
 }

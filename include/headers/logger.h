@@ -38,11 +38,11 @@
 
 #else
 
-#define BSLOG_TIME "\033[0;35m[ TIME    ]\033[0;0m"
-#define BSLOG_DEBUG "[ DEBUG   ]"
-#define BSLOG_ERROR "\033[0;31m[ ERROR   ]\033[0;0m"
+#define BSLOG_TIME "\033[0;35m[   TIME  ]\033[0;0m"
+#define BSLOG_DEBUG "[  DEBUG  ]"
+#define BSLOG_ERROR "\033[0;31m[  ERROR  ]\033[0;0m"
 #define BSLOG_WARNING "\033[0;33m[ WARNING ]\033[0;0m"
-#define BSLOG_INFO "\033[0;34m[ INFO    ]\033[0;0m"
+#define BSLOG_INFO "\033[0;34m[   INFO  ]\033[0;0m"
 
 #endif
 
