@@ -123,16 +123,12 @@ bool loadPlayerMedia(){
 
 void close(){
 	// Dealocate surface
-	SDL_FreeSurface(playerSurface);
-	cerr << "0\n";
 	for (int i = 0; i < keysNr; ++i) {
-		cerr << "3";
 		SDL_FreeSurface(playerSurfaceList[i]);
 	}
-	cerr << "2\n";
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
-
+	playerSurface = NULL;
 	SDL_Quit();
 }
 
