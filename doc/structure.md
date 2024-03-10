@@ -5,6 +5,8 @@
 `include/sdl` - header files of SDL library   
 `lib` - SDL files   
 `res` - resources like images and sounds
+`bin` - folder for binary files
+`legal` - place for all license files
 
 Misc
 `.gitignore` - gitignore file   
@@ -12,5 +14,3 @@ Misc
 `LICENSE.txt` - license file of the project
 `Makefile` - make file of the project TODO: switch to cmake   
 `NOTICE.txt` - notice file for license   
-`SDL_image.dll` - Windows library requied by project   
-`SDL2.dll` - main sdl library for Windows   

@@ -1,5 +1,7 @@
 ## development at early stages
 
+license files available in /legal
+
 Source-avaiable Space Invaders style c++ game
 
 for now there is no way to support project
