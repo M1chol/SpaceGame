@@ -32,7 +32,7 @@ Linux dependencies
    
 Start by installing SDL for your system. You can use package menager or [build from surce](https://github.com/libsdl-org/SDL). You will also need SDL2_image
 
-__Arch__ `sudo pacman -S sdl2 sdl2_image`
+__Arch__ `sudo pacman -S sdl2 sdl2_image`   
 __Ubuntu__ `sudo apt-get install libsdl2 libsdl2-image` (NOT TESTED)   
 Then   
 ```
