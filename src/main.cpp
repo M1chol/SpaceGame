@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <SDL_image.h>
 #include "logger.h"
 
 using namespace std;
@@ -95,8 +96,15 @@ bool init(){
 		if(gWindow == NULL){
 			log(LOG_ERR) << "Failed creating window " << SDL_GetError() << "\n";
 			success = false;
+		}else{
+			int imageFlags = IMG_INIT_PNG;
+			if(!(IMG_Init(imageFlags) & imageFlags)){
+				log(LOG_ERR) << "SDL_Image failed to initialize " << IMG_GetError() << "\n";
+				success = false;
+			}else{
+				gScreenSurface = SDL_GetWindowSurface(gWindow);
+			}	
 		}
-		gScreenSurface = SDL_GetWindowSurface(gWindow);
 	}
 	if(!loadPlayerMedia()){
 		log(LOG_WARN) << "Player media failed to load\n";
@@ -108,11 +116,11 @@ bool init(){
 bool loadPlayerMedia(){
 	LOG_INIT_CERR();
 	bool success = true;
-	playerSurfaceList[playerUp] = loadSurface("res/player-up.bmp");
-	playerSurfaceList[playerDown] = loadSurface("res/player-down.bmp");
-	playerSurfaceList[playerLeft] = loadSurface("res/player-left.bmp");
-	playerSurfaceList[playerRight] = loadSurface("res/player-right.bmp");
-	playerSurfaceList[playerDef] = loadSurface("res/player-placeholder.bmp");
+	playerSurfaceList[playerUp] = loadSurface("res/player-up.png");
+	playerSurfaceList[playerDown] = loadSurface("res/player-down.png");
+	playerSurfaceList[playerLeft] = loadSurface("res/player-left.png");
+	playerSurfaceList[playerRight] = loadSurface("res/player-right.png");
+	playerSurfaceList[playerDef] = loadSurface("res/player-placeholder.png");
 	for(const auto& image: playerSurfaceList){
 		if(image == NULL){
 			return false;
@@ -134,7 +142,7 @@ void close(){
 
 SDL_Surface* loadSurface(string path){
 	LOG_INIT_CERR();
-	SDL_Surface* surface = SDL_LoadBMP(path.c_str());
+	SDL_Surface* surface = IMG_Load(path.c_str());
 	SDL_Surface* optimized = NULL;
 	if(surface == NULL){
 		log(LOG_WARN) << "Media failed to load (" << path << ") " << SDL_GetError() << "\n";
