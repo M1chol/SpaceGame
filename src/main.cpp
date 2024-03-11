@@ -21,8 +21,13 @@ enum Keytest{
 };
 SDL_Window* gWindow = NULL;
 SDL_Surface* gScreenSurface = NULL;
-SDL_Surface* playerSurfaceList[keysNr];
-SDL_Surface* playerSurface = NULL;
+//SDL_Surface* playerSurfaceList[keysNr];
+//SDL_Surface* playerSurface = NULL;
+SDL_Texture* playerTextureList[keysNr];
+SDL_Texture* playerTexture = NULL;
+SDL_Renderer* gRenderer = NULL;
+
+
 
 // load all media for player
 bool loadPlayerMedia();
@@ -36,6 +41,8 @@ void close();
 // load surface at specified path
 SDL_Surface* loadSurface(string);
 
+// load image from path as teture
+SDL_Texture* loadTexture(string);
 
 int main( int argc, char* args[] )
 {
@@ -45,6 +52,12 @@ int main( int argc, char* args[] )
 		close();
 	}else{
 		log(LOG_INFO) << "Initialization successful\n";
+
+		if(!loadPlayerMedia()){
+			log(LOG_WARN) << "Player media failed to load\n";
+		return false;
+	}
+
 		bool quit = false;
 		SDL_Event e;
 
@@ -60,24 +73,25 @@ int main( int argc, char* args[] )
 					// keyboard check
 					switch (e.key.keysym.sym){
 						case SDLK_w:
-							playerSurface = playerSurfaceList[playerUp];
+							playerTexture = playerTextureList[playerUp];
 							break;
 						case SDLK_a:
-							playerSurface = playerSurfaceList[playerLeft];
+							playerTexture = playerTextureList[playerLeft];
 							break;
 						case SDLK_s:
-							playerSurface = playerSurfaceList[playerDown];
+							playerTexture = playerTextureList[playerDown];
 							break;
 						case SDLK_d:
-							playerSurface = playerSurfaceList[playerRight];
+							playerTexture = playerTextureList[playerRight];
 							break;
 						default:
-							playerSurface = playerSurfaceList[playerDef];
+							playerTexture = playerTextureList[playerDef];
 					}
 				}
 			}
-			SDL_BlitSurface(playerSurface, NULL, gScreenSurface, NULL);
-			SDL_UpdateWindowSurface(gWindow);
+			SDL_RenderClear(gRenderer);
+			SDL_RenderCopy(gRenderer, playerTexture, NULL, NULL);
+			SDL_RenderPresent(gRenderer);
 		}
 	}
 	close();
@@ -86,42 +100,47 @@ int main( int argc, char* args[] )
 
 bool init(){
 	LOG_INIT_CERR();
-	bool success = true;
+
+	// Try Init
 	if ( SDL_Init(SDL_INIT_VIDEO) < 0){
 		log(LOG_ERROR) << "SDL could not initialize successfuly " << SDL_GetError() << "\n";
-		success = false;
-	} else {
-		// Create window
-		gWindow = SDL_CreateWindow("Game",SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-		if(gWindow == NULL){
-			log(LOG_ERR) << "Failed creating window " << SDL_GetError() << "\n";
-			success = false;
-		}else{
-			int imageFlags = IMG_INIT_PNG;
-			if(!(IMG_Init(imageFlags) & imageFlags)){
-				log(LOG_ERR) << "SDL_Image failed to initialize " << IMG_GetError() << "\n";
-				success = false;
-			}else{
-				gScreenSurface = SDL_GetWindowSurface(gWindow);
-			}	
-		}
+		return false;
 	}
-	if(!loadPlayerMedia()){
-		log(LOG_WARN) << "Player media failed to load\n";
-		success = false;
+	// Try to create window
+	gWindow = SDL_CreateWindow("Game",SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	if(gWindow == NULL){
+		log(LOG_ERR) << "Failed creating window " << SDL_GetError() << "\n";
+		return false;
 	}
-	return success;
+	//Try to create renderer
+	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+	if(gRenderer == NULL){
+		log(LOG_ERR) << "Failed to create renderer " << SDL_GetError() << "\n";
+		return false;
+	}else{
+		SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+	}
+	
+
+
+	//Try to init SDL_Image
+	int imageFlags = IMG_INIT_PNG;
+	if(!(IMG_Init(imageFlags) & imageFlags)){
+		log(LOG_ERR) << "SDL_Image failed to initialize " << IMG_GetError() << "\n";
+		return false;
+	}
+	gScreenSurface = SDL_GetWindowSurface(gWindow);
+	return true;
 }
 
 bool loadPlayerMedia(){
-	LOG_INIT_CERR();
 	bool success = true;
-	playerSurfaceList[playerUp] = loadSurface("res/player-up.png");
-	playerSurfaceList[playerDown] = loadSurface("res/player-down.png");
-	playerSurfaceList[playerLeft] = loadSurface("res/player-left.png");
-	playerSurfaceList[playerRight] = loadSurface("res/player-right.png");
-	playerSurfaceList[playerDef] = loadSurface("res/player-placeholder.png");
-	for(const auto& image: playerSurfaceList){
+	playerTextureList[playerDown] = loadTexture("res/player-down.png");
+	playerTextureList[playerUp] = loadTexture("res/player-up.png");
+	playerTextureList[playerLeft] = loadTexture("res/player-left.png");
+	playerTextureList[playerRight] = loadTexture("res/player-right.png");
+	playerTextureList[playerDef] = loadTexture("res/player-placeholder.png");
+	for(const auto& image: playerTextureList){
 		if(image == NULL){
 			return false;
 		}
@@ -132,11 +151,11 @@ bool loadPlayerMedia(){
 void close(){
 	// Dealocate surface
 	for (int i = 0; i < keysNr; ++i) {
-		SDL_FreeSurface(playerSurfaceList[i]);
+		SDL_DestroyTexture(playerTextureList[i]);
 	}
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
-	playerSurface = NULL;
+	playerTexture = NULL;
 	SDL_Quit();
 }
 
@@ -154,4 +173,21 @@ SDL_Surface* loadSurface(string path){
 	}
 	SDL_FreeSurface(surface);
 	return optimized;
+}
+
+SDL_Texture* loadTexture(string path){
+	LOG_INIT_CERR();
+	SDL_Texture* texture = NULL;
+	SDL_Surface* loaded = IMG_Load(path.c_str());
+	if(loaded == NULL){
+		log(LOG_WARN) << "Failed loading media (" << path << ") " << IMG_GetError() << "\n";
+		return NULL;
+	}
+	texture = SDL_CreateTextureFromSurface(gRenderer, loaded);
+	if(texture == NULL){
+		log(LOG_WARN) << "Failed converting media to texture (" << path << ") " << IMG_GetError() << "\n";
+		return NULL;
+	}
+	SDL_FreeSurface(loaded);
+	return texture;
 }
