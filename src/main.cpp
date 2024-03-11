@@ -44,6 +44,9 @@ SDL_Surface* loadSurface(string);
 // load image from path as teture
 SDL_Texture* loadTexture(string);
 
+// draw rectangle at x,y and with width and height
+void renderRect(float, float, float, float);
+
 int main( int argc, char* args[] )
 {
 	LOG_INIT_CERR();
@@ -91,6 +94,7 @@ int main( int argc, char* args[] )
 			}
 			SDL_RenderClear(gRenderer);
 			SDL_RenderCopy(gRenderer, playerTexture, NULL, NULL);
+			renderRect(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 50, 50);
 			SDL_RenderPresent(gRenderer);
 		}
 	}
@@ -117,11 +121,7 @@ bool init(){
 	if(gRenderer == NULL){
 		log(LOG_ERR) << "Failed to create renderer " << SDL_GetError() << "\n";
 		return false;
-	}else{
-		SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	}
-	
-
 
 	//Try to init SDL_Image
 	int imageFlags = IMG_INIT_PNG;
@@ -190,4 +190,10 @@ SDL_Texture* loadTexture(string path){
 	}
 	SDL_FreeSurface(loaded);
 	return texture;
+}
+
+void renderRect(float x, float y, float width, float height){
+	SDL_Rect rect = {x, y, width, height};
+	SDL_SetRenderDrawColor(gRenderer, 0x00, 0xFF, 0x00, 0xFF);
+	SDL_RenderDrawRect(gRenderer, &rect);
 }
