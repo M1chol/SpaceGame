@@ -45,7 +45,7 @@ SDL_Surface* loadSurface(string);
 SDL_Texture* loadTexture(string);
 
 // draw rectangle at x,y and with width and height
-void renderRect(float, float, float, float);
+void renderRect(int, int, int, int);
 
 int main( int argc, char* args[] )
 {
@@ -192,7 +192,7 @@ SDL_Texture* loadTexture(string path){
 	return texture;
 }
 
-void renderRect(float x, float y, float width, float height){
+void renderRect(int x, int y, int width, int height){
 	SDL_Rect rect = {x, y, width, height};
 	SDL_SetRenderDrawColor(gRenderer, 0x00, 0xFF, 0x00, 0xFF);
 	SDL_RenderDrawRect(gRenderer, &rect);
