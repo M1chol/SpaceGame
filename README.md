@@ -25,7 +25,7 @@ git clone https://github.com/M1chol/SpaceGame
 cd SpaceGame
 mingw32-make.exe
 ```
-If you didnt install `mingw32-make` instead launch   
+If you didn't install `mingw32-make` instead launch   
 ```
 g++ -Iinclude -Iinclude/sdl -Iinclude/headers -Llib -o Main src/*.cpp -lmingw32 -lSDL2main -lSDL2 -lSDL2_image
 ```

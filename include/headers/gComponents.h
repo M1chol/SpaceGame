@@ -1,27 +1,27 @@
-
 #ifndef Components
 #define Components
 
-#include <string>
-#include "logger.h"
-#include <SDL.h>
-#include "gMath.h"
+#include "engine.h"
+
 using namespace std;
 
 #pragma once
 
-class LTexture{
+class SpriteComponent : public Component{
     public:
 
         // Constructor
-        LTexture();
+        SpriteComponent(SDL_Renderer* gRenderer, string path);
 
         // Deconstructor
-        ~LTexture();
+        ~SpriteComponent();
 
-        bool loadFromFile(string path);
+        // Loads texture on specified path returns false if it fails
+        bool load(string path);
 
         void free();
+
+        void simpleRender(iVect pos);
 
         void render(iVect* coordinates, iVect* offset, SDL_Rect* clip = NULL);
 
@@ -29,6 +29,7 @@ class LTexture{
 
     private:
         SDL_Texture* texture;
+        SDL_Renderer* gRenderer;
         iVect* dim;
 };
 
