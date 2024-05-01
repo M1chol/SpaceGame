@@ -4,7 +4,23 @@
 
 - `main/void close()` function that frees resources, destroys game window and closes SDL
 
-### Texture class (Sprite)
+There are 2 primitive structures
+- `gObject`
+- `Component`
+
+`Component` is a parent class for:
+- `SpriteComponent`
+
+`Component` can be linked to `gObject` using `gObject.addComponent()` for example
+
+```cpp
+gObject player;
+component = new SpriteComponent(gRenderer, "player.png")
+player.addComponent(component);
+```
+The idea behind this is to create scalable system.
+
+### SpriteComponent (Sprite)
 texture loading supports png, jpg
 `Sprite(SDL_Renderer* renderer, string path)` - creates texture object bound to provided renderer. path - optional, if provided automaticly runs Sprite.load.
 `bool load(string path)` - used to load texture on specified path

@@ -6,7 +6,7 @@ Mr. Foo' for providing great way to begin developing with SDL (https://lazyfoo.n
 Bastian Schiffthaler for creating cool logging utility (https://github.com/bschiffthaler/BSlogger)   
    
 ## Installing
-For windows simply __Use provided binary__ you can find latest exe file in releases   
+For windows simply __go to newest realese__ you can then download installer or zip folder containg exe.   
    
 __Build from source__   
 Windows dependencies  
@@ -58,4 +58,4 @@ Misc
 `Makefile` - make file of the project 
 `NOTICE.txt` - notice file for license   
    
- Michał Kozłowski 2024
+ *Michał Kozłowski 2024*
