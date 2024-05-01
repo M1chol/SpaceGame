@@ -21,8 +21,13 @@ Component* gObject::getComponent(int componentId){
     return componentList[componentId];
 }
 
+void Component::setParent(gObject* new_parent){
+    parent = new_parent;
+}
+
 void gObject::addComponent(Component* comp){
     componentList.push_back(comp);
+    comp->setParent(this);
 }
 
 #pragma endregion

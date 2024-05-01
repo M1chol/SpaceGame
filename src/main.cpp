@@ -26,8 +26,6 @@ SDL_Texture* playerTextureList[keysNr];
 SDL_Texture* playerTexture = NULL;
 SDL_Renderer* gRenderer = NULL;
 
-gObject player;
-
 // load all media for player
 bool loadPlayerMedia();
 
@@ -54,8 +52,9 @@ int main( int argc, char* args[] )
 	bool quit = false;
 	SDL_Event e;
 
+	gObject player;
+	player.pos = {SCREEN_WIDTH/2, SCREEN_HEIGHT/2};
 	player.addComponent(new SpriteComponent(gRenderer, "res/player-placeholder.png"));
-	printf("TEST2");
 
 	// MAIN LOOP
 	log(LOG_INFO) << "Setup finished starting game loop\n";
@@ -83,7 +82,7 @@ int main( int argc, char* args[] )
 		}
 		SDL_RenderClear(gRenderer);
 		
-		static_cast<SpriteComponent*>(player.getComponent(0))->simpleRender(toiVect(player.pos));
+		static_cast<SpriteComponent*>(player.getComponent(0))->render(2);
 
 		SDL_RenderPresent(gRenderer);
 	}

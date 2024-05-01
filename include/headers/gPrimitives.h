@@ -9,8 +9,13 @@ struct iVect{
     int x;
     int y;
 };
+class gObject;
 
 class Component{
+    public:
+        void setParent(gObject* parent);
+    protected:
+        gObject* parent;
 };
 
 iVect toiVect(Vect vect);
@@ -23,6 +28,8 @@ class gObject{
         ~gObject();
 
         void destroy();
+
+        // TODO: create abstract render function for gameobject
 
         void addComponent(Component* comp);
 

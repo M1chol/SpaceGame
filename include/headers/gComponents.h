@@ -20,16 +20,18 @@ class SpriteComponent : public Component{
         bool load(string path);
 
         void free();
-
-        void simpleRender(iVect pos);
-
-        void render(iVect* coordinates, iVect* offset, SDL_Rect* clip = NULL);
+        
+        // TODO: change function type to bool and handle errors
+        void render(iVect offset, float scale);
+        void render(float scale);
+        void render();
 
         iVect* getDim();
 
     private:
         SDL_Texture* texture;
         SDL_Renderer* gRenderer;
+        SDL_Rect* renderBox;
         iVect* dim;
 };
 
