@@ -39,7 +39,7 @@ bool SpriteComponent::load(string path){
 iVect* SpriteComponent::getDim(){
 	return dim;
 }
-// Renders image at offset with set scale
+
 bool SpriteComponent::render(iVect offset, float scale){
 	LOG_INIT_CERR();
 	*renderBox = {(int)parent->pos.x + offset.x, (int)parent->pos.y + offset.y, (int)((float)dim->x*scale), (int)((float)dim->y*scale)};
@@ -49,13 +49,11 @@ bool SpriteComponent::render(iVect offset, float scale){
 	}
 	return true;
 }
-// Renders centered image at scale
 bool SpriteComponent::render(float scale){
 	iVect center = {-(int)((float)dim->x*scale/2), -(int)((float)dim->y*scale/2)};
 	bool status = render(center, scale);
 	return status;
 }
-// Renders centered image
 bool SpriteComponent::render(){
 	bool status = render(1);
 	return status;

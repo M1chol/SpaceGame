@@ -14,6 +14,7 @@ class gObject;
 class Component{
     public:
         void setParent(gObject* parent);
+        virtual bool render();
     protected:
         gObject* parent;
 };
@@ -29,7 +30,8 @@ class gObject{
 
         void destroy();
 
-        // TODO: create abstract render function for gameobject
+        // goes through linked components and renders them
+        int render();
 
         void addComponent(Component* comp);
 

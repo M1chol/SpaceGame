@@ -82,8 +82,8 @@ int main( int argc, char* args[] )
 		}
 		SDL_RenderClear(gRenderer);
 		
-		static_cast<SpriteComponent*>(player.getComponent(0))->render(2);
-
+		//static_cast<SpriteComponent*>(player.getComponent(0))->render(2);
+		player.render();
 		SDL_RenderPresent(gRenderer);
 	}
 	close();

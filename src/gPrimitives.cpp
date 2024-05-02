@@ -21,13 +21,29 @@ Component* gObject::getComponent(int componentId){
     return componentList[componentId];
 }
 
+void gObject::addComponent(Component* comp){
+    componentList.push_back(comp);
+    nrOfComponents++;
+    comp->setParent(this);
+}
+
+int gObject::render(){
+    int count = 0;
+    for(int i=0; i < nrOfComponents; i++){
+        if(componentList[i]->render()){
+            count++;
+        }
+    }
+    return count;
+}
+
+#pragma endregion
+
+
 void Component::setParent(gObject* new_parent){
     parent = new_parent;
 }
 
-void gObject::addComponent(Component* comp){
-    componentList.push_back(comp);
-    comp->setParent(this);
+bool Component::render(){
+    return 0;
 }
-
-#pragma endregion

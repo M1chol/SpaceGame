@@ -21,9 +21,22 @@ class SpriteComponent : public Component{
 
         void free();
         
+        /*
+        Renders the texture assigned to object to screen at the position of linked parent
+        @param offset set the offset from parent position
+        @param scale set the size of image, 1 = 100%
+        @return true if success else false
+        */
         bool render(iVect offset, float scale);
+        /*
+        Renders the texture assigned to object to screen centered at parent object
+        @param scale set the size of image, 1 = 100%
+        */
         bool render(float scale);
-        bool render();
+        /*
+        Renders the texture assigned to object to screen centered at parent object
+        */
+        bool render() override;
 
         iVect* getDim();
 
