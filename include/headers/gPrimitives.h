@@ -38,11 +38,9 @@ class gObject{
         Component* getComponent(int componentId);
 
         Vect pos;
-
-        std::vector<Component*> componentList;
-
     private:
         int nrOfComponents;
+        std::vector<Component*> componentList;
 
     
 };
