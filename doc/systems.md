@@ -1,4 +1,4 @@
-## All classes and functions
+# All classes and functions
 
 - `main/bool init()` funcition that initializes SDL and creates game window returns false if could not initialize
 
@@ -7,23 +7,46 @@
 There are 2 primitive structures
 - `gObject`
 - `Component`
+## gObject class
+gObject class is the most primitive object that can be created. It has position and a list of linked components.
 
-`Component` is a parent class for:
-- `SpriteComponent`
-
-`Component` can be linked to `gObject` using `gObject.addComponent()` for example
-
+```cpp
+gObject();
+~gObject();
+Vect pos; // position of object
+void destroy(); // frees resources
+void addComponent(Component* comp); // link new component
+Component* getComponent(int componentId); // get pointer to component at index
+int render(); // calls render on all components
+```
+Example usecase:
 ```cpp
 gObject player;
 component = new SpriteComponent(gRenderer, "player.png")
 player.addComponent(component);
 ```
-The idea behind this is to create scalable system.
 
-### SpriteComponent (Sprite)
-texture loading supports png, jpg
-`Sprite(SDL_Renderer* renderer, string path)` - creates texture object bound to provided renderer. path - optional, if provided automaticly runs Sprite.load.
-`bool load(string path)` - used to load texture on specified path
-`void free()` - called to destroy object
-`void render(iVect* coordinates, iVect* offset, SDL_Rect* clip = NULL);` - renders texture to renderer
-`iVect* getDim();` - returns dimentions of image
+## Component class
+
+```cpp
+void setParent(gObject* parent); // set parent object
+virtual bool render(); // if child object can be renderd ralls render else returns 0
+```
+
+`Component` is an abstract parent class for:
+- `SpriteComponent`
+
+### SpriteComponent class
+
+```cpp
+SpriteComponent(SDL_Renderer* gRenderer, string path);
+~SpriteComponent();
+bool load(string path); // Loads texture on specified path
+void free();
+
+// Renders the texture assigned to object to screen at the position of linked parent
+bool render(iVect offset, float scale);
+bool render(float scale);
+bool render() override;
+iVect* getDim(); // returns original dimentions of loaded texture
+```
