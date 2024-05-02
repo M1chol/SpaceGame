@@ -40,18 +40,25 @@ iVect* SpriteComponent::getDim(){
 	return dim;
 }
 // Renders image at offset with set scale
-void SpriteComponent::render(iVect offset, float scale){
+bool SpriteComponent::render(iVect offset, float scale){
+	LOG_INIT_CERR();
 	*renderBox = {(int)parent->pos.x + offset.x, (int)parent->pos.y + offset.y, (int)((float)dim->x*scale), (int)((float)dim->y*scale)};
-	SDL_RenderCopy(gRenderer, texture, NULL, renderBox);
+	if(SDL_RenderCopy(gRenderer, texture, NULL, renderBox)){
+		log(LOG_WARN) << "Element failed to render, " << SDL_GetError() << "\n";
+		return false;
+	}
+	return true;
 }
 // Renders centered image at scale
-void SpriteComponent::render(float scale){
+bool SpriteComponent::render(float scale){
 	iVect center = {-(int)((float)dim->x*scale/2), -(int)((float)dim->y*scale/2)};
-	render(center, scale);
+	bool status = render(center, scale);
+	return status;
 }
 // Renders centered image
-void SpriteComponent::render(){
-	render(1);
+bool SpriteComponent::render(){
+	bool status = render(1);
+	return status;
 }
 
 void SpriteComponent::free(){

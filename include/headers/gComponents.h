@@ -21,10 +21,9 @@ class SpriteComponent : public Component{
 
         void free();
         
-        // TODO: change function type to bool and handle errors
-        void render(iVect offset, float scale);
-        void render(float scale);
-        void render();
+        bool render(iVect offset, float scale);
+        bool render(float scale);
+        bool render();
 
         iVect* getDim();
 
