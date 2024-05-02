@@ -1,42 +1,18 @@
 #define SDL_MAIN_HANDLED
-#include <SDL.h>
-#include <stdio.h>
-#include <iostream>
-#include <string>
-#include <SDL_image.h>
-#include "logger.h"
-#include "gComponents.h"
-
-using namespace std;
+#include "engine.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
-enum Keytest{
-	playerUp,
-	playerRight,
-	playerDown,
-	playerLeft,
-	playerDef,
-	keysNr
-};
 SDL_Window* gWindow = NULL;
 SDL_Surface* gScreenSurface = NULL;
-SDL_Texture* playerTextureList[keysNr];
-SDL_Texture* playerTexture = NULL;
 SDL_Renderer* gRenderer = NULL;
-
-// load all media for player
-bool loadPlayerMedia();
 
 // start SDL and create game window
 bool init();
 
 // free resources and close app
 void close();
-
-// draw rectangle at x,y and with width and height
-void renderRect(int, int, int, int);
 
 int main( int argc, char* args[] )
 {	
@@ -90,6 +66,7 @@ int main( int argc, char* args[] )
 	return 0;
 }
 
+// TODO: Rework to engine
 bool init(){
 	LOG_INIT_CERR();
 
@@ -121,36 +98,8 @@ bool init(){
 	return true;
 }
 
-// bool loadPlayerMedia(){
-// 	bool success = true;
-	
-// 	playerTextureList[playerDown] = 
-// 	playerTextureList[playerUp] = loadTexture("res/player-up.png");
-// 	playerTextureList[playerLeft] = loadTexture("res/player-left.png");
-// 	playerTextureList[playerRight] = loadTexture("res/player-right.png");
-// 	playerTextureList[playerDef] = loadTexture("res/player-placeholder.png");
-// 	for(const auto& image: playerTextureList){
-// 		if(image == NULL){
-// 			return false;
-// 		}
-// 	}
-// 	return true;
-// }
-
+// TODO: Rework to engine. track all gObjects on scene and remove them
 void close(){
-	// Dealocate surface
-	for (int i = 0; i < keysNr; ++i) {
-		SDL_DestroyTexture(playerTextureList[i]);
-	}
-	SDL_DestroyWindow(gWindow);
-	gWindow = NULL;
-	playerTexture = NULL;
+	// For now  no implementation
 	SDL_Quit();
-}
-
-
-void renderRect(int x, int y, int width, int height){
-	SDL_Rect rect = {x, y, width, height};
-	SDL_SetRenderDrawColor(gRenderer, 0x00, 0xFF, 0x00, 0xFF);
-	SDL_RenderDrawRect(gRenderer, &rect);
 }

@@ -7,6 +7,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "gPrimitives.h"
+#include "gComponents.h"
 
 #pragma once
 
