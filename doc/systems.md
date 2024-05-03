@@ -5,14 +5,14 @@
 - `main/void close()` function that frees resources, destroys game window and closes SDL
 
 There are 2 primitive structures
-- `gObject`
+- `Object`
 - `Component`
-## gObject class
-gObject class is the most primitive object that can be created. It has position and a list of linked components.
+## Object class
+Object class is the most primitive object that can be created. It has position and a list of linked components.
 
 ```cpp
-gObject();
-~gObject();
+Object();
+~Object();
 Vect pos; // position of object
 void destroy(); // frees resources
 void addComponent(Component* comp); // link new component
@@ -21,15 +21,16 @@ int render(); // calls render on all components
 ```
 Example usecase:
 ```cpp
-gObject player;
-component = new SpriteComponent(gRenderer, "player.png")
+Object player;
+component = new SpriteComponent(gRenderer)
 player.addComponent(component);
 ```
+This block of code is creating new Object and then linking newly created `SpriteComponent` to it.
 
 ## Component class
 
 ```cpp
-void setParent(gObject* parent); // set parent object
+void setParent(Object* parent); // set parent object
 virtual bool render(); // if child object can be renderd ralls render else returns 0
 ```
 
@@ -37,7 +38,7 @@ virtual bool render(); // if child object can be renderd ralls render else retur
 - `SpriteComponent`
 
 ### SpriteComponent class
-
+Yo can use this class to add sprites to any Object.
 ```cpp
 SpriteComponent(SDL_Renderer* gRenderer, string path);
 ~SpriteComponent();
@@ -49,4 +50,31 @@ bool render(iVect offset, float scale);
 bool render(float scale);
 bool render() override;
 iVect* getDim(); // returns original dimentions of loaded texture
+```
+Simple usecase:
+Here is continuation for example explored in Object section.
+```cpp
+Object player;
+playerSprite* = new SpriteComponent(gRenderer);
+player.addComponent(component);
+```
+After creating Object and linking `SpriteComponent` to it you can load texture to memory using `load` function. You can also do it while creating new `SpriteComponent` by specifying `path` argument.
+
+```cpp
+playerSprite->load("res/player-placeholder.png");
+```
+And then render it to screen calling directly from pointer
+```cpp
+playerSprite->render();
+```
+or by calling `render` on parent `Object`
+```cpp
+player.render();
+```
+full example:
+```cpp
+Object player;
+player.addComponent(new SpriteComponent(gRenderer, "res/player-placeholder.png"));
+//static_cast<SpriteComponent*>(player.getComponent(0))->render(); // Calling render by directly referencing SpriteComponent linked to Object
+player.render(); // Calling render on all Components linked to Object
 ```
