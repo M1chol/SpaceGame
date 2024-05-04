@@ -4,9 +4,14 @@
 
 - `main/void close()` function that frees resources, destroys game window and closes SDL
 
-There are 2 primitive structures
+There are 3 primitive structures
+- `Sceme`
 - `Object`
 - `Component`
+
+## Scene class
+Scene class holds list of `Object` 
+
 ## Object class
 Object class is the most primitive object that can be created. It has position and a list of linked components.
 
