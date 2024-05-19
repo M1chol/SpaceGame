@@ -11,6 +11,7 @@ Object::Object()
     // Set default position
     pos = {0, 0};
     nrOfComponents = 0;
+    linkedScene = nullptr;
 }
 
 Object::~Object()
@@ -35,6 +36,7 @@ void Object::addComponent(Component *comp)
     componentList.push_back(comp);
     nrOfComponents++;
     comp->setParent(this);
+    comp->whenLinked();
 }
 
 int Object::render()
@@ -63,14 +65,19 @@ bool Component::render()
 {
     return 0;
 }
+
+void Component::whenLinked() {};
+
 #pragma endregion
 
 #pragma region Scene definitions
 
-Scene::Scene()
+Scene::Scene(SDL_Renderer *newRenderer)
 {
+    sceneList.push_back(this);
     nrOfActiveObjects = 0;
     name = "Scene";
+    sceneRenderer = newRenderer;
 }
 Scene::~Scene()
 {
@@ -83,17 +90,20 @@ void Scene::destroy()
         object->destroy();
     }
 }
-void Scene::setName(std::string newName){
+void Scene::setName(std::string newName)
+{
     name = newName;
 }
 bool Scene::addObject(Object *obj)
 {
     objectList.push_back(obj);
+    obj->linkedScene = this;
     nrOfActiveObjects++;
 }
 
 int Scene::Update()
 {
+    SDL_RenderClear(sceneRenderer);
     int temp = 0;
     for (auto &obj : objectList)
     {
@@ -103,7 +113,12 @@ int Scene::Update()
             obj->render();
         }
     }
+    SDL_RenderPresent(sceneRenderer);
     return temp;
+}
+SDL_Renderer *Scene::getRenderer()
+{
+    return sceneRenderer;
 }
 
 #pragma endregion

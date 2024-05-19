@@ -1,5 +1,6 @@
 #ifndef Engine
 #define Engine
+#pragma once
 
 #include <string>
 #include <vector>
@@ -9,6 +10,12 @@
 #include "gPrimitives.h"
 #include "gComponents.h"
 
-#pragma once
+extern const int SCREEN_WIDTH;
+extern const int SCREEN_HEIGHT;
+extern Scene *mainScene;
+extern std::vector<Scene *> sceneList;
+
+bool EngineInit();
+void EngineClose();
 
 #endif
