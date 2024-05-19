@@ -3,21 +3,19 @@
 
 #include "engine.h"
 
-using namespace std;
-
 #pragma once
 
 class SpriteComponent : public Component{
     public:
 
         // Constructor
-        SpriteComponent(SDL_Renderer* gRenderer, string path);
+        SpriteComponent(SDL_Renderer* gRenderer, std::string path="");
 
         // Deconstructor
         ~SpriteComponent();
 
         // Loads texture on specified path returns false if it fails
-        bool load(string path);
+        bool load(std::string path);
 
         void free();
         

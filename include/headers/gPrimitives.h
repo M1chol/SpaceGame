@@ -1,46 +1,68 @@
 #include "engine.h"
 
-struct Vect{
+struct Vect
+{
     float x;
     float y;
 };
 
-struct iVect{
+struct iVect
+{
     int x;
     int y;
 };
-class gObject;
 
-class Component{
-    public:
-        void setParent(gObject* parent);
-        virtual bool render();
-    protected:
-        gObject* parent;
+class Object;
+
+class Component
+{
+public:
+    void setParent(Object *parent);
+    virtual bool render();
+
+protected:
+    Object *parent;
 };
 
-iVect toiVect(Vect vect);
+class Object
+{
 
-class gObject{
+public:
+    Object();
 
-    public:
-        gObject();
+    ~Object();
 
-        ~gObject();
+    void destroy();
 
-        void destroy();
+    // goes through linked components and renders them
+    int render();
 
-        // goes through linked components and renders them
-        int render();
+    void addComponent(Component *comp);
 
-        void addComponent(Component* comp);
+    Component *getComponent(int componentId);
 
-        Component* getComponent(int componentId);
+    Vect pos;
 
-        Vect pos;
-    private:
-        int nrOfComponents;
-        std::vector<Component*> componentList;
+    bool isActive;
 
-    
+private:
+    int nrOfComponents;
+    std::vector<Component *> componentList;
+};
+
+class Scene
+{
+    // TODO: Finish implementation
+public:
+    Scene();
+    ~Scene();
+    bool addObject(Object *);
+    void destroy();
+    int Update();
+    void setName(std::string);
+
+private:
+    std::vector<Object *> objectList;
+    int nrOfActiveObjects;
+    std::string name;
 };

@@ -1,6 +1,6 @@
 #include "gComponents.h"
 
-SpriteComponent::SpriteComponent(SDL_Renderer* renderer, string path=""){
+SpriteComponent::SpriteComponent(SDL_Renderer* renderer, std::string path){
 	LOG_INIT_CERR();
     gRenderer = renderer;
 	texture = NULL;
@@ -17,7 +17,7 @@ SpriteComponent::~SpriteComponent(){
     free();
 }
 
-bool SpriteComponent::load(string path){
+bool SpriteComponent::load(std::string path){
     LOG_INIT_CERR();
 	SDL_Texture* new_texture = NULL;
 	SDL_Surface* loaded = IMG_Load(path.c_str());
