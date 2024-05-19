@@ -51,14 +51,17 @@ private:
 
 class Scene
 {
-    // TODO: Finish implementation
 public:
     Scene(SDL_Renderer*);
     ~Scene();
+    // Used to add object to objectList
     bool addObject(Object *);
     void destroy();
+    // Updates all active game Objects eg. rendering
     int Update();
+    // Change name of scene
     void setName(std::string);
+    // Returns pointer to renderer linked to Scene
     SDL_Renderer *getRenderer();
 
 private:

@@ -1,5 +1,6 @@
 #define SDL_MAIN_HANDLED
 #include "engine.h"
+#include "player.h"
 
 int main(int argc, char *args[])
 {
@@ -7,14 +8,12 @@ int main(int argc, char *args[])
 	LOG_INIT_CERR();
 	EngineInit();
 
+	// CREATE PLAYER
+	PlayerObject player;
+
 	bool quit = false;
 	SDL_Event e;
 
-	Object player;
-	player.pos = {(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2};
-	mainScene->addObject(&player);
-	player.addComponent(new SpriteComponent("res/player-placeholder.png"));
-	
 	// MAIN LOOP
 	while (!quit)
 	{
