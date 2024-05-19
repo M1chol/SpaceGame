@@ -1,16 +1,21 @@
 # All classes and functions
 
-- `main/bool init()` funcition that initializes SDL and creates game window returns false if could not initialize
-
-- `main/void close()` function that frees resources, destroys game window and closes SDL
-
 There are 3 primitive structures
 - `Sceme`
 - `Object`
 - `Component`
 
 ## Scene class
-Scene class holds list of `Object` 
+Scene class holds list of `Object` It is used to keep all Objects for ease of clearing memory. It holds name for debugging purpouses.
+```cpp
+Scene(SDL_Renderer*);
+~Scene();
+bool addObject(Object *);
+void destroy();
+int Update();
+void setName(std::string);
+SDL_Renderer *getRenderer();
+```
 
 ## Object class
 Object class is the most primitive object that can be created. It has position and a list of linked components.
