@@ -34,17 +34,20 @@ int main(int argc, char *args[])
 			}
 		}
 		mainScene->Update();
-
-		if(timer < 10){
+		// FIXME: Does not show real values rather shows delta after correction
+		if (timer < 10)
+		{
 			timer += deltaTime;
 			deltaCounter++;
-		}else{
-			log(LOG_INFO) << "Avarege draw time " << timer / (double)deltaCounter << " s. Theoretical frame rate: " <<deltaCounter / timer << "fps\n";
+		}
+		else
+		{
+			log(LOG_INFO) << "Avarege draw time " << timer / (double)deltaCounter << " s. Theoretical frame rate: " << deltaCounter / timer << "fps\n";
 			timer = 0.0;
 			deltaCounter = 0;
 		}
 
-		EngineCapFrames(60);
+		EngineCapFrames(200);
 	}
 	EngineClose();
 	return 0;

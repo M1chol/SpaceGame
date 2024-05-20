@@ -13,7 +13,6 @@ Object::Object()
     nrOfComponents = 0;
     linkedScene = nullptr;
 }
-// TODO: Add Update functionality to object to enable moving
 Object::~Object()
 {
     destroy();
@@ -52,7 +51,7 @@ int Object::render()
     return count;
 }
 
-void Object::update(){}
+void Object::update() {}
 
 #pragma endregion
 
