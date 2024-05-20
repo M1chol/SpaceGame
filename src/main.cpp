@@ -6,6 +6,8 @@ int main(int argc, char *args[])
 {
 	// SETUP
 	LOG_INIT_CERR();
+	uint32_t previousTime = SDL_GetTicks();
+	uint32_t currentTime;
 	EngineInit();
 
 	// CREATE PLAYER
@@ -13,11 +15,16 @@ int main(int argc, char *args[])
 
 	bool quit = false;
 	SDL_Event e;
+	double timer = 0.0;
+	int deltaCounter = 0;
 
 	// MAIN LOOP
 	while (!quit)
 	{
-		// Check all events
+		deltaTime = (double)(SDL_GetTicks() - previousTime) / 1000;
+		previousTime = SDL_GetTicks();
+
+		EngineUpdateKeyboard();
 		while (SDL_PollEvent(&e) != 0)
 		{
 			if (e.type == SDL_QUIT)
@@ -25,25 +32,19 @@ int main(int argc, char *args[])
 				quit = true;
 				log(LOG_INFO) << "Quit requested exiting loop\n";
 			}
-			else if (e.type = SDL_KEYDOWN)
-			{
-				// keyboard check
-				switch (e.key.keysym.sym)
-				{
-				case SDLK_w:
-					break;
-				case SDLK_a:
-					break;
-				case SDLK_s:
-					break;
-				case SDLK_d:
-					break;
-				default:
-					break;
-				}
-			}
 		}
 		mainScene->Update();
+
+		if(timer < 10){
+			timer += deltaTime;
+			deltaCounter++;
+		}else{
+			log(LOG_INFO) << "Avarege draw time " << timer / (double)deltaCounter << " s. Theoretical frame rate: " <<deltaCounter / timer << "fps\n";
+			timer = 0.0;
+			deltaCounter = 0;
+		}
+
+		EngineCapFrames(60);
 	}
 	EngineClose();
 	return 0;

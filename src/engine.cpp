@@ -7,6 +7,10 @@ const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 std::vector<Scene *> sceneList;
 Scene *mainScene = nullptr;
+double deltaTime;
+
+Uint8 currentKeyState[SDL_NUM_SCANCODES];
+Uint8 previousKeyState[SDL_NUM_SCANCODES];
 
 bool EngineInit()
 {
@@ -45,6 +49,32 @@ bool EngineInit()
     mainScene->setName("MAIN");
     log(LOG_INFO) << "Initilization succesfull created main Scene\n";
     return true;
+}
+
+void EngineUpdateKeyboard(){
+    SDL_PumpEvents();
+    const Uint8 *state = SDL_GetKeyboardState(NULL);
+    memcpy(previousKeyState, currentKeyState, SDL_NUM_SCANCODES);
+    memcpy(currentKeyState, state, SDL_NUM_SCANCODES);
+}
+
+void EngineCapFrames(int targetFrames){
+    double targetFrameTime = 1 / (double)targetFrames;
+    if(targetFrameTime > deltaTime){
+        SDL_Delay((Uint32)((targetFrameTime - deltaTime) * 1000));
+        deltaTime = targetFrameTime;
+    }
+}
+
+bool isKeyDown(SDL_Scancode key){
+    return currentKeyState[key];
+}
+
+bool isKeyReleased(SDL_Scancode key){
+    return previousKeyState[key] && !currentKeyState[key];
+}
+bool isKeyPushed(SDL_Scancode key){
+    return currentKeyState[key] && !previousKeyState[key];
 }
 
 void EngineClose()

@@ -38,6 +38,7 @@ public:
 
     // goes through linked components and renders them
     int render();
+    virtual void update();
     void addComponent(Component *comp);
     Component *getComponent(int componentId);
     Vect pos;

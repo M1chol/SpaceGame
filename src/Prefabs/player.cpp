@@ -1,6 +1,8 @@
 #include "engine.h"
 #include "player.h"
 
+int playerSpeed = 2;
+
 PlayerObject::PlayerObject()
 {
     LOG_INIT_CERR();
@@ -12,5 +14,30 @@ PlayerObject::PlayerObject()
 
 PlayerObject::~PlayerObject()
 {
-    destroy();
+    this->destroy();
+}
+
+void PlayerObject::update()
+{
+    if (isKeyDown(SDL_SCANCODE_W))
+    {
+        this->pos.y -= playerSpeed;
+    }
+    if (isKeyDown(SDL_SCANCODE_S))
+    {
+        this->pos.y += playerSpeed;
+    }
+    if (isKeyDown(SDL_SCANCODE_A))
+    {
+        this->pos.x -= playerSpeed;
+    }
+    if (isKeyDown(SDL_SCANCODE_D))
+    {
+        this->pos.x += playerSpeed;
+    }
+    if (isKeyDown(SDL_SCANCODE_Q))
+    {
+        // FIXME: destroy crashing the app
+        this->destroy();
+    }
 }
