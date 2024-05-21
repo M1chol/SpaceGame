@@ -37,7 +37,6 @@ void PlayerObject::update()
     }
     if (isKeyDown(SDL_SCANCODE_Q))
     {
-        // FIXME: destroy crashing the app
         this->destroy();
     }
 }

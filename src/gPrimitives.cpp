@@ -10,7 +10,6 @@ Object::Object()
 {
     // Set default position
     pos = {0, 0};
-    nrOfComponents = 0;
     linkedScene = nullptr;
 }
 Object::~Object()
@@ -19,36 +18,46 @@ Object::~Object()
 }
 void Object::destroy()
 {
-    for (int i = 0; i < nrOfComponents; i++)
+    for (auto &component : componentList)
     {
-        delete componentList[i];
+        delete component;
     }
+    componentList.clear();
 }
 
 Component *Object::getComponent(int componentId)
 {
+    LOG_INIT_CERR();
+    if (componentId + 1 > componentList.size())
+    {
+        log(LOG_WARN) << "Trying to access not existant component\n";
+        return nullptr;
+    }
     return componentList[componentId];
 }
 
 void Object::addComponent(Component *comp)
 {
     componentList.push_back(comp);
-    nrOfComponents++;
     comp->setParent(this);
     comp->whenLinked();
 }
+void Object::removeComponent(Component *comp)
+{
+    auto el = std::find(componentList.begin(), componentList.end(), comp);
+    if (el != componentList.end())
+    {
+        componentList.erase(el);
+    }
+}
 
-int Object::render()
+void Object::render()
 {
     int count = 0;
-    for (int i = 0; i < nrOfComponents; i++)
+    for (auto &component : componentList)
     {
-        if (componentList[i]->render())
-        {
-            count++;
-        }
+        component->render();
     }
-    return count;
 }
 
 void Object::update() {}
@@ -65,6 +74,13 @@ void Component::setParent(Object *new_parent)
 bool Component::render()
 {
     return 0;
+}
+
+void Component::destroy() {};
+
+Component::~Component()
+{
+    destroy();
 }
 
 void Component::whenLinked() {};

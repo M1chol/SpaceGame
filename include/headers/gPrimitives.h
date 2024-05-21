@@ -18,9 +18,11 @@ class Scene;
 class Component
 {
 public:
+    virtual ~Component();
     void setParent(Object *parent);
     virtual void whenLinked();
     virtual bool render();
+    virtual void destroy();
 
 protected:
     Object *parent;
@@ -37,23 +39,24 @@ public:
     void destroy();
 
     // goes through linked components and renders them
-    int render();
+    void render();
     virtual void update();
     void addComponent(Component *comp);
+    void removeComponent(Component *comp);
     Component *getComponent(int componentId);
     Vect pos;
     bool isActive;
     Scene *linkedScene;
 
 private:
-    int nrOfComponents;
+    //int nrOfComponents;
     std::vector<Component *> componentList;
 };
 
 class Scene
 {
 public:
-    Scene(SDL_Renderer*);
+    Scene(SDL_Renderer *);
     ~Scene();
     // Used to add object to objectList
     bool addObject(Object *);

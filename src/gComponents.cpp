@@ -14,7 +14,7 @@ SpriteComponent::SpriteComponent(std::string newPath)
 
 SpriteComponent::~SpriteComponent()
 {
-	free();
+	destroy();
 }
 
 void SpriteComponent::whenLinked()
@@ -56,7 +56,7 @@ bool SpriteComponent::render(iVect offset, float scale)
 	LOG_INIT_CERR();
 	if (gRenderer == nullptr)
 	{
-		//log(LOG_WARN) << "SpriteComponent::render gRenderer is nullptr\n";
+		// log(LOG_WARN) << "SpriteComponent::render gRenderer is nullptr\n";
 		return false;
 	}
 	*renderBox = {(int)parent->pos.x + offset.x, (int)parent->pos.y + offset.y, (int)((float)dim->x * scale), (int)((float)dim->y * scale)};
@@ -79,7 +79,8 @@ bool SpriteComponent::render()
 	return status;
 }
 
-void SpriteComponent::free()
+void SpriteComponent::destroy()
 {
 	SDL_DestroyTexture(texture);
+	parent->removeComponent(this);
 }

@@ -47,7 +47,7 @@ int main(int argc, char *args[])
 			deltaCounter = 0;
 		}
 
-		EngineCapFrames(200);
+		EngineCapFrames(60);
 	}
 	EngineClose();
 	return 0;

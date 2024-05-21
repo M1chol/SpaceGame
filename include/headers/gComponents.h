@@ -17,7 +17,7 @@ public:
     // Loads texture on specified path returns false if it fails
     bool load(std::string path);
 
-    void free();
+    void destroy() override;
 
     /*
     Renders the texture assigned to object to screen at the position of linked parent
