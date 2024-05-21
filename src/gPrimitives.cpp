@@ -23,6 +23,7 @@ void Object::destroy()
         delete component;
     }
     componentList.clear();
+    linkedScene = nullptr;
 }
 
 Component *Object::getComponent(int componentId)
@@ -104,7 +105,7 @@ void Scene::destroy()
 {
     for (auto &object : objectList)
     {
-        object->destroy();
+        delete object;
     }
 }
 void Scene::setName(std::string newName)
@@ -137,6 +138,15 @@ int Scene::Update()
 SDL_Renderer *Scene::getRenderer()
 {
     return sceneRenderer;
+}
+bool Scene::removeObject(Object *obj)
+{
+    auto el = std::find(objectList.begin(), objectList.end(), obj);
+    if (el != objectList.end())
+    {
+        objectList.erase(el);
+        delete obj;
+    }
 }
 
 #pragma endregion

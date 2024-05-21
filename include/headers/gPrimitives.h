@@ -60,6 +60,7 @@ public:
     ~Scene();
     // Used to add object to objectList
     bool addObject(Object *);
+    bool removeObject(Object *);
     void destroy();
     // Updates all active game Objects eg. rendering
     int Update();
