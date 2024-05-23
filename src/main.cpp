@@ -16,13 +16,12 @@ int main(int argc, char *args[])
 	bool quit = false;
 	SDL_Event e;
 	double timer = 0.0;
-	int deltaCounter = 0;
 
 	// MAIN LOOP
 	while (!quit)
 	{
-		deltaTime = (double)(SDL_GetTicks() - previousTime) / 1000;
-		previousTime = SDL_GetTicks();
+		currentTime = SDL_GetTicks();
+		deltaTime = (double)(currentTime - previousTime) / 1000;
 
 		EngineUpdateKeyboard();
 		while (SDL_PollEvent(&e) != 0)
@@ -30,24 +29,24 @@ int main(int argc, char *args[])
 			if (e.type == SDL_QUIT)
 			{
 				quit = true;
-				log(LOG_INFO) << "Quit requested exiting loop\n";
+				log(LOG_INFO) << "Quit requested...\n";
 			}
 		}
 		mainScene->Update();
-		// FIXME: Does not show real values rather shows delta after correction
+
+		drawTime = (double)(SDL_GetTicks() - currentTime) / 1000.0;
 		if (timer < 10)
 		{
 			timer += deltaTime;
-			deltaCounter++;
 		}
 		else
 		{
-			log(LOG_INFO) << "Avarege draw time " << timer / (double)deltaCounter << " s. Theoretical frame rate: " << deltaCounter / timer << "fps\n";
+			log(LOG_INFO) << "Current draw time " << drawTime << " s. Theoretical frame rate: " << 1 / drawTime << " fps\n";
 			timer = 0.0;
-			deltaCounter = 0;
 		}
 
 		EngineCapFrames(60);
+		previousTime = currentTime;
 	}
 	EngineClose();
 	return 0;

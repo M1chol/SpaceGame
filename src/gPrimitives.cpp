@@ -6,6 +6,7 @@
 
 #pragma region gObject definitions
 
+// TODO: Add Scene as requierment before creating object to call scene->addObject
 Object::Object()
 {
     // Set default position
@@ -18,11 +19,17 @@ Object::~Object()
 }
 void Object::destroy()
 {
+    LOG_INIT_CERR();
     for (auto &component : componentList)
     {
         delete component;
     }
     componentList.clear();
+    std::cout << this << "\n";
+    if (!linkedScene->removeObject(this))
+    {
+        log(LOG_WARN) << "Could not remove Object from linked scene\n";
+    }
     linkedScene = nullptr;
 }
 
@@ -43,13 +50,33 @@ void Object::addComponent(Component *comp)
     comp->setParent(this);
     comp->whenLinked();
 }
-void Object::removeComponent(Component *comp)
+void Object::setScene(Scene *parentScene)
+{
+    LOG_INIT_CERR();
+    linkedScene = parentScene;
+}
+Scene *Object::getScene()
+{
+    LOG_INIT_CERR();
+    if (linkedScene != nullptr)
+    {
+        return linkedScene;
+    }
+    else
+    {
+        log(LOG_WARN) << "Trying to access linked scene that does not exist (Object " << this << ")\n";
+        return nullptr;
+    }
+}
+bool Object::removeComponent(Component *comp)
 {
     auto el = std::find(componentList.begin(), componentList.end(), comp);
     if (el != componentList.end())
     {
         componentList.erase(el);
+        return true;
     }
+    return false;
 }
 
 void Object::render()
@@ -115,7 +142,7 @@ void Scene::setName(std::string newName)
 bool Scene::addObject(Object *obj)
 {
     objectList.push_back(obj);
-    obj->linkedScene = this;
+    obj->setScene(this);
     nrOfActiveObjects++;
 }
 
@@ -140,13 +167,15 @@ SDL_Renderer *Scene::getRenderer()
     return sceneRenderer;
 }
 bool Scene::removeObject(Object *obj)
-{
+{   
+    // FIXME: Calls Object remove from object remove
     auto el = std::find(objectList.begin(), objectList.end(), obj);
     if (el != objectList.end())
     {
-        objectList.erase(el);
-        delete obj;
+        objectList.erase(el); 
+        return true;
     }
+    return false;
 }
 
 #pragma endregion

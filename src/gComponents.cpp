@@ -19,7 +19,7 @@ SpriteComponent::~SpriteComponent()
 
 void SpriteComponent::whenLinked()
 {
-	gRenderer = parent->linkedScene->getRenderer();
+	gRenderer = parent->getScene()->getRenderer();
 	load(path);
 }
 
@@ -81,6 +81,10 @@ bool SpriteComponent::render()
 
 void SpriteComponent::destroy()
 {
+	LOG_INIT_CERR();
 	SDL_DestroyTexture(texture);
-	parent->removeComponent(this);
+	if (!parent->removeComponent(this))
+	{
+		log(LOG_WARN) << "Could not remove component from object\n";
+	}
 }

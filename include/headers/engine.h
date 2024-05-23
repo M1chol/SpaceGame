@@ -15,6 +15,7 @@ extern const int SCREEN_HEIGHT;
 extern Scene *mainScene;
 extern std::vector<Scene *> sceneList;
 extern double deltaTime;
+extern double drawTime;
 
 bool EngineInit();
 void EngineClose();
@@ -26,7 +27,6 @@ Checks status of key and returns true if it is beeing pressed
 @return True if key is beeing pressed
 */
 bool isKeyDown(SDL_Scancode key);
-
 
 bool isKeyReleased(SDL_Scancode);
 

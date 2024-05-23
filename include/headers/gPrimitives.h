@@ -42,15 +42,20 @@ public:
     void render();
     virtual void update();
     void addComponent(Component *comp);
-    void removeComponent(Component *comp);
+    bool removeComponent(Component *comp);
     Component *getComponent(int componentId);
+    void setScene(Scene*);
+    Scene *getScene();
+    void setName(); // TODO: Implement
     Vect pos;
     bool isActive;
-    Scene *linkedScene;
+    
 
 private:
     //int nrOfComponents;
+    Scene *linkedScene;
     std::vector<Component *> componentList;
+    std::string name;
 };
 
 class Scene

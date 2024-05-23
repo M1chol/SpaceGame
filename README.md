@@ -1,5 +1,7 @@
 ## development in early stages
 
+TODO: Update readme
+
 license files available in /legal   
 documentation avaiable in /doc
 
