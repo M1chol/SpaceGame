@@ -52,14 +52,6 @@ bool EngineInit()
     return true;
 }
 
-void EngineUpdateKeyboard()
-{
-    SDL_PumpEvents();
-    const Uint8 *state = SDL_GetKeyboardState(NULL);
-    memcpy(previousKeyState, currentKeyState, SDL_NUM_SCANCODES);
-    memcpy(currentKeyState, state, SDL_NUM_SCANCODES);
-}
-
 void EngineCapFrames(int targetFrames)
 {
     static LOG_INIT_CERR();
@@ -75,6 +67,27 @@ void EngineCapFrames(int targetFrames)
     }
 }
 
+void EngineClose()
+{
+    LOG_INIT_CERR();
+    for (auto &scene : sceneList)
+    {
+        scene->destroy();
+    }
+    SDL_Quit();
+    log(LOG_INFO) << "Quit successfull, bye bye!\n";
+}
+
+#pragma region KEYBOARD FUNCTIONS
+
+void EngineUpdateKeyboard()
+{
+    SDL_PumpEvents();
+    const Uint8 *state = SDL_GetKeyboardState(NULL);
+    memcpy(previousKeyState, currentKeyState, SDL_NUM_SCANCODES);
+    memcpy(currentKeyState, state, SDL_NUM_SCANCODES);
+}
+
 bool isKeyDown(SDL_Scancode key)
 {
     return currentKeyState[key];
@@ -88,14 +101,5 @@ bool isKeyPushed(SDL_Scancode key)
 {
     return currentKeyState[key] && !previousKeyState[key];
 }
+#pragma endregion
 
-void EngineClose()
-{
-    LOG_INIT_CERR();
-    for (auto &scene : sceneList)
-    {
-        scene->destroy();
-    }
-    SDL_Quit();
-    log(LOG_INFO) << "Quit successfull, bye bye!\n";
-}

@@ -1,22 +1,18 @@
-## development in early stages
+## Space Game SDL Project
+This is my source-avaiable c++ game based Space Invaders made with c++ and SDL library. Feel free to fork / modify / mod the game. Selling the game is prohibited as stated in [license](https://github.com/M1chol/SpaceGame/blob/master/LICENSE.txt).
 
-TODO: Update readme
-
-license files available in /legal   
-documentation avaiable in /doc
-
-Source-avaiable Space Invaders style c++ game based on SDL
-
+all license files available in [/legal](https://github.com/M1chol/SpaceGame/tree/master/legal)   
+documentation avaiable in [/doc](https://github.com/M1chol/SpaceGame/tree/master/doc)   
+   
 Target os:
   1. Windows
   2. Linux
 
 ## Installing
-For windows simply __Use provided binary__ you can find latest exe file in releases   
+For windows simply [download lates release](https://github.com/M1chol/SpaceGame/releases)
    
 __Build from source__   
 Windows dependencies  
-- [git](https://git-scm.com/download/win)
 - [MinGW](https://sourceforge.net/projects/mingw/) 
 - mingw32-make  (optional)
     
@@ -25,10 +21,7 @@ git clone https://github.com/M1chol/SpaceGame
 cd SpaceGame
 mingw32-make.exe
 ```
-If you didn't install `mingw32-make` instead launch   
-```
-g++ -Iinclude -Iinclude/sdl -Iinclude/headers -Llib -o Main src/*.cpp -lmingw32 -lSDL2main -lSDL2 -lSDL2_image
-```
+If you didn't install `mingw32-make` instead launch command from [Makefile](https://github.com/M1chol/SpaceGame/blob/master/Makefile) manually
 
 Linux dependencies      
 1. git
@@ -39,7 +32,7 @@ Linux dependencies
 Start by installing SDL for your system. You can use package menager or [build from surce](https://github.com/libsdl-org/SDL). You will also need SDL2_image
 
 __Arch__ `sudo pacman -S sdl2 sdl2_image`   
-__Ubuntu__ `sudo apt-get install libsdl2 libsdl2-image` (NOT TESTED)   
+__Ubuntu__ `sudo apt-get install libsdl2 libsdl2-image` __(NOT TESTED)__   
 Then   
 ```
 git clone https://github.com/M1chol/SpaceGame

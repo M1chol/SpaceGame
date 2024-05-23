@@ -17,19 +17,19 @@ extern std::vector<Scene *> sceneList;
 extern double deltaTime;
 extern double drawTime;
 
+/*Initialize SDL wrapper "Engine" @return true if successfull*/
 bool EngineInit();
+// Close all Engine systems and SDL
 void EngineClose();
+// Updates arrays of active keys, it needs to be called each frame
 void EngineUpdateKeyboard();
-void EngineCapFrames(int frames);
-/*
-Checks status of key and returns true if it is beeing pressed
-@param key Key to check
-@return True if key is beeing pressed
-*/
-bool isKeyDown(SDL_Scancode key);
-
+/* Used to cap frames per second of application @param targetFrames FPS limit */
+void EngineCapFrames(int);
+/* Check if key is beeing held @param key key to check @return true if key is beeing pressed */
+bool isKeyDown(SDL_Scancode);
+/* Check if key has been released @param key key to check @return true if key has been released */
 bool isKeyReleased(SDL_Scancode);
-
+/* Check if key just has been pressed @param key key to check @return true if key just has been pressed*/
 bool isKeyPushed(SDL_Scancode);
 
 #endif

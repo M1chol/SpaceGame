@@ -8,13 +8,13 @@
 class SpriteComponent : public Component
 {
 public:
-    // Constructor
+    /* Create SpriteComponent @param path optional path to image that will be loaded automaticly*/
     SpriteComponent(std::string path = "");
 
-    // Deconstructor
+    /* Destroy SpriteComponent*/
     ~SpriteComponent();
 
-    // Loads texture on specified path returns false if it fails
+    /* Loads texture on specified path @returns true if successfull */
     bool load(std::string path);
 
     void destroy() override;
@@ -35,8 +35,9 @@ public:
     Renders the texture assigned to object to screen centered at parent object
     */
     bool render() override;
+    /* This function runs every time Object is linked to new Scene*/
     void whenLinked() override;
-
+    /* Returns dimentions of texture*/
     iVect *getDim();
 
 private:

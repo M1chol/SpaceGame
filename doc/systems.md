@@ -1,34 +1,17 @@
 # All classes and functions
 
-There are 3 primitive structures
+There are 3 primitive structures their respective definitions are located in `gPrimitives.h`
 - `Sceme`
 - `Object`
 - `Component`
 
 ## Scene class
 Scene class holds list of `Object` It is used to keep all Objects for ease of clearing memory. It holds name for debugging purpouses.
-```cpp
-Scene(SDL_Renderer*);
-~Scene();
-bool addObject(Object *);
-void destroy();
-int Update();
-void setName(std::string);
-SDL_Renderer *getRenderer();
-```
+
 
 ## Object class
 Object class is the most primitive object that can be created. It has position and a list of linked components.
 
-```cpp
-Object();
-~Object();
-Vect pos; // position of object
-void destroy(); // frees resources
-void addComponent(Component* comp); // link new component
-Component* getComponent(int componentId); // get pointer to component at index
-int render(); // calls render on all components
-```
 Example usecase:
 ```cpp
 Object player;
@@ -38,31 +21,14 @@ player.addComponent(component);
 This block of code is creating new Object and then linking newly created `SpriteComponent` to it.
 
 ## Component class
-
-```cpp
-void setParent(Object* parent); // set parent object
-virtual bool render(); // if child object can be renderd ralls render else returns 0
-```
-
-`Component` is an abstract parent class for:
+`Component` is an abstract parent class for:   
 - `SpriteComponent`
 
 ### SpriteComponent class
-Yo can use this class to add sprites to any Object.
-```cpp
-SpriteComponent(SDL_Renderer* gRenderer, string path);
-~SpriteComponent();
-bool load(string path); // Loads texture on specified path
-void free();
-
-// Renders the texture assigned to object to screen at the position of linked parent
-bool render(iVect offset, float scale);
-bool render(float scale);
-bool render() override;
-iVect* getDim(); // returns original dimentions of loaded texture
-```
-Simple usecase:
-Here is continuation for example explored in Object section.
+You can use this class to add sprites to any `Object`.   
+   
+Simple usecase:   
+Here is continuation for example explored in Object section.   
 ```cpp
 Object player;
 playerSprite* = new SpriteComponent(gRenderer);
