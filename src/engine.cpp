@@ -69,7 +69,7 @@ void EngineCapFrames(int targetFrames)
         SDL_Delay((Uint32)((targetFrameTime - deltaTime) * 1000));
         deltaTime = targetFrameTime;
     }
-    if (drawTime-drawTime*0.05 <= deltaTime < drawTime)
+    if (drawTime - drawTime * 0.05 <= deltaTime < drawTime)
     {
         log(LOG_WARN) << "Game running at hardware limit!\n";
     }

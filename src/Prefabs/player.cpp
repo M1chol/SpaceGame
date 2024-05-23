@@ -37,10 +37,7 @@ void PlayerObject::update()
     }
     if (isKeyDown(SDL_SCANCODE_Q))
     {
-        // TODO: Move to object destroy
-        // mainScene->removeObject(this);
-        std::cout << "removing player\n";
-        delete this;
+        this->destroy();
         LOG_INIT_CERR();
         log(LOG_INFO) << "Oh no! player destroyed!\n";
     }

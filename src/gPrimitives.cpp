@@ -25,7 +25,7 @@ void Object::destroy()
         delete component;
     }
     componentList.clear();
-    std::cout << this << "\n";
+    componentList.shrink_to_fit();
     if (!linkedScene->removeObject(this))
     {
         log(LOG_WARN) << "Could not remove Object from linked scene\n";
@@ -167,12 +167,11 @@ SDL_Renderer *Scene::getRenderer()
     return sceneRenderer;
 }
 bool Scene::removeObject(Object *obj)
-{   
-    // FIXME: Calls Object remove from object remove
+{
     auto el = std::find(objectList.begin(), objectList.end(), obj);
     if (el != objectList.end())
     {
-        objectList.erase(el); 
+        objectList.erase(el);
         return true;
     }
     return false;
