@@ -1,5 +1,5 @@
 ## Space Game SDL Project
-This is my source-avaiable c++ game based Space Invaders made with c++ and SDL library. Feel free to fork / modify / mod the game. Selling the game is prohibited as stated in [license](https://github.com/M1chol/SpaceGame/blob/master/LICENSE.txt).
+This is my source-avaiable c++ game made with SDL library. Feel free to fork / modify / mod the game. Selling the game is prohibited as stated in [license](https://github.com/M1chol/SpaceGame/blob/master/LICENSE.txt).
 
 all license files available in [/legal](https://github.com/M1chol/SpaceGame/tree/master/legal)   
 documentation avaiable in [/doc](https://github.com/M1chol/SpaceGame/tree/master/doc)   

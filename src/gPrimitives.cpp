@@ -12,6 +12,7 @@ Object::Object()
     // Set default position
     pos = {0, 0};
     linkedScene = nullptr;
+    name = "unnamed";
 }
 Object::~Object()
 {
@@ -28,7 +29,7 @@ void Object::destroy()
     componentList.shrink_to_fit();
     if (!linkedScene->removeObject(this))
     {
-        log(LOG_WARN) << "Could not remove Object from linked scene\n";
+        log(LOG_WARN) << "Could not remove "<< name <<" Object from linked scene\n";
     }
     linkedScene = nullptr;
 }
@@ -38,7 +39,7 @@ Component *Object::getComponent(int componentId)
     LOG_INIT_CERR();
     if (componentId + 1 > componentList.size())
     {
-        log(LOG_WARN) << "Trying to access not existant component\n";
+        log(LOG_WARN) << "Trying to access not existant component in " << name << " Object\n";
         return nullptr;
     }
     return componentList[componentId];
@@ -64,10 +65,15 @@ Scene *Object::getScene()
     }
     else
     {
-        log(LOG_WARN) << "Trying to access linked scene that does not exist (Object " << this << ")\n";
+        log(LOG_WARN) << "Trying to access linked scene that does not exist (" << name << ")\n";
         return nullptr;
     }
 }
+void Object::setName(std::string newName)
+{
+    name = newName;
+}
+
 bool Object::removeComponent(Component *comp)
 {
     auto el = std::find(componentList.begin(), componentList.end(), comp);

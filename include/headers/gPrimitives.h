@@ -49,19 +49,18 @@ public:
     virtual void update();
     /* add Component to vector componentList of Object @param comp Component to be linked */
     void addComponent(Component *comp);
-    /* remove Component from vector componentList of Object @param comp Component to be removed 
+    /* remove Component from vector componentList of Object @param comp Component to be removed
     @return `true` if successfull and `false` if component was not found */
     bool removeComponent(Component *comp);
     /* Get pointer to component at specified index @param componentID id of component @return pointer to component */
     Component *getComponent(int componentId); // TODO: Remove componentId search based on component type
     /* Set linked scene variable of Object @param scene pointer to scene */
-    void setScene(Scene* scene);
+    void setScene(Scene *scene);
     /* Get Scene pointer of linked scene @return pointer to linked scene*/
     Scene *getScene();
-    void setName(); // TODO: Implement
+    void setName(std::string newName);
     Vect pos;
     bool isActive;
-    
 
 private:
     Scene *linkedScene;
