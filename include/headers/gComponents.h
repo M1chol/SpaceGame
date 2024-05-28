@@ -48,4 +48,6 @@ private:
     iVect *dim;
 };
 
+// TODO: Add Rigidbody component
+
 #endif

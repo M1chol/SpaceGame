@@ -3,8 +3,8 @@
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int SCREEN_WIDTH = 960;
+const int SCREEN_HEIGHT = 540;
 std::vector<Scene *> sceneList;
 Scene *mainScene = nullptr;
 double deltaTime;
@@ -12,6 +12,8 @@ double drawTime;
 
 Uint8 currentKeyState[SDL_NUM_SCANCODES];
 Uint8 previousKeyState[SDL_NUM_SCANCODES];
+
+// TODO: Text rendering
 
 bool EngineInit()
 {
@@ -102,4 +104,3 @@ bool isKeyPushed(SDL_Scancode key)
     return currentKeyState[key] && !previousKeyState[key];
 }
 #pragma endregion
-

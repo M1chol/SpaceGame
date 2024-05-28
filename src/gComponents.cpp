@@ -1,5 +1,7 @@
 #include "gComponents.h"
 
+#pragma region SpriteComponent definitions
+
 SpriteComponent::SpriteComponent(std::string newPath)
 {
 	LOG_INIT_CERR();
@@ -11,18 +13,15 @@ SpriteComponent::SpriteComponent(std::string newPath)
 	renderBox = new SDL_Rect;
 	log(LOG_INFO) << "SpriteComponent created\n";
 }
-
 SpriteComponent::~SpriteComponent()
 {
 	destroy();
 }
-
 void SpriteComponent::whenLinked()
 {
 	gRenderer = parent->getScene()->getRenderer();
 	load(path);
 }
-
 bool SpriteComponent::load(std::string path)
 {
 	LOG_INIT_CERR();
@@ -45,12 +44,10 @@ bool SpriteComponent::load(std::string path)
 	texture = new_texture;
 	return true;
 }
-
 iVect *SpriteComponent::getDim()
 {
 	return dim;
 }
-
 bool SpriteComponent::render(iVect offset, float scale)
 {
 	LOG_INIT_CERR();
@@ -78,7 +75,6 @@ bool SpriteComponent::render()
 	bool status = render(1);
 	return status;
 }
-
 void SpriteComponent::destroy()
 {
 	LOG_INIT_CERR();
@@ -88,3 +84,5 @@ void SpriteComponent::destroy()
 		log(LOG_WARN) << "Could not remove component from object\n";
 	}
 }
+
+#pragma endregion

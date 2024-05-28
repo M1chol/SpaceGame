@@ -1,9 +1,5 @@
 #include "engine.h"
 
-// iVect toiVect(Vect vect){
-//     return {(int)(vect.x + 0.5), (int)(vect.y+0.5)};
-// }
-
 #pragma region gObject definitions
 
 Object::Object(Scene *scene)
