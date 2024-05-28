@@ -37,7 +37,7 @@ class Object
 {
 
 public:
-    Object();
+    Object(Scene *scene);
 
     ~Object();
 

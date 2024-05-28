@@ -11,7 +11,7 @@ int main(int argc, char *args[])
 	EngineInit();
 
 	// CREATE PLAYER
-	PlayerObject player;
+	PlayerObject player(mainScene);
 
 	bool quit = false;
 	SDL_Event e;

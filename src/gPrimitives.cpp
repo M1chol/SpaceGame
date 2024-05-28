@@ -6,12 +6,12 @@
 
 #pragma region gObject definitions
 
-// TODO: Add Scene as requierment before creating object to call scene->addObject
-Object::Object()
+Object::Object(Scene *scene)
 {
     // Set default position
+    linkedScene = scene;
+    linkedScene->addObject(this);
     pos = {0, 0};
-    linkedScene = nullptr;
     name = "unnamed";
 }
 Object::~Object()
@@ -29,7 +29,7 @@ void Object::destroy()
     componentList.shrink_to_fit();
     if (!linkedScene->removeObject(this))
     {
-        log(LOG_WARN) << "Could not remove "<< name <<" Object from linked scene\n";
+        log(LOG_WARN) << "Could not remove " << name << " Object from linked scene\n";
     }
     linkedScene = nullptr;
 }
@@ -53,7 +53,6 @@ void Object::addComponent(Component *comp)
 }
 void Object::setScene(Scene *parentScene)
 {
-    LOG_INIT_CERR();
     linkedScene = parentScene;
 }
 Scene *Object::getScene()
@@ -148,7 +147,7 @@ void Scene::setName(std::string newName)
 bool Scene::addObject(Object *obj)
 {
     objectList.push_back(obj);
-    obj->setScene(this);
+    // obj->setScene(this);
     nrOfActiveObjects++;
 }
 

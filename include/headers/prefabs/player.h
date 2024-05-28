@@ -1,9 +1,10 @@
 class PlayerObject : public Object
 {
-    public:
-        PlayerObject();
-        ~PlayerObject();
-        void update() override;
-    private:
-        SDL_Event b;
+public:
+    PlayerObject(Scene *scene);
+    ~PlayerObject();
+    void update() override;
+
+private:
+    SDL_Event b;
 };

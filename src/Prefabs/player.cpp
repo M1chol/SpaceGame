@@ -3,11 +3,11 @@
 
 int playerSpeed = 2;
 
-PlayerObject::PlayerObject()
+PlayerObject::PlayerObject(Scene *scene) : Object(scene)
 {
     LOG_INIT_CERR();
     log(LOG_INFO) << "Creating player object\n";
-    mainScene->addObject(this);
+    this->setName("Player Object");
     this->addComponent(new SpriteComponent("res/player-placeholder.png"));
     this->pos = {(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2};
 }
