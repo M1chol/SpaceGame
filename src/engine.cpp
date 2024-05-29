@@ -5,6 +5,7 @@ SDL_Renderer *gRenderer = NULL;
 
 const int SCREEN_WIDTH = 960;
 const int SCREEN_HEIGHT = 540;
+const int succes_quit = std::atexit(SDL_Quit);
 std::vector<Scene *> sceneList;
 Scene *mainScene = nullptr;
 double deltaTime;
@@ -48,7 +49,6 @@ bool EngineInit()
         return false;
     }
     mainScene = new Scene(gRenderer);
-    sceneList.push_back(mainScene);
     mainScene->setName("MAIN");
     log(LOG_INFO) << "Initilization succesfull created main Scene\n";
     return true;
@@ -75,8 +75,10 @@ void EngineClose()
     for (auto &scene : sceneList)
     {
         scene->destroy();
+        log(LOG_INFO) << "Destroyed Scene " << scene->getName() << " (" << scene << ")\n";
     }
-    SDL_Quit();
+    sceneList.clear();
+    mainScene = nullptr;
     log(LOG_INFO) << "Quit successfull, bye bye!\n";
 }
 

@@ -19,7 +19,7 @@ void Object::destroy()
     LOG_INIT_CERR();
     for (auto &component : componentList)
     {
-        delete component;
+        component->destroy();
     }
     componentList.clear();
     componentList.shrink_to_fit();
@@ -67,6 +67,10 @@ Scene *Object::getScene()
 void Object::setName(std::string newName)
 {
     name = newName;
+}
+std::string Object::getName()
+{
+    return name;
 }
 
 bool Object::removeComponent(Component *comp)
@@ -122,7 +126,7 @@ Scene::Scene(SDL_Renderer *newRenderer)
 {
     sceneList.push_back(this);
     nrOfActiveObjects = 0;
-    name = "Scene";
+    name = "unnamed";
     sceneRenderer = newRenderer;
 }
 Scene::~Scene()
@@ -131,15 +135,22 @@ Scene::~Scene()
 }
 void Scene::destroy()
 {
+    LOG_INIT_CERR();
     for (auto &object : objectList)
     {
-        delete object;
+        object->destroy();
+        log(LOG_INFO) << "Destroyed object " << object->getName() << " (" << object << ")\n";
     }
 }
 void Scene::setName(std::string newName)
 {
     name = newName;
 }
+std::string Scene::getName()
+{
+    return name;
+}
+
 bool Scene::addObject(Object *obj)
 {
     objectList.push_back(obj);

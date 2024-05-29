@@ -24,6 +24,22 @@ int main(int argc, char *args[])
 		deltaTime = (double)(currentTime - previousTime) / 1000;
 
 		EngineUpdateKeyboard();
+
+		mainScene->Update();
+
+		drawTime = (double)(SDL_GetTicks() - currentTime) / 1000.0;
+
+		previousTime = currentTime;
+		EngineCapFrames(60);
+		if (timer < 5)
+		{
+			timer += deltaTime;
+		}
+		else
+		{
+			log(LOG_INFO) << "Current frame rate " << (int)(1 / deltaTime) << " fps\n";
+			timer = 0.0;
+		}
 		while (SDL_PollEvent(&e) != 0)
 		{
 			if (e.type == SDL_QUIT)
@@ -32,22 +48,10 @@ int main(int argc, char *args[])
 				log(LOG_INFO) << "Quit requested...\n";
 			}
 		}
-		mainScene->Update();
-
-		drawTime = (double)(SDL_GetTicks() - currentTime) / 1000.0;
-		if (timer < 10)
-		{
-			timer += deltaTime;
-		}
-		else
-		{
-			log(LOG_INFO) << "Current draw time " << drawTime << " s. Theoretical frame rate: " << 1 / drawTime << " fps\n";
-			timer = 0.0;
-		}
-
-		EngineCapFrames(60);
-		previousTime = currentTime;
 	}
 	EngineClose();
+	SDL_Quit();
+
+	log(LOG_INFO) << "SDL Quit successfull!";
 	return 0;
 }

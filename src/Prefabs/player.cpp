@@ -7,7 +7,7 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
 {
     LOG_INIT_CERR();
     log(LOG_INFO) << "Creating player object\n";
-    this->setName("Player Object");
+    this->setName("PlayerObject");
     this->addComponent(new SpriteComponent("res/player-placeholder.png"));
     this->pos = {(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2};
 }

@@ -59,6 +59,7 @@ public:
     /* Get Scene pointer of linked scene @return pointer to linked scene*/
     Scene *getScene();
     void setName(std::string newName);
+    std::string getName();
     Vect pos;
     bool isActive;
 
@@ -83,6 +84,7 @@ public:
     int Update();
     // Change name of scene
     void setName(std::string);
+    std::string getName();
     // Returns pointer to renderer linked to Scene
     SDL_Renderer *getRenderer();
 
