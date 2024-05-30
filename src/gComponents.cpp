@@ -94,6 +94,7 @@ RigidBodyComponent::RigidBodyComponent(double newMass)
 	mass = newMass;
 	velocity = {0.0, 0.0};
 	force = {0.0, 0.0};
+	energyLoss = 1.0;
 }
 RigidBodyComponent::~RigidBodyComponent() {}
 void RigidBodyComponent::applyForce(Vect newForce)
@@ -116,7 +117,18 @@ bool RigidBodyComponent::update()
 		parent->pos = parent->pos + force * deltaTime;
 		return true;
 	}
-	return false;
+	Vect acceleration = {force.x / mass, force.y / mass};
+	velocity += acceleration * deltaTime;
+	velocity *= energyLoss;
+	parent->pos += velocity;
+}
+void RigidBodyComponent::setMass(double newMass)
+{
+	mass = newMass;
+}
+void RigidBodyComponent::setEnergyLoss(double newEnergyLoss)
+{
+	energyLoss = newEnergyLoss;
 }
 
 #pragma endregion

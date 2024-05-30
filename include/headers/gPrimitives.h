@@ -9,6 +9,7 @@ struct Vect
     Vect operator+(const Vect &other);
     Vect operator*(double scalar);
     Vect &operator+=(const Vect &other);
+    Vect &operator*=(double scalar);
     double magnitude();
     Vect normalized();
 };

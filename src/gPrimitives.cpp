@@ -16,6 +16,12 @@ Vect &Vect::operator+=(const Vect &other)
     y += other.y;
     return *this;
 }
+Vect &Vect::operator*=(double scalar)
+{
+    x *= scalar;
+    y *= scalar;
+    return *this;
+}
 double Vect::magnitude()
 {
     return std::sqrt(x * x + y * y);

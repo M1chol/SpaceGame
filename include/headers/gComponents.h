@@ -56,10 +56,13 @@ public:
     bool update() override;
     bool render() override;
     void applyForce(Vect newForce);
-    void setMass();
+    void setMass(double newMass);
+    void setEnergyLoss(double newEnergyLoss);
 
 private:
     double mass;
+    double maxSpeed;
+    double energyLoss;
     Vect velocity;
     Vect force;
 };

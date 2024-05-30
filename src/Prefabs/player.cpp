@@ -1,8 +1,8 @@
 #include "engine.h"
 #include "player.h"
 
-double playerSpeed = 200.0;
-RigidBodyComponent PlayerRB = RigidBodyComponent();
+double playerSpeed = 350.0;
+RigidBodyComponent PlayerRB = RigidBodyComponent(10);
 Vect forceToApply = {0.0, 0.0};
 
 PlayerObject::PlayerObject(Scene *scene) : Object(scene)
@@ -13,6 +13,7 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     this->addComponent(new SpriteComponent("res/player-placeholder.png"));
     this->addComponent(&PlayerRB);
     this->pos = {(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2};
+    PlayerRB.setEnergyLoss(0.97);
 }
 
 PlayerObject::~PlayerObject()
