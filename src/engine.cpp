@@ -5,11 +5,11 @@ SDL_Renderer *gRenderer = NULL;
 
 const int SCREEN_WIDTH = 960;
 const int SCREEN_HEIGHT = 540;
-const int succes_quit = std::atexit(SDL_Quit);
 std::vector<Scene *> sceneList;
 Scene *mainScene = nullptr;
 double deltaTime;
 double drawTime;
+bool drawHitbox = false;
 
 Uint8 currentKeyState[SDL_NUM_SCANCODES];
 Uint8 previousKeyState[SDL_NUM_SCANCODES];
@@ -50,7 +50,8 @@ bool EngineInit()
     }
     mainScene = new Scene(gRenderer);
     mainScene->setName("MAIN");
-    log(LOG_INFO) << "Initilization succesfull created main Scene\n";
+    drawHitbox = true;
+    log(LOG_INFO) << "Initilization succesfull created MAIN Scene\n";
     return true;
 }
 

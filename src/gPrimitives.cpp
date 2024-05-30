@@ -1,5 +1,40 @@
 #include "engine.h"
 
+#pragma region Vect math implementation
+
+Vect Vect::operator*(double scalar)
+{
+    return Vect{x * scalar, y * scalar};
+}
+Vect Vect::operator+(const Vect &other)
+{
+    return Vect{x + other.x, y + other.y};
+}
+Vect &Vect::operator+=(const Vect &other)
+{
+    x += other.x;
+    y += other.y;
+    return *this;
+}
+double Vect::magnitude()
+{
+    return std::sqrt(x * x + y * y);
+}
+Vect Vect::normalized()
+{
+    double mag = magnitude();
+    if (mag == 0)
+    {
+        return {0.0, 0.0};
+    }
+    else
+    {
+        return {x / mag, y / mag};
+    }
+}
+
+#pragma endregion
+
 #pragma region gObject definitions
 
 Object::Object(Scene *scene)
@@ -86,14 +121,19 @@ bool Object::removeComponent(Component *comp)
 
 void Object::render()
 {
-    int count = 0;
     for (auto &component : componentList)
     {
         component->render();
     }
 }
 
-void Object::update() {}
+void Object::update()
+{
+    for (auto &component : componentList)
+    {
+        component->update();
+    }
+}
 
 #pragma endregion
 
@@ -104,12 +144,8 @@ void Component::setParent(Object *new_parent)
     parent = new_parent;
 }
 
-bool Component::render()
-{
-    return 0;
-}
-
-void Component::destroy() {};
+bool Component::render() { return true; };
+bool Component::update() { return true; };
 
 Component::~Component()
 {
@@ -117,6 +153,7 @@ Component::~Component()
 }
 
 void Component::whenLinked() {};
+void Component::destroy() {};
 
 #pragma endregion
 
@@ -166,6 +203,7 @@ int Scene::Update()
     {
         if (obj->isActive)
         {
+            // TODO: calling the same 2 for loops. Will compilator fix that?
             temp++;
             obj->render();
             obj->update();

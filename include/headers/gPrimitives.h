@@ -3,15 +3,21 @@
 /* Primitive struct that holds to floats x and y*/
 struct Vect
 {
-    float x;
-    float y;
+    double x;
+    double y;
+
+    Vect operator+(const Vect &other);
+    Vect operator*(double scalar);
+    Vect &operator+=(const Vect &other);
+    double magnitude();
+    Vect normalized();
 };
 /* Primitive struct that holds to ints x and y*/
-struct iVect
+typedef struct
 {
     int x;
     int y;
-};
+} iVect;
 
 class Object;
 class Scene;
@@ -26,6 +32,8 @@ public:
     virtual void whenLinked();
     /* Call render function of child object if exists overload*/
     virtual bool render();
+    /* Call update function of child object */
+    virtual bool update();
     /* Call destroy function of child object*/
     virtual void destroy();
 

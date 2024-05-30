@@ -10,12 +10,14 @@
 #include "gPrimitives.h"
 #include "gComponents.h"
 
+// Global engine variables
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
 extern Scene *mainScene;
 extern std::vector<Scene *> sceneList;
 extern double deltaTime;
 extern double drawTime;
+extern bool drawHitbox;
 
 /*Initialize SDL wrapper "Engine" @return true if successfull*/
 bool EngineInit();

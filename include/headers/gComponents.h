@@ -48,6 +48,20 @@ private:
     iVect *dim;
 };
 
-// TODO: Add Rigidbody component
+class RigidBodyComponent : public Component
+{
+public:
+    RigidBodyComponent(double mass = 0);
+    ~RigidBodyComponent();
+    bool update() override;
+    bool render() override;
+    void applyForce(Vect newForce);
+    void setMass();
+
+private:
+    double mass;
+    Vect velocity;
+    Vect force;
+};
 
 #endif

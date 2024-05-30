@@ -1,7 +1,9 @@
 #include "engine.h"
 #include "player.h"
 
-int playerSpeed = 2;
+double playerSpeed = 200.0;
+RigidBodyComponent PlayerRB = RigidBodyComponent();
+Vect forceToApply = {0.0, 0.0};
 
 PlayerObject::PlayerObject(Scene *scene) : Object(scene)
 {
@@ -9,6 +11,7 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     log(LOG_INFO) << "Creating player object\n";
     this->setName("PlayerObject");
     this->addComponent(new SpriteComponent("res/player-placeholder.png"));
+    this->addComponent(&PlayerRB);
     this->pos = {(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2};
 }
 
@@ -19,21 +22,22 @@ PlayerObject::~PlayerObject()
 
 void PlayerObject::update()
 {
+    Object::update();
     if (isKeyDown(SDL_SCANCODE_W))
     {
-        this->pos.y -= playerSpeed;
+        forceToApply += {0.0, -1.0};
     }
     if (isKeyDown(SDL_SCANCODE_S))
     {
-        this->pos.y += playerSpeed;
+        forceToApply += {0.0, 1.0};
     }
     if (isKeyDown(SDL_SCANCODE_A))
     {
-        this->pos.x -= playerSpeed;
+        forceToApply += {-1.0, 0.0};
     }
     if (isKeyDown(SDL_SCANCODE_D))
     {
-        this->pos.x += playerSpeed;
+        forceToApply += {1.0, 0};
     }
     if (isKeyDown(SDL_SCANCODE_Q))
     {
@@ -41,4 +45,6 @@ void PlayerObject::update()
         LOG_INIT_CERR();
         log(LOG_INFO) << "Oh no! player destroyed!\n";
     }
+    PlayerRB.applyForce(forceToApply.normalized() * playerSpeed);
+    forceToApply = {0.0, 0.0};
 }

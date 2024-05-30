@@ -15,7 +15,7 @@ SpriteComponent::SpriteComponent(std::string newPath)
 }
 SpriteComponent::~SpriteComponent()
 {
-	destroy();
+	std::cout << "Do not usem delete on SpriteComponent instad use comp->destoy()";
 }
 void SpriteComponent::whenLinked()
 {
@@ -53,13 +53,13 @@ bool SpriteComponent::render(iVect offset, float scale)
 	LOG_INIT_CERR();
 	if (gRenderer == nullptr)
 	{
-		// log(LOG_WARN) << "SpriteComponent::render gRenderer is nullptr\n";
+		log(LOG_WARN) << "gRenderer is nullptr for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
 		return false;
 	}
 	*renderBox = {(int)parent->pos.x + offset.x, (int)parent->pos.y + offset.y, (int)((float)dim->x * scale), (int)((float)dim->y * scale)};
 	if (SDL_RenderCopy(gRenderer, texture, NULL, renderBox))
 	{
-		log(LOG_WARN) << "Element failed to render, " << SDL_GetError() << "\n";
+		log(LOG_WARN) << "Texture failed to render for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
 		return false;
 	}
 	return true;
@@ -83,6 +83,40 @@ void SpriteComponent::destroy()
 	{
 		log(LOG_WARN) << "Could not remove component from object\n";
 	}
+}
+
+#pragma endregion
+
+#pragma region RigidBodyComponent definitions
+
+RigidBodyComponent::RigidBodyComponent(double newMass)
+{
+	mass = newMass;
+	velocity = {0.0, 0.0};
+	force = {0.0, 0.0};
+}
+RigidBodyComponent::~RigidBodyComponent() {}
+void RigidBodyComponent::applyForce(Vect newForce)
+{
+	force = newForce;
+}
+bool RigidBodyComponent::render()
+{
+	if (drawHitbox)
+	{
+		// TODO: Implement drawing of hitbox using SDL shapes
+	}
+	return true;
+}
+bool RigidBodyComponent::update()
+{
+	// TODO: Implement case when mass != 0
+	if (mass == 0.0)
+	{
+		parent->pos = parent->pos + force * deltaTime;
+		return true;
+	}
+	return false;
 }
 
 #pragma endregion
