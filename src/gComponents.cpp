@@ -4,14 +4,12 @@
 
 SpriteComponent::SpriteComponent(std::string newPath)
 {
-	LOG_INIT_CERR();
 	path = newPath;
 	texture = NULL;
 	renderBox = NULL;
 	dim = new iVect;
 	gRenderer = nullptr;
 	renderBox = new SDL_Rect;
-	log(LOG_INFO) << "SpriteComponent created\n";
 }
 SpriteComponent::~SpriteComponent()
 {
@@ -19,8 +17,10 @@ SpriteComponent::~SpriteComponent()
 }
 void SpriteComponent::whenLinked()
 {
+	LOG_INIT_CERR();
 	gRenderer = parent->getScene()->getRenderer();
 	load(path);
+	log(LOG_INFO) << "Sprite component (" << this << ") linked to " << parent->getName() << "\n";
 }
 bool SpriteComponent::load(std::string path)
 {
@@ -91,15 +91,19 @@ void SpriteComponent::destroy()
 
 RigidBodyComponent::RigidBodyComponent(double newMass)
 {
-	LOG_INIT_CERR();
 	mass = newMass;
 	velocity = {0.0, 0.0};
 	force = {0.0, 0.0};
 	energyLoss = 1.0;
 	hasCollision = false;
-	log(LOG_INFO) << "Created RigidBody component for " << parent->getName() << "\n";
 }
 RigidBodyComponent::~RigidBodyComponent() {}
+
+void RigidBodyComponent::whenLinked()
+{
+	LOG_INIT_CERR();
+	log(LOG_INFO) << "RigidBody (" << this << ") linked to " << parent->getName() << "\n";
+}
 void RigidBodyComponent::applyForce(Vect newForce)
 {
 	force = newForce;

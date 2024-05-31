@@ -241,7 +241,6 @@ bool Scene::removeObject(Object *obj)
 }
 bool Scene::solveCollisions(int currObj)
 {
-    // TODO: Implement
     RigidBodyComponent *currRB = objectList[currObj]->getComponent<RigidBodyComponent>();
     if (currRB == nullptr)
     {
@@ -255,7 +254,11 @@ bool Scene::solveCollisions(int currObj)
     iVect minA = currRB->getHitBox()[1];
     for (int j = currObj + 1; j < nrOfObjects; j++)
     {
-        RigidBodyComponent *testRB = objectList[j]->getComponent<RigidBodyComponent>();
+        RigidBodyComponent *testRB = objectList[j]->getComponent<RigidBodyComponent>(); // FIXME: Function returning nullptr even if element has RB
+        if (testRB == nullptr)
+        {
+            continue;
+        }
         iVect maxB = testRB->getHitBox()[0];
         iVect minB = testRB->getHitBox()[1];
         double d1x = minB.x - maxA.x;
@@ -273,6 +276,7 @@ bool Scene::solveCollisions(int currObj)
         // TODO: Implement collision solve
         std::cout << objectList[currObj]->getName() << " is coliding with " << objectList[j]->getName() << "\n";
     }
+    return true;
 }
 
 #pragma endregion

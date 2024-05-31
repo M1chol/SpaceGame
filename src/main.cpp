@@ -1,11 +1,10 @@
 #define SDL_MAIN_HANDLED
 #include "engine.h"
 #include "player.h"
-// #include "targetObject.h"
+#include "targetObject.h"
 
 int main(int argc, char *args[])
 {
-	printf("TEST\n");
 	// SETUP
 	LOG_INIT_CERR();
 	uint32_t previousTime = SDL_GetTicks();
@@ -16,9 +15,9 @@ int main(int argc, char *args[])
 	PlayerObject player(mainScene);
 
 	// CREATE TARGETS
-	// targetObject(mainScene, 1);
-	// targetObject(mainScene, 2);
-	// targetObject(mainScene, 3);
+	targetObject target1 = targetObject(mainScene, 1);
+	// targetObject target2 = targetObject(mainScene, 2);
+	// targetObject target3 = targetObject(mainScene, 3);
 
 	bool quit = false;
 	SDL_Event e;
@@ -31,7 +30,7 @@ int main(int argc, char *args[])
 		deltaTime = (double)(currentTime - previousTime) / 1000;
 
 		EngineUpdateKeyboard();
-
+		
 		mainScene->Update();
 
 		drawTime = (double)(SDL_GetTicks() - currentTime) / 1000.0;

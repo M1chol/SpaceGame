@@ -55,6 +55,7 @@ public:
     ~RigidBodyComponent();
     bool update() override;
     bool render() override;
+    void whenLinked() override;
     void applyForce(Vect newForce);
     void setMass(double newMass);
     void setEnergyLoss(double newEnergyLoss);
