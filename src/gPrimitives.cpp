@@ -203,6 +203,7 @@ bool Scene::addObject(Object *obj)
 
 int Scene::Update()
 {
+    SDL_SetRenderDrawColor(sceneRenderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(sceneRenderer);
     int temp = 0;
     for (auto &obj : objectList)
@@ -213,6 +214,7 @@ int Scene::Update()
             temp++;
             obj->render();
             obj->update();
+            // TODO: Solve overlaping objects
         }
     }
     SDL_RenderPresent(sceneRenderer);

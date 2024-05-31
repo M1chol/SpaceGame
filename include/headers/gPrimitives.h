@@ -62,7 +62,7 @@ public:
     @return `true` if successfull and `false` if component was not found */
     bool removeComponent(Component *comp);
     /* Get pointer to component at specified index @param componentID id of component @return pointer to component */
-    Component *getComponent(int componentId); // TODO: Remove componentId search based on component type using tamplates
+    Component *getComponent(int componentId); // TODO: Remove componentId, search based on component type using tamplates
     /* Set linked scene variable of Object @param scene pointer to scene */
     void setScene(Scene *scene);
     /* Get Scene pointer of linked scene @return pointer to linked scene*/

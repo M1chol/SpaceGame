@@ -95,6 +95,7 @@ RigidBodyComponent::RigidBodyComponent(double newMass)
 	velocity = {0.0, 0.0};
 	force = {0.0, 0.0};
 	energyLoss = 1.0;
+	hasCollision = false;
 }
 RigidBodyComponent::~RigidBodyComponent() {}
 void RigidBodyComponent::applyForce(Vect newForce)
@@ -103,15 +104,18 @@ void RigidBodyComponent::applyForce(Vect newForce)
 }
 bool RigidBodyComponent::render()
 {
-	if (drawHitbox)
+	if (drawHitbox && hasCollision)
 	{
-		// TODO: Implement drawing of hitbox using SDL shapes
+		SDL_Renderer* renderer = parent->getScene()->getRenderer();
+		SDL_Rect hitBoxVisual{(int)parent->pos.x + hitBox[0].x, (int)parent->pos.y + hitBox[0].y, hitBox[1].x - hitBox[0].x, hitBox[1].y - hitBox[0].y};
+		SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
+		SDL_RenderDrawRect(renderer, &hitBoxVisual);
 	}
 	return true;
 }
 bool RigidBodyComponent::update()
 {
-	// TODO: Implement case when mass != 0
+	// TODO: add check if speed is beeing changed, then disable energy loss to let objects move at real speed
 	if (mass == 0.0)
 	{
 		parent->pos = parent->pos + force * deltaTime;
@@ -121,14 +125,22 @@ bool RigidBodyComponent::update()
 	velocity += acceleration * deltaTime;
 	velocity *= energyLoss;
 	parent->pos += velocity;
+	return true;
 }
+void RigidBodyComponent::setCollision(iVect *newHitbox)
+{
+	hasCollision = true;
+	hitBox[0] = newHitbox[0];
+	hitBox[1] = newHitbox[1];
+}
+
 void RigidBodyComponent::setMass(double newMass)
 {
 	mass = newMass;
 }
 void RigidBodyComponent::setEnergyLoss(double newEnergyLoss)
 {
-	energyLoss = newEnergyLoss;
+	energyLoss = 1 - newEnergyLoss;
 }
 
 #pragma endregion

@@ -58,8 +58,11 @@ public:
     void applyForce(Vect newForce);
     void setMass(double newMass);
     void setEnergyLoss(double newEnergyLoss);
+    void setCollision(iVect newHitbox[2]);
+    bool hasCollision;
 
 private:
+    iVect hitBox[2];
     double mass;
     double maxSpeed;
     double energyLoss;

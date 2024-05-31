@@ -13,7 +13,9 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     this->addComponent(new SpriteComponent("res/player-placeholder.png"));
     this->addComponent(&PlayerRB);
     this->pos = {(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2};
-    PlayerRB.setEnergyLoss(0.97);
+    PlayerRB.setEnergyLoss(0.03);
+    iVect box[] = {{66, 70}, {-66, -70}};
+    PlayerRB.setCollision(box);
 }
 
 PlayerObject::~PlayerObject()
