@@ -1,5 +1,7 @@
 #include "engine.h"
 
+struct iVect;
+
 /* Primitive struct that holds to floats x and y*/
 struct Vect
 {
@@ -12,12 +14,18 @@ struct Vect
     Vect &operator*=(double scalar);
     double magnitude();
     Vect normalized();
+    iVect toIVect();
 };
 /* Primitive struct that holds to ints x and y*/
 struct iVect
 {
     int x;
     int y;
+
+    iVect operator+(const iVect &other);
+    iVect operator*(int scalar);
+    iVect &operator+=(const iVect &other);
+    iVect &operator*=(int scalar);
 };
 
 class Object;

@@ -38,6 +38,23 @@ Vect Vect::normalized()
         return {x / mag, y / mag};
     }
 }
+iVect Vect::toIVect()
+{
+    return iVect{(int)x, (int)y};
+}
+
+iVect iVect::operator+(const iVect &other)
+{
+    return iVect{x + other.x, y + other.y};
+}
+iVect iVect::operator*(int scalar)
+{
+    return iVect{x * scalar, y * scalar};
+}
+
+// TODO: Implement
+iVect &iVect::operator+=(const iVect &other) { std::cout << "No def for iVect += operator\n"; }
+iVect &iVect::operator*=(int scalar) { std::cout << "No def for iVect *= operator\n"; }
 
 #pragma endregion
 
@@ -250,8 +267,8 @@ bool Scene::solveCollisions(int currObj)
     {
         return false;
     }
-    iVect maxA = currRB->getHitBox()[0];
-    iVect minA = currRB->getHitBox()[1];
+    iVect maxA = objectList[currObj]->pos.toIVect() + currRB->getHitBox()[0];
+    iVect minA = objectList[currObj]->pos.toIVect() + currRB->getHitBox()[1];
     for (int j = currObj + 1; j < nrOfObjects; j++)
     {
         RigidBodyComponent *testRB = objectList[j]->getComponent<RigidBodyComponent>(); // FIXME: Function returning nullptr even if element has RB
@@ -259,8 +276,8 @@ bool Scene::solveCollisions(int currObj)
         {
             continue;
         }
-        iVect maxB = testRB->getHitBox()[0];
-        iVect minB = testRB->getHitBox()[1];
+        iVect maxB = objectList[j]->pos.toIVect() + testRB->getHitBox()[0];
+        iVect minB = objectList[j]->pos.toIVect() + testRB->getHitBox()[1];
         double d1x = minB.x - maxA.x;
         double d1y = minB.y - maxA.y;
         double d2x = minA.x - maxB.x;
