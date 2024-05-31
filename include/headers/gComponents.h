@@ -58,11 +58,12 @@ public:
     void applyForce(Vect newForce);
     void setMass(double newMass);
     void setEnergyLoss(double newEnergyLoss);
-    void setCollision(iVect newHitbox[2]);
+    void setCollision(std::vector<iVect> *newHitBox);
+    std::vector<iVect> &getHitBox();
     bool hasCollision;
 
 private:
-    iVect hitBox[2];
+    std::vector<iVect> hitBox;
     double mass;
     double maxSpeed;
     double energyLoss;

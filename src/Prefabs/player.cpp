@@ -14,8 +14,8 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     this->addComponent(&PlayerRB);
     this->pos = {(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2};
     PlayerRB.setEnergyLoss(0.03);
-    iVect box[] = {{66, 70}, {-66, -70}};
-    PlayerRB.setCollision(box);
+    std::vector<iVect> box = {{66, 70}, {-66, -70}}; // TODO: Dealocate
+    PlayerRB.setCollision(&box);
 }
 
 PlayerObject::~PlayerObject()

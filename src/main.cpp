@@ -1,9 +1,11 @@
 #define SDL_MAIN_HANDLED
 #include "engine.h"
 #include "player.h"
+// #include "targetObject.h"
 
 int main(int argc, char *args[])
 {
+	printf("TEST\n");
 	// SETUP
 	LOG_INIT_CERR();
 	uint32_t previousTime = SDL_GetTicks();
@@ -12,6 +14,11 @@ int main(int argc, char *args[])
 
 	// CREATE PLAYER
 	PlayerObject player(mainScene);
+
+	// CREATE TARGETS
+	// targetObject(mainScene, 1);
+	// targetObject(mainScene, 2);
+	// targetObject(mainScene, 3);
 
 	bool quit = false;
 	SDL_Event e;

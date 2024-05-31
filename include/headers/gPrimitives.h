@@ -14,11 +14,11 @@ struct Vect
     Vect normalized();
 };
 /* Primitive struct that holds to ints x and y*/
-typedef struct
+struct iVect
 {
     int x;
     int y;
-} iVect;
+};
 
 class Object;
 class Scene;
@@ -62,7 +62,8 @@ public:
     @return `true` if successfull and `false` if component was not found */
     bool removeComponent(Component *comp);
     /* Get pointer to component at specified index @param componentID id of component @return pointer to component */
-    Component *getComponent(int componentId); // TODO: Remove componentId, search based on component type using tamplates
+    template <typename CompType>
+    CompType *getComponent(); // TODO: Remove componentId, search based on component type using tamplates
     /* Set linked scene variable of Object @param scene pointer to scene */
     void setScene(Scene *scene);
     /* Get Scene pointer of linked scene @return pointer to linked scene*/
@@ -96,10 +97,11 @@ public:
     std::string getName();
     // Returns pointer to renderer linked to Scene
     SDL_Renderer *getRenderer();
+    bool solveCollisions(int objectNr);
 
 private:
     SDL_Renderer *sceneRenderer;
     std::vector<Object *> objectList;
-    int nrOfActiveObjects;
+    int nrOfObjects;
     std::string name;
 };

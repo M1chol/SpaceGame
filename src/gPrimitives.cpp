@@ -71,15 +71,18 @@ void Object::destroy()
     linkedScene = nullptr;
 }
 
-Component *Object::getComponent(int componentId)
+template <typename CompType>
+CompType *Object::getComponent()
 {
     LOG_INIT_CERR();
-    if (componentId + 1 > componentList.size())
+    for (auto *comp : componentList)
     {
-        log(LOG_WARN) << "Trying to access not existant component in " << name << " Object\n";
-        return nullptr;
+        if (CompType *specificComp = dynamic_cast<CompType *>(comp))
+        {
+            return specificComp;
+        }
     }
-    return componentList[componentId];
+    return nullptr;
 }
 
 void Object::addComponent(Component *comp)
@@ -168,7 +171,7 @@ void Component::destroy() {};
 Scene::Scene(SDL_Renderer *newRenderer)
 {
     sceneList.push_back(this);
-    nrOfActiveObjects = 0;
+    nrOfObjects = 0;
     name = "unnamed";
     sceneRenderer = newRenderer;
 }
@@ -198,7 +201,7 @@ bool Scene::addObject(Object *obj)
 {
     objectList.push_back(obj);
     // obj->setScene(this);
-    nrOfActiveObjects++;
+    nrOfObjects++;
 }
 
 int Scene::Update()
@@ -206,15 +209,16 @@ int Scene::Update()
     SDL_SetRenderDrawColor(sceneRenderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(sceneRenderer);
     int temp = 0;
-    for (auto &obj : objectList)
+    for (int i = 0; i < nrOfObjects; i++)
     {
+        Object *obj = objectList[i];
         if (obj->isActive)
         {
             // TODO: calling the same 2 for loops. Will compilator fix that?
             temp++;
             obj->render();
             obj->update();
-            // TODO: Solve overlaping objects
+            solveCollisions(i);
         }
     }
     SDL_RenderPresent(sceneRenderer);
@@ -230,9 +234,45 @@ bool Scene::removeObject(Object *obj)
     if (el != objectList.end())
     {
         objectList.erase(el);
+        nrOfObjects--;
         return true;
     }
     return false;
+}
+bool Scene::solveCollisions(int currObj)
+{
+    // TODO: Implement
+    RigidBodyComponent *currRB = objectList[currObj]->getComponent<RigidBodyComponent>();
+    if (currRB == nullptr)
+    {
+        return false;
+    }
+    if (!currRB->hasCollision)
+    {
+        return false;
+    }
+    iVect maxA = currRB->getHitBox()[0];
+    iVect minA = currRB->getHitBox()[1];
+    for (int j = currObj + 1; j < nrOfObjects; j++)
+    {
+        RigidBodyComponent *testRB = objectList[j]->getComponent<RigidBodyComponent>();
+        iVect maxB = testRB->getHitBox()[0];
+        iVect minB = testRB->getHitBox()[1];
+        double d1x = minB.x - maxA.x;
+        double d1y = minB.y - maxA.y;
+        double d2x = minA.x - maxB.x;
+        double d2y = minA.y - maxB.y;
+        if (d1x > 0.0 || d1y > 0.0)
+        {
+            continue;
+        }
+        if (d2x > 0.0 || d2y > 0.0)
+        {
+            continue;
+        }
+        // TODO: Implement collision solve
+        std::cout << objectList[currObj]->getName() << " is coliding with " << objectList[j]->getName() << "\n";
+    }
 }
 
 #pragma endregion
