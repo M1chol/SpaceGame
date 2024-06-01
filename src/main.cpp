@@ -1,6 +1,7 @@
 #define SDL_MAIN_HANDLED
 #include "engine.h"
 #include "player.h"
+#include "targetObject.h"
 
 int main(int argc, char *args[])
 {
@@ -12,6 +13,11 @@ int main(int argc, char *args[])
 
 	// CREATE PLAYER
 	PlayerObject player(mainScene);
+
+	// CREATE TARGETS
+	targetObject target1 = targetObject(mainScene, 1);
+	targetObject target2 = targetObject(mainScene, 2);
+	targetObject target3 = targetObject(mainScene, 3);
 
 	bool quit = false;
 	SDL_Event e;
@@ -52,6 +58,6 @@ int main(int argc, char *args[])
 	EngineClose();
 	SDL_Quit();
 
-	log(LOG_INFO) << "SDL Quit successfull!";
+	log(LOG_INFO) << "SDL Quit successfull!\n";
 	return 0;
 }

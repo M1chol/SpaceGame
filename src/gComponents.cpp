@@ -4,14 +4,12 @@
 
 SpriteComponent::SpriteComponent(std::string newPath)
 {
-	LOG_INIT_CERR();
 	path = newPath;
 	texture = NULL;
 	renderBox = NULL;
 	dim = new iVect;
 	gRenderer = nullptr;
 	renderBox = new SDL_Rect;
-	log(LOG_INFO) << "SpriteComponent created\n";
 }
 SpriteComponent::~SpriteComponent()
 {
@@ -19,8 +17,10 @@ SpriteComponent::~SpriteComponent()
 }
 void SpriteComponent::whenLinked()
 {
+	LOG_INIT_CERR();
 	gRenderer = parent->getScene()->getRenderer();
 	load(path);
+	log(LOG_INFO) << "Sprite component (" << this << ") linked to " << parent->getName() << "\n";
 }
 bool SpriteComponent::load(std::string path)
 {
@@ -98,6 +98,12 @@ RigidBodyComponent::RigidBodyComponent(double newMass)
 	hasCollision = false;
 }
 RigidBodyComponent::~RigidBodyComponent() {}
+
+void RigidBodyComponent::whenLinked()
+{
+	LOG_INIT_CERR();
+	log(LOG_INFO) << "RigidBody (" << this << ") linked to " << parent->getName() << "\n";
+}
 void RigidBodyComponent::applyForce(Vect newForce)
 {
 	force = newForce;
@@ -106,7 +112,7 @@ bool RigidBodyComponent::render()
 {
 	if (drawHitbox && hasCollision)
 	{
-		SDL_Renderer* renderer = parent->getScene()->getRenderer();
+		SDL_Renderer *renderer = parent->getScene()->getRenderer();
 		SDL_Rect hitBoxVisual{(int)parent->pos.x + hitBox[0].x, (int)parent->pos.y + hitBox[0].y, hitBox[1].x - hitBox[0].x, hitBox[1].y - hitBox[0].y};
 		SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
 		SDL_RenderDrawRect(renderer, &hitBoxVisual);
@@ -127,13 +133,11 @@ bool RigidBodyComponent::update()
 	parent->pos += velocity;
 	return true;
 }
-void RigidBodyComponent::setCollision(iVect *newHitbox)
+void RigidBodyComponent::setCollision(std::vector<iVect> *newHitBox)
 {
 	hasCollision = true;
-	hitBox[0] = newHitbox[0];
-	hitBox[1] = newHitbox[1];
+	hitBox = *newHitBox;
 }
-
 void RigidBodyComponent::setMass(double newMass)
 {
 	mass = newMass;
@@ -141,6 +145,10 @@ void RigidBodyComponent::setMass(double newMass)
 void RigidBodyComponent::setEnergyLoss(double newEnergyLoss)
 {
 	energyLoss = 1 - newEnergyLoss;
+}
+std::vector<iVect> &RigidBodyComponent::getHitBox()
+{
+	return hitBox;
 }
 
 #pragma endregion

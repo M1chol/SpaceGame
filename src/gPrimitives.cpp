@@ -38,6 +38,23 @@ Vect Vect::normalized()
         return {x / mag, y / mag};
     }
 }
+iVect Vect::toIVect()
+{
+    return iVect{(int)x, (int)y};
+}
+
+iVect iVect::operator+(const iVect &other)
+{
+    return iVect{x + other.x, y + other.y};
+}
+iVect iVect::operator*(int scalar)
+{
+    return iVect{x * scalar, y * scalar};
+}
+
+// TODO: Implement
+iVect &iVect::operator+=(const iVect &other) { std::cout << "No def for iVect += operator\n"; }
+iVect &iVect::operator*=(int scalar) { std::cout << "No def for iVect *= operator\n"; }
 
 #pragma endregion
 
@@ -50,6 +67,7 @@ Object::Object(Scene *scene)
     linkedScene->addObject(this);
     pos = {0, 0};
     name = "unnamed";
+    nrOfComponents = 0;
 }
 Object::~Object()
 {
@@ -58,8 +76,10 @@ Object::~Object()
 void Object::destroy()
 {
     LOG_INIT_CERR();
-    for (auto &component : componentList)
+    for (int i = nrOfComponents - 1; i >= 0; i--)
     {
+        Component *component = componentList[i];
+        log(LOG_INFO) << "destoyed component (" << component << ") in " << this->name << "\n";
         component->destroy();
     }
     componentList.clear();
@@ -69,17 +89,21 @@ void Object::destroy()
         log(LOG_WARN) << "Could not remove " << name << " Object from linked scene\n";
     }
     linkedScene = nullptr;
+    log(LOG_INFO) << "Removed object " << this->name << " (" << this << ")\n";
 }
 
-Component *Object::getComponent(int componentId)
+template <typename CompType>
+CompType *Object::getComponent()
 {
     LOG_INIT_CERR();
-    if (componentId + 1 > componentList.size())
+    for (auto *comp : componentList)
     {
-        log(LOG_WARN) << "Trying to access not existant component in " << name << " Object\n";
-        return nullptr;
+        if (CompType *specificComp = dynamic_cast<CompType *>(comp))
+        {
+            return specificComp;
+        }
     }
-    return componentList[componentId];
+    return nullptr;
 }
 
 void Object::addComponent(Component *comp)
@@ -87,6 +111,7 @@ void Object::addComponent(Component *comp)
     componentList.push_back(comp);
     comp->setParent(this);
     comp->whenLinked();
+    nrOfComponents++;
 }
 void Object::setScene(Scene *parentScene)
 {
@@ -120,6 +145,7 @@ bool Object::removeComponent(Component *comp)
     if (el != componentList.end())
     {
         componentList.erase(el);
+        nrOfComponents--;
         return true;
     }
     return false;
@@ -168,7 +194,7 @@ void Component::destroy() {};
 Scene::Scene(SDL_Renderer *newRenderer)
 {
     sceneList.push_back(this);
-    nrOfActiveObjects = 0;
+    nrOfObjects = 0;
     name = "unnamed";
     sceneRenderer = newRenderer;
 }
@@ -179,10 +205,10 @@ Scene::~Scene()
 void Scene::destroy()
 {
     LOG_INIT_CERR();
-    for (auto &object : objectList)
+    for (int i = nrOfObjects - 1; i >= 0; i--)
     {
+        Object *object = objectList[i];
         object->destroy();
-        log(LOG_INFO) << "Destroyed object " << object->getName() << " (" << object << ")\n";
     }
 }
 void Scene::setName(std::string newName)
@@ -198,7 +224,7 @@ bool Scene::addObject(Object *obj)
 {
     objectList.push_back(obj);
     // obj->setScene(this);
-    nrOfActiveObjects++;
+    nrOfObjects++;
 }
 
 int Scene::Update()
@@ -206,15 +232,16 @@ int Scene::Update()
     SDL_SetRenderDrawColor(sceneRenderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(sceneRenderer);
     int temp = 0;
-    for (auto &obj : objectList)
+    for (int i = 0; i < nrOfObjects; i++)
     {
+        Object *obj = objectList[i];
         if (obj->isActive)
         {
             // TODO: calling the same 2 for loops. Will compilator fix that?
             temp++;
             obj->render();
             obj->update();
-            // TODO: Solve overlaping objects
+            solveCollisions(i);
         }
     }
     SDL_RenderPresent(sceneRenderer);
@@ -230,9 +257,49 @@ bool Scene::removeObject(Object *obj)
     if (el != objectList.end())
     {
         objectList.erase(el);
+        nrOfObjects--;
         return true;
     }
     return false;
+}
+bool Scene::solveCollisions(int currObj)
+{
+    RigidBodyComponent *currRB = objectList[currObj]->getComponent<RigidBodyComponent>();
+    if (currRB == nullptr)
+    {
+        return false;
+    }
+    if (!currRB->hasCollision)
+    {
+        return false;
+    }
+    iVect maxA = objectList[currObj]->pos.toIVect() + currRB->getHitBox()[0];
+    iVect minA = objectList[currObj]->pos.toIVect() + currRB->getHitBox()[1];
+    for (int j = currObj + 1; j < nrOfObjects; j++)
+    {
+        RigidBodyComponent *testRB = objectList[j]->getComponent<RigidBodyComponent>(); // FIXME: Function returning nullptr even if element has RB
+        if (testRB == nullptr)
+        {
+            continue;
+        }
+        iVect maxB = objectList[j]->pos.toIVect() + testRB->getHitBox()[0];
+        iVect minB = objectList[j]->pos.toIVect() + testRB->getHitBox()[1];
+        double d1x = minB.x - maxA.x;
+        double d1y = minB.y - maxA.y;
+        double d2x = minA.x - maxB.x;
+        double d2y = minA.y - maxB.y;
+        if (d1x > 0.0 || d1y > 0.0)
+        {
+            continue;
+        }
+        if (d2x > 0.0 || d2y > 0.0)
+        {
+            continue;
+        }
+        // TODO: Implement collision solve
+        std::cout << objectList[currObj]->getName() << " is coliding with " << objectList[j]->getName() << "\n";
+    }
+    return true;
 }
 
 #pragma endregion

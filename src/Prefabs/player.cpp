@@ -8,14 +8,14 @@ Vect forceToApply = {0.0, 0.0};
 PlayerObject::PlayerObject(Scene *scene) : Object(scene)
 {
     LOG_INIT_CERR();
-    log(LOG_INFO) << "Creating player object\n";
     this->setName("PlayerObject");
     this->addComponent(new SpriteComponent("res/player-placeholder.png"));
     this->addComponent(&PlayerRB);
     this->pos = {(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2};
     PlayerRB.setEnergyLoss(0.03);
-    iVect box[] = {{66, 70}, {-66, -70}};
-    PlayerRB.setCollision(box);
+    std::vector<iVect> box = {{66, 70}, {-66, -70}}; // TODO: Dealocate
+    PlayerRB.setCollision(&box);
+    log(LOG_INFO) << "Created player object (" << this << ")\n";
 }
 
 PlayerObject::~PlayerObject()
