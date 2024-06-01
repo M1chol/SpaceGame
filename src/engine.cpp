@@ -10,7 +10,7 @@ Scene *mainScene = nullptr;
 double deltaTime;
 double drawTime;
 bool drawHitbox = false;
-
+int nrOfScenes = 1; // TODO: Imlement adding of scenes
 Uint8 currentKeyState[SDL_NUM_SCANCODES];
 Uint8 previousKeyState[SDL_NUM_SCANCODES];
 
@@ -73,10 +73,12 @@ void EngineCapFrames(int targetFrames)
 void EngineClose()
 {
     LOG_INIT_CERR();
-    for (auto &scene : sceneList)
+    for (int i = nrOfScenes - 1; i >= 0; i--)
     {
+        Scene *scene = sceneList[i];
+        log(LOG_INFO) << "Destroying Scene " << scene->getName() << "... (" << scene << ")\n";
         scene->destroy();
-        log(LOG_INFO) << "Destroyed Scene " << scene->getName() << " (" << scene << ")\n";
+        log(LOG_INFO) << "Scene Destroyed\n";
     }
     sceneList.clear();
     mainScene = nullptr;

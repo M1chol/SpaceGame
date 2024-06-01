@@ -58,6 +58,6 @@ int main(int argc, char *args[])
 	EngineClose();
 	SDL_Quit();
 
-	log(LOG_INFO) << "SDL Quit successfull!";
+	log(LOG_INFO) << "SDL Quit successfull!\n";
 	return 0;
 }

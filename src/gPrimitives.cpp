@@ -67,6 +67,7 @@ Object::Object(Scene *scene)
     linkedScene->addObject(this);
     pos = {0, 0};
     name = "unnamed";
+    nrOfComponents = 0;
 }
 Object::~Object()
 {
@@ -75,8 +76,10 @@ Object::~Object()
 void Object::destroy()
 {
     LOG_INIT_CERR();
-    for (auto &component : componentList)
+    for (int i = nrOfComponents - 1; i >= 0; i--)
     {
+        Component *component = componentList[i];
+        log(LOG_INFO) << "destoyed component (" << component << ") in " << this->name << "\n";
         component->destroy();
     }
     componentList.clear();
@@ -86,6 +89,7 @@ void Object::destroy()
         log(LOG_WARN) << "Could not remove " << name << " Object from linked scene\n";
     }
     linkedScene = nullptr;
+    log(LOG_INFO) << "Removed object " << this->name << " (" << this << ")\n";
 }
 
 template <typename CompType>
@@ -107,6 +111,7 @@ void Object::addComponent(Component *comp)
     componentList.push_back(comp);
     comp->setParent(this);
     comp->whenLinked();
+    nrOfComponents++;
 }
 void Object::setScene(Scene *parentScene)
 {
@@ -140,6 +145,7 @@ bool Object::removeComponent(Component *comp)
     if (el != componentList.end())
     {
         componentList.erase(el);
+        nrOfComponents--;
         return true;
     }
     return false;
@@ -199,10 +205,10 @@ Scene::~Scene()
 void Scene::destroy()
 {
     LOG_INIT_CERR();
-    for (auto &object : objectList)
+    for (int i = nrOfObjects - 1; i >= 0; i--)
     {
+        Object *object = objectList[i];
         object->destroy();
-        log(LOG_INFO) << "Destroyed object " << object->getName() << " (" << object << ")\n";
     }
 }
 void Scene::setName(std::string newName)

@@ -8,7 +8,6 @@ Vect forceToApply = {0.0, 0.0};
 PlayerObject::PlayerObject(Scene *scene) : Object(scene)
 {
     LOG_INIT_CERR();
-    log(LOG_INFO) << "Creating player object\n";
     this->setName("PlayerObject");
     this->addComponent(new SpriteComponent("res/player-placeholder.png"));
     this->addComponent(&PlayerRB);
@@ -16,6 +15,7 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     PlayerRB.setEnergyLoss(0.03);
     std::vector<iVect> box = {{66, 70}, {-66, -70}}; // TODO: Dealocate
     PlayerRB.setCollision(&box);
+    log(LOG_INFO) << "Created player object (" << this << ")\n";
 }
 
 PlayerObject::~PlayerObject()

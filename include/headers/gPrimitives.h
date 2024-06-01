@@ -85,6 +85,7 @@ private:
     Scene *linkedScene;
     std::vector<Component *> componentList;
     std::string name;
+    int nrOfComponents;
 };
 
 class Scene
