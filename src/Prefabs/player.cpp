@@ -18,10 +18,6 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     log(LOG_INFO) << "Created player object (" << this << ")\n";
 }
 
-PlayerObject::~PlayerObject()
-{
-    this->destroy();
-}
 
 void PlayerObject::update()
 {
@@ -44,7 +40,7 @@ void PlayerObject::update()
     }
     if (isKeyDown(SDL_SCANCODE_Q))
     {
-        this->destroy();
+        delete this;
         LOG_INIT_CERR();
         log(LOG_INFO) << "Oh no! player destroyed!\n";
     }

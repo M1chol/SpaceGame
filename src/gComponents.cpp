@@ -13,7 +13,7 @@ SpriteComponent::SpriteComponent(std::string newPath)
 }
 SpriteComponent::~SpriteComponent()
 {
-	std::cout << "Do not usem delete on SpriteComponent instad use comp->destoy()";
+	//this->destroy();
 }
 void SpriteComponent::whenLinked()
 {
@@ -75,15 +75,15 @@ bool SpriteComponent::render()
 	bool status = render(1);
 	return status;
 }
-void SpriteComponent::destroy()
-{
-	LOG_INIT_CERR();
-	SDL_DestroyTexture(texture);
-	if (!parent->removeComponent(this))
-	{
-		log(LOG_WARN) << "Could not remove component from object\n";
-	}
-}
+//void SpriteComponent::destroy()
+// {
+// 	LOG_INIT_CERR();
+// 	SDL_DestroyTexture(texture);
+// 	if (!parent->removeComponent(this))
+// 	{
+// 		log(LOG_WARN) << "Could not remove component from object\n";
+// 	}
+// }
 
 #pragma endregion
 
@@ -97,7 +97,10 @@ RigidBodyComponent::RigidBodyComponent(double newMass)
 	energyLoss = 1.0;
 	hasCollision = false;
 }
-RigidBodyComponent::~RigidBodyComponent() {}
+RigidBodyComponent::~RigidBodyComponent()
+{
+	//this->destroy();
+}
 
 void RigidBodyComponent::whenLinked()
 {
