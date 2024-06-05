@@ -77,7 +77,7 @@ void EngineClose()
     {
         Scene *scene = sceneList[i];
         log(LOG_INFO) << "Destroying Scene " << scene->getName() << "... (" << scene << ")\n";
-        scene->destroy();
+        delete scene;
         log(LOG_INFO) << "Scene Destroyed\n";
     }
     sceneList.clear();
