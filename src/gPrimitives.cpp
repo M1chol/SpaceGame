@@ -76,9 +76,10 @@ Object::~Object()
     {
         Component *component = componentList[i];
         log(LOG_INFO) << "destoyed component (" << component << ") in " << this->name << "\n";
-        nrOfComponents = 0;
         delete component;
+        component = nullptr;
     }
+    nrOfComponents = 0;
     componentList.clear();
     componentList.shrink_to_fit();
     if (!linkedScene->removeObject(this))
@@ -202,11 +203,12 @@ Scene::Scene(SDL_Renderer *newRenderer)
 Scene::~Scene()
 {
     LOG_INIT_CERR();
-    for (int i = nrOfObjects - 1; i >= 0; i--)
+    for (auto obj : objectList)
     {
-        Object *object = objectList[i];
-        delete object;
+        delete obj;
+        obj = nullptr;
     }
+    objectList.clear();
 }
 // void Scene::destroy()
 // {
@@ -254,6 +256,7 @@ SDL_Renderer *Scene::getRenderer()
 }
 bool Scene::removeObject(Object *obj)
 {
+    std::cout << "trying to remove object " << obj << " from list\n";
     auto el = std::find(objectList.begin(), objectList.end(), obj);
     if (el != objectList.end())
     {
