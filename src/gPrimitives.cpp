@@ -76,6 +76,7 @@ Object::~Object()
 void Object::destroy()
 {
     LOG_INIT_CERR();
+    log(LOG_INFO) << "Destroying " << this->name << "\n";
     for (int i = nrOfComponents - 1; i >= 0; i--)
     {
         Component *component = componentList[i];
