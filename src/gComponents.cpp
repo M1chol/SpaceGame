@@ -11,10 +11,7 @@ SpriteComponent::SpriteComponent(std::string newPath)
 	gRenderer = nullptr;
 	renderBox = new SDL_Rect;
 }
-SpriteComponent::~SpriteComponent()
-{
-	//this->destroy();
-}
+SpriteComponent::~SpriteComponent() {}
 void SpriteComponent::whenLinked()
 {
 	LOG_INIT_CERR();
@@ -75,15 +72,6 @@ bool SpriteComponent::render()
 	bool status = render(1);
 	return status;
 }
-//void SpriteComponent::destroy()
-// {
-// 	LOG_INIT_CERR();
-// 	SDL_DestroyTexture(texture);
-// 	if (!parent->removeComponent(this))
-// 	{
-// 		log(LOG_WARN) << "Could not remove component from object\n";
-// 	}
-// }
 
 #pragma endregion
 
@@ -97,10 +85,7 @@ RigidBodyComponent::RigidBodyComponent(double newMass)
 	energyLoss = 1.0;
 	hasCollision = false;
 }
-RigidBodyComponent::~RigidBodyComponent()
-{
-	//this->destroy();
-}
+RigidBodyComponent::~RigidBodyComponent() {}
 
 void RigidBodyComponent::whenLinked()
 {

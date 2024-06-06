@@ -182,13 +182,9 @@ void Component::setParent(Object *new_parent)
 bool Component::render() { return true; };
 bool Component::update() { return true; };
 
-Component::~Component()
-{
-    // this->destroy();
-}
+Component::~Component() {}
 
-void Component::whenLinked() {};
-// void Component::destroy() {};
+void Component::whenLinked() {}
 
 #pragma endregion
 
@@ -210,10 +206,7 @@ Scene::~Scene()
     }
     objectList.clear();
 }
-// void Scene::destroy()
-// {
 
-// }
 void Scene::setName(std::string newName)
 {
     name = newName;
@@ -226,7 +219,7 @@ std::string Scene::getName()
 bool Scene::addObject(Object *obj)
 {
     objectList.push_back(obj);
-    // obj->setScene(this);
+    obj->setScene(this); // MODIFIED
     nrOfObjects++;
 }
 

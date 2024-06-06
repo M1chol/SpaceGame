@@ -17,8 +17,6 @@ public:
     /* Loads texture on specified path @returns true if successfull */
     bool load(std::string path);
 
-    //void destroy() override;
-
     /*
     Renders the texture assigned to object to screen at the position of linked parent
     @param offset set the offset from parent position
