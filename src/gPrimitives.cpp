@@ -72,6 +72,7 @@ Object::Object(Scene *scene)
 Object::~Object()
 {
     LOG_INIT_CERR();
+    log(LOG_INFO) << "Dealocating " << this->name << "\n";
     for (int i = nrOfComponents - 1; i >= 0; i--)
     {
         Component *component = componentList[i];
@@ -203,10 +204,9 @@ Scene::Scene(SDL_Renderer *newRenderer)
 Scene::~Scene()
 {
     LOG_INIT_CERR();
-    for (auto obj : objectList)
+    for (int i = nrOfObjects - 1; i > 0; i--)
     {
-        delete obj;
-        obj = nullptr;
+        delete objectList[i];
     }
     objectList.clear();
 }
