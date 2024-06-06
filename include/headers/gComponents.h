@@ -12,12 +12,10 @@ public:
     SpriteComponent(std::string path = "");
 
     /* Destroy SpriteComponent*/
-    ~SpriteComponent();
+    ~SpriteComponent() override;
 
     /* Loads texture on specified path @returns true if successfull */
     bool load(std::string path);
-
-    void destroy() override;
 
     /*
     Renders the texture assigned to object to screen at the position of linked parent
@@ -52,7 +50,7 @@ class RigidBodyComponent : public Component
 {
 public:
     RigidBodyComponent(double mass = 0);
-    ~RigidBodyComponent();
+    ~RigidBodyComponent() override;
     bool update() override;
     bool render() override;
     void whenLinked() override;

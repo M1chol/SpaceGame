@@ -11,10 +11,7 @@ SpriteComponent::SpriteComponent(std::string newPath)
 	gRenderer = nullptr;
 	renderBox = new SDL_Rect;
 }
-SpriteComponent::~SpriteComponent()
-{
-	std::cout << "Do not usem delete on SpriteComponent instad use comp->destoy()";
-}
+SpriteComponent::~SpriteComponent() {}
 void SpriteComponent::whenLinked()
 {
 	LOG_INIT_CERR();
@@ -74,15 +71,6 @@ bool SpriteComponent::render()
 {
 	bool status = render(1);
 	return status;
-}
-void SpriteComponent::destroy()
-{
-	LOG_INIT_CERR();
-	SDL_DestroyTexture(texture);
-	if (!parent->removeComponent(this))
-	{
-		log(LOG_WARN) << "Could not remove component from object\n";
-	}
 }
 
 #pragma endregion
