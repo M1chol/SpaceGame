@@ -50,6 +50,7 @@ bool EngineInit()
     }
     mainScene = new Scene(gRenderer);
     mainScene->setName("MAIN");
+    sceneList.push_back(mainScene);
     drawHitbox = true;
     log(LOG_INFO) << "Initilization succesfull created MAIN Scene\n";
     return true;
@@ -77,11 +78,11 @@ void EngineClose()
     {
         Scene *scene = sceneList[i];
         log(LOG_INFO) << "Destroying Scene " << scene->getName() << "... (" << scene << ")\n";
-        scene->destroy();
+        delete scene;
+        scene = nullptr;
         log(LOG_INFO) << "Scene Destroyed\n";
     }
     sceneList.clear();
-    mainScene = nullptr;
     log(LOG_INFO) << "Quit successfull, bye bye!\n";
 }
 

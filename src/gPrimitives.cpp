@@ -71,18 +71,16 @@ Object::Object(Scene *scene)
 }
 Object::~Object()
 {
-    destroy();
-}
-void Object::destroy()
-{
     LOG_INIT_CERR();
     log(LOG_INFO) << "Destroying " << this->name << "\n";
     for (int i = nrOfComponents - 1; i >= 0; i--)
     {
         Component *component = componentList[i];
         log(LOG_INFO) << "destoyed component (" << component << ") in " << this->name << "\n";
-        component->destroy();
+        delete component;
+        component = nullptr;
     }
+    nrOfComponents = 0;
     componentList.clear();
     componentList.shrink_to_fit();
     if (!linkedScene->removeObject(this))
@@ -92,6 +90,10 @@ void Object::destroy()
     linkedScene = nullptr;
     log(LOG_INFO) << "Removed object " << this->name << " (" << this << ")\n";
 }
+// void Object::destroy()
+// {
+//     delete this;
+// }
 
 template <typename CompType>
 CompType *Object::getComponent()
@@ -182,11 +184,11 @@ bool Component::update() { return true; };
 
 Component::~Component()
 {
-    destroy();
+    // this->destroy();
 }
 
 void Component::whenLinked() {};
-void Component::destroy() {};
+// void Component::destroy() {};
 
 #pragma endregion
 
@@ -201,17 +203,17 @@ Scene::Scene(SDL_Renderer *newRenderer)
 }
 Scene::~Scene()
 {
-    destroy();
-}
-void Scene::destroy()
-{
     LOG_INIT_CERR();
-    for (int i = nrOfObjects - 1; i >= 0; i--)
+    for (int i = nrOfObjects - 1; i > 0; i--)
     {
-        Object *object = objectList[i];
-        object->destroy();
+        delete objectList[i];
     }
+    objectList.clear();
 }
+// void Scene::destroy()
+// {
+
+// }
 void Scene::setName(std::string newName)
 {
     name = newName;
@@ -254,9 +256,11 @@ SDL_Renderer *Scene::getRenderer()
 }
 bool Scene::removeObject(Object *obj)
 {
+    std::cout << "trying to remove object " << obj << " from list\n";
     auto el = std::find(objectList.begin(), objectList.end(), obj);
     if (el != objectList.end())
     {
+        std::cout << "Removed " << obj->getName() << " from " << this->getName() << "\n";
         objectList.erase(el);
         nrOfObjects--;
         return true;
