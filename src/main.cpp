@@ -12,12 +12,12 @@ int main(int argc, char *args[])
 	EngineInit();
 
 	// CREATE PLAYER
-	PlayerObject player(mainScene);
+	PlayerObject *player = new PlayerObject(mainScene);
 
 	// CREATE TARGETS
-	targetObject target1 = targetObject(mainScene, 1);
-	targetObject target2 = targetObject(mainScene, 2);
-	targetObject target3 = targetObject(mainScene, 3);
+	targetObject *target1 = new targetObject(mainScene, 1);
+	targetObject *target2 = new targetObject(mainScene, 2);
+	targetObject *target3 = new targetObject(mainScene, 3);
 
 	bool quit = false;
 	SDL_Event e;
