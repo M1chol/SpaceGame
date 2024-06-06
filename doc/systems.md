@@ -54,3 +54,6 @@ player.addComponent(new SpriteComponent(gRenderer, "res/player-placeholder.png")
 //static_cast<SpriteComponent*>(player.getComponent(0))->render(); // Calling render by directly referencing SpriteComponent linked to Object
 player.render(); // Calling render on all Components linked to Object
 ```
+
+
+Other functions

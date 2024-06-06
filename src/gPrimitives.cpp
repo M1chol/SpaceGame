@@ -72,7 +72,7 @@ Object::Object(Scene *scene)
 Object::~Object()
 {
     LOG_INIT_CERR();
-    log(LOG_INFO) << "Dealocating " << this->name << "\n";
+    log(LOG_INFO) << "Destroying " << this->name << "\n";
     for (int i = nrOfComponents - 1; i >= 0; i--)
     {
         Component *component = componentList[i];
@@ -182,9 +182,13 @@ void Component::setParent(Object *new_parent)
 bool Component::render() { return true; };
 bool Component::update() { return true; };
 
-Component::~Component() {}
+Component::~Component()
+{
+    // this->destroy();
+}
 
-void Component::whenLinked() {}
+void Component::whenLinked() {};
+// void Component::destroy() {};
 
 #pragma endregion
 
@@ -206,7 +210,10 @@ Scene::~Scene()
     }
     objectList.clear();
 }
+// void Scene::destroy()
+// {
 
+// }
 void Scene::setName(std::string newName)
 {
     name = newName;
@@ -219,7 +226,7 @@ std::string Scene::getName()
 bool Scene::addObject(Object *obj)
 {
     objectList.push_back(obj);
-    obj->setScene(this); // MODIFIED
+    // obj->setScene(this);
     nrOfObjects++;
 }
 

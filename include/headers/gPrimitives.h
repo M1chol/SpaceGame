@@ -44,6 +44,7 @@ public:
     /* Call update function of child object */
     virtual bool update();
     /* Call destroy function of child object*/
+    //virtual void destroy();
 
 protected:
     Object *parent;
@@ -56,6 +57,8 @@ public:
     Object(Scene *scene);
 
     virtual ~Object();
+
+    //virtual void destroy();
 
     /* goes through linked components and renders them if they support it */
     void render();
@@ -95,6 +98,7 @@ public:
     bool addObject(Object *obj);
     /* remove object from objectList*/
     bool removeObject(Object *obj);
+    //void destroy();
     // Updates all active game `Objects`
     int Update();
     // Change name of scene

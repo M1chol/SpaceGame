@@ -14,6 +14,13 @@ targetObject::targetObject(Scene *scene, int number) : Object(scene)
     this->pos = {(double)(rand() % 500), (double)(rand() % 500)};
 }
 
+// void targetObject::destroy()
+// {
+//     Object::destroy();
+//     box.clear();
+//     box.shrink_to_fit();
+// }
+
 void targetObject::update()
 {
     // TODO: Destroy target on impact
