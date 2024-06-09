@@ -44,7 +44,7 @@ public:
     /* Call update function of child object */
     virtual bool update();
     /* Call destroy function of child object*/
-    //virtual void destroy();
+    // virtual void destroy();
 
 protected:
     Object *parent;
@@ -58,7 +58,7 @@ public:
 
     virtual ~Object();
 
-    //virtual void destroy();
+    // virtual void destroy();
 
     /* goes through linked components and renders them if they support it */
     void render();
@@ -71,7 +71,7 @@ public:
     bool removeComponent(Component *comp);
     /* Get pointer to component at specified index @param componentID id of component @return pointer to component */
     template <typename CompType>
-    CompType *getComponent(); // TODO: Remove componentId, search based on component type using tamplates
+    CompType *getComponent();
     /* Set linked scene variable of Object @param scene pointer to scene */
     void setScene(Scene *scene);
     /* Get Scene pointer of linked scene @return pointer to linked scene*/
@@ -98,8 +98,8 @@ public:
     bool addObject(Object *obj);
     /* remove object from objectList*/
     bool removeObject(Object *obj);
-    //void destroy();
-    // Updates all active game `Objects`
+    // void destroy();
+    //  Updates all active game `Objects`
     int Update();
     // Change name of scene
     void setName(std::string);

@@ -17,7 +17,7 @@ public:
     /* Loads texture on specified path @returns true if successfull */
     bool load(std::string path);
 
-    //void destroy() override;
+    // void destroy() override;
 
     /*
     Renders the texture assigned to object to screen at the position of linked parent
@@ -62,9 +62,12 @@ public:
     void setCollision(std::vector<iVect> *newHitBox);
     std::vector<iVect> &getHitBox();
     bool hasCollision;
+    bool isColliding(Object *obj);
+    void setColliding(Object *obj);
 
 private:
     std::vector<iVect> hitBox;
+    std::vector<Object *> collisionList;
     double mass;
     double maxSpeed;
     double energyLoss;

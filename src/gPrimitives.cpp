@@ -52,9 +52,18 @@ iVect iVect::operator*(int scalar)
     return iVect{x * scalar, y * scalar};
 }
 
-// TODO: Implement
-iVect &iVect::operator+=(const iVect &other) { std::cout << "No def for iVect += operator\n"; }
-iVect &iVect::operator*=(int scalar) { std::cout << "No def for iVect *= operator\n"; }
+iVect &iVect::operator+=(const iVect &other)
+{
+    x += other.x;
+    y += other.y;
+    return *this;
+}
+iVect &iVect::operator*=(int scalar)
+{
+    x *= scalar;
+    y *= scalar;
+    return *this;
+}
 
 #pragma endregion
 
@@ -282,7 +291,7 @@ bool Scene::solveCollisions(int currObj)
     iVect minA = objectList[currObj]->pos.toIVect() + currRB->getHitBox()[1];
     for (int j = currObj + 1; j < nrOfObjects; j++)
     {
-        RigidBodyComponent *testRB = objectList[j]->getComponent<RigidBodyComponent>(); // FIXME: Function returning nullptr even if element has RB
+        RigidBodyComponent *testRB = objectList[j]->getComponent<RigidBodyComponent>();
         if (testRB == nullptr)
         {
             continue;

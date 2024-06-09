@@ -13,7 +13,7 @@ SpriteComponent::SpriteComponent(std::string newPath)
 }
 SpriteComponent::~SpriteComponent()
 {
-	//this->destroy();
+	// this->destroy();
 }
 void SpriteComponent::whenLinked()
 {
@@ -75,15 +75,15 @@ bool SpriteComponent::render()
 	bool status = render(1);
 	return status;
 }
-//void SpriteComponent::destroy()
-// {
-// 	LOG_INIT_CERR();
-// 	SDL_DestroyTexture(texture);
-// 	if (!parent->removeComponent(this))
-// 	{
-// 		log(LOG_WARN) << "Could not remove component from object\n";
-// 	}
-// }
+// void SpriteComponent::destroy()
+//  {
+//  	LOG_INIT_CERR();
+//  	SDL_DestroyTexture(texture);
+//  	if (!parent->removeComponent(this))
+//  	{
+//  		log(LOG_WARN) << "Could not remove component from object\n";
+//  	}
+//  }
 
 #pragma endregion
 
@@ -99,7 +99,7 @@ RigidBodyComponent::RigidBodyComponent(double newMass)
 }
 RigidBodyComponent::~RigidBodyComponent()
 {
-	//this->destroy();
+	// this->destroy();
 }
 
 void RigidBodyComponent::whenLinked()
@@ -152,6 +152,21 @@ void RigidBodyComponent::setEnergyLoss(double newEnergyLoss)
 std::vector<iVect> &RigidBodyComponent::getHitBox()
 {
 	return hitBox;
+}
+
+bool RigidBodyComponent::isColliding(Object *obj)
+{
+	auto el = std::find(collisionList.begin(), collisionList.end(), obj);
+	if (el != collisionList.end())
+	{
+		collisionList.erase(el);
+		return true;
+	}
+	return false;
+}
+void RigidBodyComponent::setColliding(Object *obj)
+{
+	collisionList.push_back(obj);
 }
 
 #pragma endregion
