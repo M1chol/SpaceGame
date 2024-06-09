@@ -99,10 +99,6 @@ Object::~Object()
     linkedScene = nullptr;
     log(LOG_INFO) << "Removed object " << this->name << " (" << this << ")\n";
 }
-// void Object::destroy()
-// {
-//     delete this;
-// }
 
 template <typename CompType>
 CompType *Object::getComponent()
@@ -219,10 +215,7 @@ Scene::~Scene()
     }
     objectList.clear();
 }
-// void Scene::destroy()
-// {
 
-// }
 void Scene::setName(std::string newName)
 {
     name = newName;
@@ -235,7 +228,6 @@ std::string Scene::getName()
 bool Scene::addObject(Object *obj)
 {
     objectList.push_back(obj);
-    // obj->setScene(this);
     nrOfObjects++;
 }
 
@@ -265,11 +257,11 @@ SDL_Renderer *Scene::getRenderer()
 }
 bool Scene::removeObject(Object *obj)
 {
-    std::cout << "trying to remove object " << obj << " from list\n";
+    LOG_INIT_CERR();
     auto el = std::find(objectList.begin(), objectList.end(), obj);
     if (el != objectList.end())
     {
-        std::cout << "Removed " << obj->getName() << " from " << this->getName() << "\n";
+        log(LOG_DEBUG) << "Removed " << obj->getName() << " from " << this->getName() << "\n";
         objectList.erase(el);
         nrOfObjects--;
         return true;

@@ -75,15 +75,6 @@ bool SpriteComponent::render()
 	bool status = render(1);
 	return status;
 }
-// void SpriteComponent::destroy()
-//  {
-//  	LOG_INIT_CERR();
-//  	SDL_DestroyTexture(texture);
-//  	if (!parent->removeComponent(this))
-//  	{
-//  		log(LOG_WARN) << "Could not remove component from object\n";
-//  	}
-//  }
 
 #pragma endregion
 
@@ -154,7 +145,7 @@ std::vector<iVect> &RigidBodyComponent::getHitBox()
 	return hitBox;
 }
 
-bool RigidBodyComponent::isColliding(Object *obj)
+bool RigidBodyComponent::isColliding(RigidBodyComponent *obj)
 {
 	auto el = std::find(collisionList.begin(), collisionList.end(), obj);
 	if (el != collisionList.end())
@@ -164,7 +155,7 @@ bool RigidBodyComponent::isColliding(Object *obj)
 	}
 	return false;
 }
-void RigidBodyComponent::setColliding(Object *obj)
+void RigidBodyComponent::setColliding(RigidBodyComponent *obj)
 {
 	collisionList.push_back(obj);
 }

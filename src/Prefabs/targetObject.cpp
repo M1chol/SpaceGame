@@ -16,7 +16,8 @@ targetObject::targetObject(Scene *scene, int number) : Object(scene)
 
 void targetObject::update()
 {
-    // For now search for player by looping all objects
-    // TODO: Add Scene::getByName()
-    if (this->getComponent<RigidBodyComponent>()->isColliding(obj))
+    if (this->getComponent<RigidBodyComponent>()->isColliding(mainScene->getObjectByName("PlayerObject")->getComponent<RigidBodyComponent>()))
+    {
+        delete this;
+    }
 }

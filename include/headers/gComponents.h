@@ -67,7 +67,7 @@ public:
 
 private:
     std::vector<iVect> hitBox;
-    std::vector<Object *> collisionList;
+    std::vector<RigidBodyComponent *> collisionList;
     double mass;
     double maxSpeed;
     double energyLoss;
