@@ -62,8 +62,8 @@ public:
     void setCollision(std::vector<iVect> *newHitBox);
     std::vector<iVect> &getHitBox();
     bool hasCollision;
-    bool isColliding(Object *obj);
-    void setColliding(Object *obj);
+    bool isColliding(RigidBodyComponent *objComp);
+    void setColliding(RigidBodyComponent *objComp);
 
 private:
     std::vector<iVect> hitBox;

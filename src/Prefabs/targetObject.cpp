@@ -16,5 +16,7 @@ targetObject::targetObject(Scene *scene, int number) : Object(scene)
 
 void targetObject::update()
 {
-    // TODO: Destroy target on impact
+    // For now search for player by looping all objects
+    // TODO: Add Scene::getByName()
+    if (this->getComponent<RigidBodyComponent>()->isColliding(obj))
 }

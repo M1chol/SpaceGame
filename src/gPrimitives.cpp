@@ -276,6 +276,20 @@ bool Scene::removeObject(Object *obj)
     }
     return false;
 }
+Object *Scene::getObjectByName(std::string name)
+{
+    LOG_INIT_CERR();
+    for (auto &obj : objectList)
+    {
+        if (obj->getName() == name)
+        {
+            return obj;
+        }
+    }
+    log(LOG_WARN) << "Failed to find object by name \"" << name << "\" in " << this->name << " Scene\n";
+    return nullptr;
+}
+
 bool Scene::solveCollisions(int currObj)
 {
     RigidBodyComponent *currRB = objectList[currObj]->getComponent<RigidBodyComponent>();
@@ -310,7 +324,8 @@ bool Scene::solveCollisions(int currObj)
         {
             continue;
         }
-        // TODO: Implement collision solve
+        currRB->setColliding(testRB);
+        testRB->setColliding(currRB);
         std::cout << objectList[currObj]->getName() << " is coliding with " << objectList[j]->getName() << "\n";
     }
     return true;

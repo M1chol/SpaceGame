@@ -107,6 +107,7 @@ public:
     // Returns pointer to renderer linked to Scene
     SDL_Renderer *getRenderer();
     bool solveCollisions(int objectNr);
+    Object *getObjectByName(std::string name);
 
 private:
     SDL_Renderer *sceneRenderer;
