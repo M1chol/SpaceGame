@@ -125,6 +125,7 @@ bool RigidBodyComponent::update()
 	velocity += acceleration * deltaTime;
 	velocity *= energyLoss;
 	parent->pos += velocity;
+	collisionList.clear();
 	return true;
 }
 void RigidBodyComponent::setCollision(std::vector<iVect> *newHitBox)

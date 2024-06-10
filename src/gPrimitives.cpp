@@ -278,7 +278,6 @@ Object *Scene::getObjectByName(std::string name)
             return obj;
         }
     }
-    log(LOG_WARN) << "Failed to find object by name \"" << name << "\" in " << this->name << " Scene\n";
     return nullptr;
 }
 
@@ -318,7 +317,6 @@ bool Scene::solveCollisions(int currObj)
         }
         currRB->setColliding(testRB);
         testRB->setColliding(currRB);
-        std::cout << objectList[currObj]->getName() << " is coliding with " << objectList[j]->getName() << "\n";
     }
     return true;
 }

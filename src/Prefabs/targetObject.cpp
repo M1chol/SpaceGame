@@ -16,8 +16,12 @@ targetObject::targetObject(Scene *scene, int number) : Object(scene)
 
 void targetObject::update()
 {
-    if (this->getComponent<RigidBodyComponent>()->isColliding(mainScene->getObjectByName("PlayerObject")->getComponent<RigidBodyComponent>()))
+    Object *player = mainScene->getObjectByName("PlayerObject");
+    if (player != nullptr)
     {
-        delete this;
+        if (this->getComponent<RigidBodyComponent>()->isColliding(player->getComponent<RigidBodyComponent>()))
+        {
+            delete this;
+        }
     }
 }
