@@ -51,18 +51,29 @@ private:
 class RigidBodyComponent : public Component
 {
 public:
+    /* Creates RigidBodyComponent @param mass mass of the object, default 0*/
     RigidBodyComponent(double mass = 0);
     ~RigidBodyComponent() override;
+    /* Updates velocity and position of paren `Object`*/
     bool update() override;
+    /* If global variable `drawHitbox` is true renders hitboxes*/
     bool render() override;
     void whenLinked() override;
+    /* Apply new force on parent `Object` @param newForce new force*/
     void applyForce(Vect newForce);
+    /* Set or change the mass of object @param newMass new mass*/
     void setMass(double newMass);
+    /* Set the energy loss of parent Object. @param newEnergyLoss value from 0 to 1*/
     void setEnergyLoss(double newEnergyLoss);
+    /* Change or set new collision detection box @param newHitBox array of `iVect`'ors*/
     void setCollision(std::vector<iVect> *newHitBox);
+    /* Returns hitbox of RigidBody */
     std::vector<iVect> &getHitBox();
+    /* If true collisions will be checked for this object*/
     bool hasCollision;
+    /* Returns true if Object is colliding with `objComp` @param objComp pointer to objects RB*/
     bool isColliding(RigidBodyComponent *objComp);
+    /* add RB to colliding list @param objComp RB of object to be added to list */
     void setColliding(RigidBodyComponent *objComp);
 
 private:
