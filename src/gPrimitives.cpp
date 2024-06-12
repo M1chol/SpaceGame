@@ -245,7 +245,7 @@ int Scene::Update()
             temp++;
             obj->render();
             obj->update();
-            solveCollisions(i);
+            handleCollisions(i);
         }
     }
     SDL_RenderPresent(sceneRenderer);
@@ -281,7 +281,7 @@ Object *Scene::getObjectByName(std::string name)
     return nullptr;
 }
 
-bool Scene::solveCollisions(int currObj)
+bool Scene::handleCollisions(int currObj)
 {
     RigidBodyComponent *currRB = objectList[currObj]->getComponent<RigidBodyComponent>();
     if (currRB == nullptr)
@@ -315,8 +315,8 @@ bool Scene::solveCollisions(int currObj)
         {
             continue;
         }
-        currRB->setColliding(testRB);
-        testRB->setColliding(currRB);
+        currRB->solveCollision(testRB);
+        testRB->solveCollision(currRB);
     }
     return true;
 }

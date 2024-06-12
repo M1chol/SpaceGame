@@ -66,7 +66,7 @@ public:
     /* Set the energy loss of parent Object. @param newEnergyLoss value from 0 to 1*/
     void setEnergyLoss(double newEnergyLoss);
     /* Change or set new collision detection box @param newHitBox array of `iVect`'ors*/
-    void setCollision(std::vector<iVect> *newHitBox);
+    void setCollision(std::vector<iVect> *newHitBox, bool isTrigger = false);
     /* Returns hitbox of RigidBody */
     std::vector<iVect> &getHitBox();
     /* If true collisions will be checked for this object*/
@@ -74,7 +74,7 @@ public:
     /* Returns true if Object is colliding with `objComp` @param objComp pointer to objects RB*/
     bool isColliding(RigidBodyComponent *objComp);
     /* add RB to colliding list @param objComp RB of object to be added to list */
-    void setColliding(RigidBodyComponent *objComp);
+    void solveCollision(RigidBodyComponent *objComp);
 
 private:
     std::vector<iVect> hitBox;
@@ -84,6 +84,7 @@ private:
     double energyLoss;
     Vect velocity;
     Vect force;
+    bool isTrigger;
 };
 
 #endif

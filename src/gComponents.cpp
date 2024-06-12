@@ -87,6 +87,7 @@ RigidBodyComponent::RigidBodyComponent(double newMass)
 	force = {0.0, 0.0};
 	energyLoss = 1.0;
 	hasCollision = false;
+	isTrigger = false;
 }
 RigidBodyComponent::~RigidBodyComponent()
 {
@@ -128,9 +129,10 @@ bool RigidBodyComponent::update()
 	collisionList.clear();
 	return true;
 }
-void RigidBodyComponent::setCollision(std::vector<iVect> *newHitBox)
+void RigidBodyComponent::setCollision(std::vector<iVect> *newHitBox, bool newisTrigger = false)
 {
 	hasCollision = true;
+	isTrigger = newisTrigger;
 	hitBox = *newHitBox;
 }
 void RigidBodyComponent::setMass(double newMass)
@@ -156,9 +158,13 @@ bool RigidBodyComponent::isColliding(RigidBodyComponent *obj)
 	}
 	return false;
 }
-void RigidBodyComponent::setColliding(RigidBodyComponent *obj)
+void RigidBodyComponent::solveCollision(RigidBodyComponent *obj)
 {
 	collisionList.push_back(obj);
+	if (!isTrigger)
+	{
+		// TODO: handle collision
+	}
 }
 
 #pragma endregion
