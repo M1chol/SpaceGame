@@ -129,7 +129,7 @@ bool RigidBodyComponent::update()
 	collisionList.clear();
 	return true;
 }
-void RigidBodyComponent::setCollision(std::vector<iVect> *newHitBox, bool newisTrigger = false)
+void RigidBodyComponent::setCollision(std::vector<iVect> *newHitBox, bool newisTrigger)
 {
 	hasCollision = true;
 	isTrigger = newisTrigger;
@@ -153,7 +153,6 @@ bool RigidBodyComponent::isColliding(RigidBodyComponent *obj)
 	auto el = std::find(collisionList.begin(), collisionList.end(), obj);
 	if (el != collisionList.end())
 	{
-		collisionList.erase(el);
 		return true;
 	}
 	return false;

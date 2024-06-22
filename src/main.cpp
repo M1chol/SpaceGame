@@ -59,5 +59,6 @@ int main(int argc, char *args[])
 	SDL_Quit();
 
 	log(LOG_INFO) << "SDL Quit successfull!\n";
+	scanf("%i");
 	return 0;
 }
