@@ -18,6 +18,7 @@ extern std::vector<Scene *> sceneList;
 extern double deltaTime;
 extern double drawTime;
 extern bool drawHitbox;
+extern bool waitToDebug;
 extern int nrOfScenes;
 
 /*Initialize SDL wrapper "Engine" @return true if successfull*/

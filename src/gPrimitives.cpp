@@ -77,6 +77,7 @@ Object::Object(Scene *scene)
     pos = {0, 0};
     name = "unnamed";
     nrOfComponents = 0;
+    isActive = true;
 }
 Object::~Object()
 {
@@ -245,11 +246,9 @@ int Scene::Update()
             temp++;
             obj->render();
             obj->update();
-            std::cout << obj->getName() << ", ";
             handleCollisions(i);
         }
     }
-    std::cout << "\n";
     SDL_RenderPresent(sceneRenderer);
     return temp;
 }

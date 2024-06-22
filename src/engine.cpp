@@ -9,10 +9,13 @@ std::vector<Scene *> sceneList;
 Scene *mainScene = nullptr;
 double deltaTime;
 double drawTime;
-bool drawHitbox = false;
 int nrOfScenes = 1; // TODO: Imlement adding of scenes
 Uint8 currentKeyState[SDL_NUM_SCANCODES];
 Uint8 previousKeyState[SDL_NUM_SCANCODES];
+
+// SETUPS
+bool drawHitbox = true;
+bool waitToDebug = true;
 
 // TODO: Text rendering
 
@@ -51,7 +54,6 @@ bool EngineInit()
     mainScene = new Scene(gRenderer);
     mainScene->setName("MAIN");
     sceneList.push_back(mainScene);
-    drawHitbox = true;
     log(LOG_INFO) << "Initilization succesfull created MAIN Scene\n";
     return true;
 }
