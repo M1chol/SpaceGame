@@ -126,6 +126,7 @@ bool RigidBodyComponent::update()
 	velocity += acceleration * deltaTime;
 	velocity *= energyLoss;
 	parent->pos += velocity;
+	// momentum = velocity * mass;
 	collisionList.clear();
 	return true;
 }

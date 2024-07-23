@@ -82,8 +82,10 @@ private:
     double mass;
     double maxSpeed;
     double energyLoss;
+    // double elasticity;
     Vect velocity;
     Vect force;
+    // Vect momentum;
     bool isTrigger;
 };
 

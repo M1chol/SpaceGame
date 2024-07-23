@@ -100,6 +100,11 @@ Object::~Object()
     linkedScene = nullptr;
     log(LOG_INFO) << "Removed object " << this->name << " (" << this << ")\n";
 }
+void Object::remove()
+{
+    isActive = false;
+    this->linkedScene->toBeRemoved.push_back(this);
+}
 
 template <typename CompType>
 CompType *Object::getComponent()
@@ -242,13 +247,14 @@ int Scene::Update()
         Object *obj = objectList[i];
         if (obj->isActive)
         {
-            // TODO: calling the same 2 for loops. Will compilator fix that?
+            // Calling the same 2 for loops. posisible fix here
             temp++;
             obj->render();
             obj->update();
             handleCollisions(i);
         }
     }
+    removeSheduled();
     SDL_RenderPresent(sceneRenderer);
     return temp;
 }
@@ -320,6 +326,15 @@ bool Scene::handleCollisions(int currObj)
         testRB->solveCollision(currRB);
     }
     return true;
+}
+
+void Scene::removeSheduled()
+{
+    for (auto *obj : toBeRemoved)
+    {
+        delete obj;
+    }
+    toBeRemoved.clear();
 }
 
 #pragma endregion

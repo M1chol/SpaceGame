@@ -21,7 +21,7 @@ void targetObject::update()
     {
         if (this->getComponent<RigidBodyComponent>()->isColliding(player->getComponent<RigidBodyComponent>()))
         {
-            delete this;
+            remove();
         }
     }
 }

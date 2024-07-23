@@ -64,6 +64,8 @@ public:
     void render();
     /* goes through linked components and updates them if they support it */
     virtual void update();
+    // Handles scheduling of objects for deconstruction
+    void remove();
     /* add Component to vector componentList of Object @param comp Component to be linked */
     void addComponent(Component *comp);
     /* remove Component from vector componentList of Object @param comp Component to be removed
@@ -108,6 +110,9 @@ public:
     SDL_Renderer *getRenderer();
     bool handleCollisions(int objectNr);
     Object *getObjectByName(std::string name);
+    std::vector<Object *> toBeRemoved;
+    // Remove items scheduled for destruction
+    void removeSheduled();
 
 private:
     SDL_Renderer *sceneRenderer;
