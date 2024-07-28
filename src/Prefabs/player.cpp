@@ -2,22 +2,26 @@
 #include "player.h"
 
 double playerSpeed = 350.0;
-RigidBodyComponent PlayerRB = RigidBodyComponent(10);
+RigidBodyComponent *PlayerRB = new RigidBodyComponent(10);
+Vect center = {0.0, 0.0};
+SpawnerComponent<genericBullet> *bulletSpawner = new SpawnerComponent<genericBullet>(center, 0.2, 2);
 Vect forceToApply = {0.0, 0.0};
+// double timer = 0.0;
+Vect bulletSpeed = {0.0, 350.0};
 
 PlayerObject::PlayerObject(Scene *scene) : Object(scene)
 {
     LOG_INIT_CERR();
-    this->setName("PlayerObject");
-    this->addComponent(new SpriteComponent("res/player-placeholder.png"));
-    this->addComponent(&PlayerRB);
-    this->pos = {(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2};
-    PlayerRB.setEnergyLoss(0.03);
+    setName("PlayerObject");
+    addComponent(bulletSpawner);
+    addComponent(new SpriteComponent("res/player-placeholder.png"));
+    addComponent(PlayerRB);
+    pos = {(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2};
+    PlayerRB->setEnergyLoss(0.03);
     std::vector<iVect> box = {{66, 70}, {-66, -70}};
-    PlayerRB.setCollision(&box);
+    PlayerRB->setCollision(&box);
     log(LOG_INFO) << "Created player object (" << this << ")\n";
 }
-
 
 void PlayerObject::update()
 {
@@ -40,10 +44,14 @@ void PlayerObject::update()
     }
     if (isKeyDown(SDL_SCANCODE_Q))
     {
-        delete this;
+        remove();
         LOG_INIT_CERR();
         log(LOG_INFO) << "Oh no! player destroyed!\n";
     }
-    PlayerRB.applyForce(forceToApply.normalized() * playerSpeed);
+    if (isKeyDown(SDL_SCANCODE_SPACE))
+    {
+        bulletSpawner->shoot();
+    }
+    PlayerRB->applyForce(forceToApply.normalized() * playerSpeed);
     forceToApply = {0.0, 0.0};
 }

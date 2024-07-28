@@ -25,20 +25,21 @@ public:
     @param scale set the size of image, 1 = 100%
     @return true if success else false
     */
-    bool render(iVect offset, float scale);
+    bool render(iVect offset, float scale = 0.0);
     /*
     Renders the texture assigned to object to screen centered at parent object
     @param scale set the size of image, 1 = 100%
     */
-    bool render(float scale);
+    bool render(float scale = 0.0);
     /*
     Renders the texture assigned to object to screen centered at parent object
     */
-    bool render() override;
+    bool render();
     /* This function runs every time Object is linked to new Scene*/
     void whenLinked() override;
     /* Returns dimentions of texture*/
     iVect *getDim();
+    void setScale(float newScale);
 
 private:
     SDL_Texture *texture;
@@ -46,6 +47,7 @@ private:
     SDL_Renderer *gRenderer;
     SDL_Rect *renderBox;
     iVect *dim;
+    float scale;
 };
 
 class RigidBodyComponent : public Component
@@ -89,4 +91,24 @@ private:
     bool isTrigger;
 };
 
+template <typename bulletType>
+class SpawnerComponent : public Component
+{
+public:
+    SpawnerComponent(Vect location, double setCooldown, double setBulletLifeSpan);
+    //~SpawnerComponent() override;
+    bool shoot();
+    void setCooldown(double newCooldown);
+    bool update() override;
+    void whenLinked() override;
+
+private:
+    Vect pos;
+    double cooldown;
+    double timer;
+    int poolsize;
+    Vect bulletSpeed;
+    double bulletLifeSpan;
+    std::vector<std::shared_ptr<bulletType>> pool;
+};
 #endif

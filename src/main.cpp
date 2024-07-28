@@ -59,9 +59,10 @@ int main(int argc, char *args[])
 	SDL_Quit();
 
 	log(LOG_INFO) << "SDL Quit successfull!\n";
+	
 	if (waitToDebug)
 	{
-		log(LOG_INFO) << "Weiting for debug is enabled\nPress any key to exit...\n";
+		log(LOG_INFO) << "Waiting for debug is enabled\nPress any key to exit...\n";
 		getchar();
 	}
 	return 0;

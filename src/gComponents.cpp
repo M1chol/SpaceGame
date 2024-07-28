@@ -10,6 +10,7 @@ SpriteComponent::SpriteComponent(std::string newPath)
 	dim = new iVect;
 	gRenderer = nullptr;
 	renderBox = new SDL_Rect;
+	scale = 1;
 }
 SpriteComponent::~SpriteComponent()
 {
@@ -48,8 +49,12 @@ iVect *SpriteComponent::getDim()
 {
 	return dim;
 }
-bool SpriteComponent::render(iVect offset, float scale)
+bool SpriteComponent::render(iVect offset, float newScale)
 {
+	if (newScale > 0)
+	{
+		scale = newScale;
+	}
 	LOG_INIT_CERR();
 	if (gRenderer == nullptr)
 	{
@@ -64,16 +69,26 @@ bool SpriteComponent::render(iVect offset, float scale)
 	}
 	return true;
 }
-bool SpriteComponent::render(float scale)
+bool SpriteComponent::render(float newScale)
 {
+	if (newScale > 0)
+	{
+		scale = newScale;
+	}
 	iVect center = {-(int)((float)dim->x * scale / 2), -(int)((float)dim->y * scale / 2)};
 	bool status = render(center, scale);
 	return status;
 }
 bool SpriteComponent::render()
 {
-	bool status = render(1);
-	return status;
+	return render(0);
+}
+void SpriteComponent::setScale(float newScale)
+{
+	if (newScale > 0)
+	{
+		scale = newScale;
+	}
 }
 
 #pragma endregion
@@ -93,7 +108,6 @@ RigidBodyComponent::~RigidBodyComponent()
 {
 	// this->destroy();
 }
-
 void RigidBodyComponent::whenLinked()
 {
 	LOG_INIT_CERR();
@@ -148,7 +162,6 @@ std::vector<iVect> &RigidBodyComponent::getHitBox()
 {
 	return hitBox;
 }
-
 bool RigidBodyComponent::isColliding(RigidBodyComponent *obj)
 {
 	auto el = std::find(collisionList.begin(), collisionList.end(), obj);
@@ -167,4 +180,69 @@ void RigidBodyComponent::solveCollision(RigidBodyComponent *obj)
 	}
 }
 
+#pragma endregion
+
+#pragma region SpawnerComponent
+template class SpawnerComponent<genericBullet>;
+
+template <typename bulletType>
+SpawnerComponent<bulletType>::SpawnerComponent(Vect newPos, double setCooldown, double setBulletLifeSpan)
+{
+	cooldown = setCooldown;
+	poolsize = 0;
+	timer = 0.0;
+	bulletSpeed = {0.0, 350.0};
+	bulletLifeSpan = setBulletLifeSpan;
+}
+template <typename bulletType>
+void SpawnerComponent<bulletType>::whenLinked()
+{
+	LOG_INIT_CERR();
+	log(LOG_INFO) << "Spawner component (" << this << ") linked to " << parent->getName() << "\n";
+}
+
+template <typename bulletType>
+void SpawnerComponent<bulletType>::setCooldown(double newCooldown)
+{
+	cooldown = newCooldown;
+}
+template <typename bulletType>
+bool SpawnerComponent<bulletType>::shoot()
+{
+	if (timer < cooldown)
+	{
+		return false;
+	}
+	if (poolsize < 1 || pool[0]->isActive)
+	{
+		std::shared_ptr<bulletType> projectile = std::make_shared<bulletType>(parent->getScene(), parent->pos, bulletSpeed);
+		projectile->isActive = true;
+		pool.push_back(projectile);
+		poolsize++;
+	}
+	else
+	{
+		pool[0]->pos = parent->pos;
+		pool[0]->isActive = true;
+		std::shared_ptr<bulletType> temp = pool[0];
+		pool.erase(pool.begin());
+		pool.push_back(temp);
+	}
+	timer = 0.0;
+	return true;
+}
+template <typename bulletType>
+bool SpawnerComponent<bulletType>::update()
+{
+	timer += deltaTime;
+	for (std::shared_ptr<genericBullet> bullet : pool)
+	{
+		if (bullet->aliveFor > bulletLifeSpan)
+		{
+			bullet->isActive = false;
+			bullet->aliveFor = 0.0;
+		}
+	}
+	return true;
+}
 #pragma endregion

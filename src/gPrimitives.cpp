@@ -110,13 +110,14 @@ template <typename CompType>
 CompType *Object::getComponent()
 {
     LOG_INIT_CERR();
-    for (auto *comp : componentList)
+    for (Component *comp : componentList)
     {
         if (CompType *specificComp = dynamic_cast<CompType *>(comp))
         {
             return specificComp;
         }
     }
+    log(LOG_WARN) << "getComponent returned nullptr, this is not normal behaviour\n";
     return nullptr;
 }
 
@@ -304,7 +305,7 @@ bool Scene::handleCollisions(int currObj)
     for (int j = currObj + 1; j < nrOfObjects; j++)
     {
         RigidBodyComponent *testRB = objectList[j]->getComponent<RigidBodyComponent>();
-        if (testRB == nullptr)
+        if (testRB == nullptr || !testRB->hasCollision)
         {
             continue;
         }
