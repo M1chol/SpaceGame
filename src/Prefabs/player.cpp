@@ -1,6 +1,6 @@
 #include "engine.h"
 #include "player.h"
-#define center {0.0, 0.0}
+#define center {0.0, -10}
 #define bulletSpeed {0.0, 350.0};
 
 PlayerObject::PlayerObject(Scene *scene) : Object(scene)

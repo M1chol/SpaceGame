@@ -189,6 +189,7 @@ template <typename bulletType>
 SpawnerComponent<bulletType>::SpawnerComponent(Vect newPos, double setCooldown, double setBulletLifeSpan)
 {
 	cooldown = setCooldown;
+	newPos = shootOffset;
 	poolsize = 0;
 	cooldownTimer = 0.0;
 	bulletLifeSpan = setBulletLifeSpan;
@@ -213,7 +214,7 @@ bool SpawnerComponent<bulletType>::shoot()
 	}
 	if (poolsize < 1 || pool[0]->isActive)
 	{
-		std::shared_ptr<bulletType> projectile = std::make_shared<bulletType>(parent->getScene(), parent->pos);
+		std::shared_ptr<bulletType> projectile = std::make_shared<bulletType>(parent->getScene(), parent->pos + shootOffset);
 		projectile->isActive = true;
 		pool.push_back(projectile);
 		poolsize++;

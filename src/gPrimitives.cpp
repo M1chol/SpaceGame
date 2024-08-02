@@ -212,7 +212,7 @@ Scene::~Scene()
     LOG_INIT_CERR();
     for (int i = nrOfObjects - 1; i > 0; i--)
     {
-        delete objectList[i];
+        objectList[i]->remove();
     }
     objectList.clear();
 }

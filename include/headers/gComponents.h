@@ -95,10 +95,14 @@ template <typename bulletType>
 class SpawnerComponent : public Component
 {
 public:
-    SpawnerComponent(Vect location, double setCooldown, double setBulletLifeSpan);
-    //~SpawnerComponent() override;
+    // Create SpawnerComponent @param setShootOffset sets shoot offset @param setCooldown sets shoot cooldown @param setBulletLifeSpan sets Bullet time to deconstruction
+    SpawnerComponent(Vect setShootOffset, double setCooldown, double setBulletLifeSpan);
+    // Handles shooting
     bool shoot();
+    // Set new cooldown of Spawner @param newCooldown new cooldown
     void setCooldown(double newCooldown);
+
+protected:
     bool update() override;
     void whenLinked() override;
 
@@ -108,6 +112,7 @@ private:
     double cooldownTimer;
     int poolsize;
     double bulletLifeSpan;
+    Vect shootOffset;
     std::vector<std::shared_ptr<bulletType>> pool;
 };
 #endif
