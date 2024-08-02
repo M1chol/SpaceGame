@@ -67,7 +67,7 @@ iVect &iVect::operator*=(int scalar)
 
 #pragma endregion
 
-#pragma region gObject definitions
+#pragma region Object definitions
 
 Object::Object(Scene *scene)
 {
@@ -105,22 +105,6 @@ void Object::remove()
     isActive = false;
     this->linkedScene->toBeRemoved.push_back(this);
 }
-
-template <typename CompType>
-CompType *Object::getComponent()
-{
-    LOG_INIT_CERR();
-    for (Component *comp : componentList)
-    {
-        if (CompType *specificComp = dynamic_cast<CompType *>(comp))
-        {
-            return specificComp;
-        }
-    }
-    log(LOG_WARN) << "getComponent returned nullptr, this is not normal behaviour\n";
-    return nullptr;
-}
-
 void Object::addComponent(Component *comp)
 {
     componentList.push_back(comp);
@@ -153,7 +137,6 @@ std::string Object::getName()
 {
     return name;
 }
-
 bool Object::removeComponent(Component *comp)
 {
     auto el = std::find(componentList.begin(), componentList.end(), comp);
@@ -165,7 +148,6 @@ bool Object::removeComponent(Component *comp)
     }
     return false;
 }
-
 void Object::render()
 {
     for (auto &component : componentList)
@@ -173,7 +155,6 @@ void Object::render()
         component->render();
     }
 }
-
 void Object::update()
 {
     for (auto &component : componentList)
@@ -181,7 +162,20 @@ void Object::update()
         component->update();
     }
 }
-
+template <typename CompType>
+CompType *Object::getComponent()
+{
+    LOG_INIT_CERR();
+    for (Component *comp : componentList)
+    {
+        if (CompType *specificComp = dynamic_cast<CompType *>(comp))
+        {
+            return specificComp;
+        }
+    }
+    log(LOG_WARN) << "getComponent returned nullptr, this is not normal behaviour\n";
+    return nullptr;
+}
 #pragma endregion
 
 #pragma region Component definitions

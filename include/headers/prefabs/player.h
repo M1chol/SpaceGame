@@ -1,4 +1,5 @@
-#include "engine.h"
+#ifndef PLAYER_H
+#define PLAYER_H
 
 class PlayerObject : public Object
 {
@@ -8,4 +9,10 @@ public:
 
 private:
     SDL_Event b;
+    double playerSpeed;
+    Vect forceToApply;
+    RigidBodyComponent *PlayerRB;
+    SpawnerComponent<genericBullet> *bulletSpawner;
 };
+
+#endif

@@ -1,18 +1,19 @@
 #include "engine.h"
 
-genericBullet::genericBullet(Scene *scene, Vect newPos, Vect speed) : Object(scene)
+genericBullet::genericBullet(Scene *scene, Vect newPos) : Object(scene)
 {
-    RigidBodyComponent *rb = new RigidBodyComponent(1.0);
-    SpriteComponent *sp = new SpriteComponent("res/bullet.png");
+    rb = new RigidBodyComponent(0);
+    sp = new SpriteComponent("res/bullet.png");
     setName("GenericBullet");
     addComponent(rb);
     addComponent(sp);
-    sp->setScale(0.5);
+    sp->setScale(0.2);
     pos = newPos;
-    // rb.applyForce(speed);
+    rb->applyForce({0.0, -1000.0});
 }
 
 void genericBullet::update()
 {
+    Object::update();
     aliveFor += deltaTime;
 }

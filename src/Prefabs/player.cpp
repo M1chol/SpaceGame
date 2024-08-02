@@ -1,18 +1,16 @@
 #include "engine.h"
 #include "player.h"
-
-double playerSpeed = 350.0;
-RigidBodyComponent *PlayerRB = new RigidBodyComponent(10);
-Vect center = {0.0, 0.0};
-SpawnerComponent<genericBullet> *bulletSpawner = new SpawnerComponent<genericBullet>(center, 0.2, 2);
-Vect forceToApply = {0.0, 0.0};
-// double timer = 0.0;
-Vect bulletSpeed = {0.0, 350.0};
+#define center {0.0, 0.0}
+#define bulletSpeed {0.0, 350.0};
 
 PlayerObject::PlayerObject(Scene *scene) : Object(scene)
 {
     LOG_INIT_CERR();
     setName("PlayerObject");
+    PlayerRB = new RigidBodyComponent(10);
+    bulletSpawner = new SpawnerComponent<genericBullet>(center, 0.2, 2);
+    forceToApply = {0.0, 0.0};
+    playerSpeed = 350.0;
     addComponent(bulletSpawner);
     addComponent(new SpriteComponent("res/player-placeholder.png"));
     addComponent(PlayerRB);

@@ -190,8 +190,7 @@ SpawnerComponent<bulletType>::SpawnerComponent(Vect newPos, double setCooldown, 
 {
 	cooldown = setCooldown;
 	poolsize = 0;
-	timer = 0.0;
-	bulletSpeed = {0.0, 350.0};
+	cooldownTimer = 0.0;
 	bulletLifeSpan = setBulletLifeSpan;
 }
 template <typename bulletType>
@@ -200,7 +199,6 @@ void SpawnerComponent<bulletType>::whenLinked()
 	LOG_INIT_CERR();
 	log(LOG_INFO) << "Spawner component (" << this << ") linked to " << parent->getName() << "\n";
 }
-
 template <typename bulletType>
 void SpawnerComponent<bulletType>::setCooldown(double newCooldown)
 {
@@ -209,13 +207,13 @@ void SpawnerComponent<bulletType>::setCooldown(double newCooldown)
 template <typename bulletType>
 bool SpawnerComponent<bulletType>::shoot()
 {
-	if (timer < cooldown)
+	if (cooldownTimer < cooldown)
 	{
 		return false;
 	}
 	if (poolsize < 1 || pool[0]->isActive)
 	{
-		std::shared_ptr<bulletType> projectile = std::make_shared<bulletType>(parent->getScene(), parent->pos, bulletSpeed);
+		std::shared_ptr<bulletType> projectile = std::make_shared<bulletType>(parent->getScene(), parent->pos);
 		projectile->isActive = true;
 		pool.push_back(projectile);
 		poolsize++;
@@ -228,13 +226,13 @@ bool SpawnerComponent<bulletType>::shoot()
 		pool.erase(pool.begin());
 		pool.push_back(temp);
 	}
-	timer = 0.0;
+	cooldownTimer = 0.0;
 	return true;
 }
 template <typename bulletType>
 bool SpawnerComponent<bulletType>::update()
 {
-	timer += deltaTime;
+	cooldownTimer += deltaTime;
 	for (std::shared_ptr<genericBullet> bullet : pool)
 	{
 		if (bullet->aliveFor > bulletLifeSpan)

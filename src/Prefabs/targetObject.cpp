@@ -16,6 +16,7 @@ targetObject::targetObject(Scene *scene, int number) : Object(scene)
 
 void targetObject::update()
 {
+    Object::update();
     Object *player = mainScene->getObjectByName("PlayerObject");
     if (player != nullptr)
     {

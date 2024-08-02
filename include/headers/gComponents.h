@@ -105,9 +105,8 @@ public:
 private:
     Vect pos;
     double cooldown;
-    double timer;
+    double cooldownTimer;
     int poolsize;
-    Vect bulletSpeed;
     double bulletLifeSpan;
     std::vector<std::shared_ptr<bulletType>> pool;
 };

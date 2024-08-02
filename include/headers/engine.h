@@ -4,12 +4,12 @@
 
 #include <string.h>
 #include <vector>
-#include "logger.h"
+#include <logger.h>
 #include <SDL.h>
 #include <SDL_image.h>
-#include "gPrimitives.h"
-#include "gComponents.h"
-#include "genericBullet.h"
+#include <gPrimitives.h>
+#include <gComponents.h>
+#include <genericBullet.h>
 
 // Global engine variables
 extern const int SCREEN_WIDTH;

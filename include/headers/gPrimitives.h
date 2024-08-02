@@ -1,3 +1,6 @@
+#ifndef G_PRIMITIVES_H
+#define G_PRIMITIVES_H
+
 #include "engine.h"
 
 struct iVect;
@@ -120,3 +123,5 @@ private:
     int nrOfObjects;
     std::string name;
 };
+
+#endif
