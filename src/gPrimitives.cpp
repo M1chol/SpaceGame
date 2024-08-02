@@ -100,10 +100,12 @@ Object::~Object()
     linkedScene = nullptr;
     log(LOG_INFO) << "Removed object " << this->name << " (" << this << ")\n";
 }
-void Object::remove()
+void Object::destroy()
 {
+
     isActive = false;
     this->linkedScene->toBeRemoved.push_back(this);
+
 }
 void Object::addComponent(Component *comp)
 {
@@ -111,6 +113,10 @@ void Object::addComponent(Component *comp)
     comp->setParent(this);
     comp->whenLinked();
     nrOfComponents++;
+}
+void Object::addTag(TAG newTag)
+{
+    linkedTags.push_back(newTag);
 }
 void Object::setScene(Scene *parentScene)
 {
@@ -166,6 +172,10 @@ template <typename CompType>
 CompType *Object::getComponent()
 {
     LOG_INIT_CERR();
+    if (this == nullptr)
+    {
+        return nullptr;
+    }
     for (Component *comp : componentList)
     {
         if (CompType *specificComp = dynamic_cast<CompType *>(comp))
@@ -176,6 +186,7 @@ CompType *Object::getComponent()
     log(LOG_WARN) << "getComponent returned nullptr, this is not normal behaviour\n";
     return nullptr;
 }
+void Object::lateUpdate() {}
 #pragma endregion
 
 #pragma region Component definitions
@@ -184,17 +195,17 @@ void Component::setParent(Object *new_parent)
 {
     parent = new_parent;
 }
-
 bool Component::render() { return true; };
 bool Component::update() { return true; };
-
 Component::~Component()
 {
     // this->destroy();
 }
-
 void Component::whenLinked() {};
-// void Component::destroy() {};
+Object *Component::getParent()
+{
+    return parent;
+}
 
 #pragma endregion
 
@@ -212,11 +223,10 @@ Scene::~Scene()
     LOG_INIT_CERR();
     for (int i = nrOfObjects - 1; i > 0; i--)
     {
-        objectList[i]->remove();
+        objectList[i]->destroy();
     }
     objectList.clear();
 }
-
 void Scene::setName(std::string newName)
 {
     name = newName;
@@ -225,28 +235,37 @@ std::string Scene::getName()
 {
     return name;
 }
-
 bool Scene::addObject(Object *obj)
 {
     objectList.push_back(obj);
     nrOfObjects++;
 }
-
 int Scene::Update()
 {
     SDL_SetRenderDrawColor(sceneRenderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(sceneRenderer);
     int temp = 0;
+    // True Update
     for (int i = 0; i < nrOfObjects; i++)
     {
         Object *obj = objectList[i];
         if (obj->isActive)
         {
-            // Calling the same 2 for loops. posisible fix here
+            //HACK: Calling the same 2 for loops. posisible fix here
             temp++;
             obj->render();
             obj->update();
             handleCollisions(i);
+        }
+    }
+    // Late Update
+    // HACK: create list of objects for late update to optimize
+    for (int i = 0; i < nrOfObjects; i++)
+    {
+        Object *obj = objectList[i];
+        if (obj->isActive)
+        {
+            obj->lateUpdate();
         }
     }
     removeSheduled();
@@ -272,7 +291,6 @@ bool Scene::removeObject(Object *obj)
 }
 Object *Scene::getObjectByName(std::string name)
 {
-    LOG_INIT_CERR();
     for (auto &obj : objectList)
     {
         if (obj->getName() == name)
@@ -282,7 +300,22 @@ Object *Scene::getObjectByName(std::string name)
     }
     return nullptr;
 }
-
+std::vector<Object *> Scene::getObjectByTag(TAG tag)
+{
+    std::vector<Object *> objects;
+    LOG_INIT_CERR();
+    for (auto &obj : objectList)
+    {
+        for (auto &ltag : obj->linkedTags)
+        {
+            if (tag == ltag)
+            {
+                objects.push_back(obj);
+            }
+        }
+    }
+    return objects;
+}
 bool Scene::handleCollisions(int currObj)
 {
     RigidBodyComponent *currRB = objectList[currObj]->getComponent<RigidBodyComponent>();
@@ -322,7 +355,6 @@ bool Scene::handleCollisions(int currObj)
     }
     return true;
 }
-
 void Scene::removeSheduled()
 {
     for (auto *obj : toBeRemoved)

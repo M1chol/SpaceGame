@@ -10,6 +10,7 @@ public:
     genericBullet(Scene *scene, Vect newPos);
     ~genericBullet() override = default;
     void update() override;
+    void lateUpdate() override;
     double aliveFor;
     Vect bulletSpeed;
 

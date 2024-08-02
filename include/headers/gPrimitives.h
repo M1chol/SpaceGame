@@ -46,8 +46,7 @@ public:
     virtual bool render();
     /* Call update function of child object */
     virtual bool update();
-    /* Call destroy function of child object*/
-    // virtual void destroy();
+    Object *getParent();
 
 protected:
     Object *parent;
@@ -67,10 +66,14 @@ public:
     void render();
     /* goes through linked components and updates them if they support it */
     virtual void update();
+    /* Runs after solving collisions */
+    virtual void lateUpdate();
     // Handles scheduling of objects for deconstruction
-    void remove();
+    void destroy();
     /* add Component to vector componentList of Object @param comp Component to be linked */
     void addComponent(Component *comp);
+    /* add Tag to existing `Object` @param newTag tag to be added*/
+    void addTag(TAG newTag);
     /* remove Component from vector componentList of Object @param comp Component to be removed
     @return `true` if successfull and `false` if component was not found */
     bool removeComponent(Component *comp);
@@ -85,6 +88,7 @@ public:
     std::string getName();
     Vect pos;
     bool isActive;
+    std::vector<TAG> linkedTags;
 
 private:
     Scene *linkedScene;
@@ -113,6 +117,7 @@ public:
     SDL_Renderer *getRenderer();
     bool handleCollisions(int objectNr);
     Object *getObjectByName(std::string name);
+    std::vector<Object *> getObjectByTag(TAG);
     std::vector<Object *> toBeRemoved;
     // Remove items scheduled for destruction
     void removeSheduled();

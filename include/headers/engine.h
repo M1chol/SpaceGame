@@ -2,6 +2,12 @@
 #define Engine
 #pragma once
 
+enum TAG
+{
+    TAG_PLAYER,
+    TAG_ENEMY
+};
+
 #include <string.h>
 #include <vector>
 #include <logger.h>

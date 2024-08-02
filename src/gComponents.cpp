@@ -130,6 +130,7 @@ bool RigidBodyComponent::render()
 }
 bool RigidBodyComponent::update()
 {
+	collisionList.clear();
 	// TODO: add check if speed is beeing changed, then disable energy loss to let objects move at real speed
 	if (mass == 0.0)
 	{
@@ -141,7 +142,6 @@ bool RigidBodyComponent::update()
 	velocity *= energyLoss;
 	parent->pos += velocity;
 	// momentum = velocity * mass;
-	collisionList.clear();
 	return true;
 }
 void RigidBodyComponent::setCollision(std::vector<iVect> *newHitBox, bool newisTrigger)
@@ -162,14 +162,30 @@ std::vector<iVect> &RigidBodyComponent::getHitBox()
 {
 	return hitBox;
 }
-bool RigidBodyComponent::isColliding(RigidBodyComponent *obj)
+Component *RigidBodyComponent::isColliding(RigidBodyComponent *obj)
 {
-	auto el = std::find(collisionList.begin(), collisionList.end(), obj);
-	if (el != collisionList.end())
+	for (auto tobj : collisionList)
 	{
-		return true;
+		if (tobj == obj)
+		{
+			return obj;
+		}
 	}
-	return false;
+	return nullptr;
+}
+Component *RigidBodyComponent::isColliding(TAG tag)
+{
+	for (auto &obj : collisionList)
+	{
+		for (auto &stag : obj->parent->linkedTags)
+		{
+			if (stag == tag)
+			{
+				return obj;
+			}
+		}
+	}
+	return nullptr;
 }
 void RigidBodyComponent::solveCollision(RigidBodyComponent *obj)
 {
