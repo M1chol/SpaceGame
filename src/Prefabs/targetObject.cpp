@@ -22,9 +22,8 @@ void targetObject::update()
 
 void targetObject::lateUpdate()
 {
-    Object *player = mainScene->getObjectByName("PlayerObject");
-    if (rb->isColliding(getScene()->getObjectByName("PlayerObject")->getComponent<RigidBodyComponent>()))
-    {
-        destroy();
-    }
+    // if (rb->isColliding(getScene()->getObjectByName("PlayerObject")->getComponent<RigidBodyComponent>()))
+    // {
+    //     destroy();
+    // }
 }

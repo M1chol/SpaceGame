@@ -1,10 +1,14 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+class RigidBodyComponent;
+class SpriteComponent;
+
 class PlayerObject : public Object
 {
 public:
     PlayerObject(Scene *scene);
+    void lateUpdate() override;
     void update() override;
 
 private:

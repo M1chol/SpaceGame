@@ -105,7 +105,6 @@ void Object::destroy()
 
     isActive = false;
     this->linkedScene->toBeRemoved.push_back(this);
-
 }
 void Object::addComponent(Component *comp)
 {
@@ -244,22 +243,22 @@ int Scene::Update()
 {
     SDL_SetRenderDrawColor(sceneRenderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(sceneRenderer);
-    int temp = 0;
+    int updatedObjects = 0;
     // True Update
     for (int i = 0; i < nrOfObjects; i++)
     {
         Object *obj = objectList[i];
         if (obj->isActive)
         {
-            //HACK: Calling the same 2 for loops. posisible fix here
-            temp++;
+            updatedObjects++;
             obj->render();
             obj->update();
             handleCollisions(i);
         }
     }
-    // Late Update
-    // HACK: create list of objects for late update to optimize
+    // std::cout << getObjectByName("PlayerObject")->getComponent<RigidBodyComponent>()->collisionList.size();
+    //  Late Update
+    //  HACK: create list of objects for late update to optimize
     for (int i = 0; i < nrOfObjects; i++)
     {
         Object *obj = objectList[i];
@@ -270,7 +269,7 @@ int Scene::Update()
     }
     removeSheduled();
     SDL_RenderPresent(sceneRenderer);
-    return temp;
+    return updatedObjects;
 }
 SDL_Renderer *Scene::getRenderer()
 {
@@ -318,26 +317,23 @@ std::vector<Object *> Scene::getObjectByTag(TAG tag)
 }
 bool Scene::handleCollisions(int currObj)
 {
-    RigidBodyComponent *currRB = objectList[currObj]->getComponent<RigidBodyComponent>();
-    if (currRB == nullptr)
+    RigidBodyComponent *rb1 = objectList[currObj]->getComponent<RigidBodyComponent>();
+    if (rb1 == nullptr || !rb1->hasCollision)
     {
         return false;
     }
-    if (!currRB->hasCollision)
+    iVect maxA = objectList[currObj]->pos.toIVect() + rb1->getHitBox()[0];
+    iVect minA = objectList[currObj]->pos.toIVect() + rb1->getHitBox()[1];
+
+    for (int i = currObj + 1; i < nrOfObjects; i++)
     {
-        return false;
-    }
-    iVect maxA = objectList[currObj]->pos.toIVect() + currRB->getHitBox()[0];
-    iVect minA = objectList[currObj]->pos.toIVect() + currRB->getHitBox()[1];
-    for (int j = currObj + 1; j < nrOfObjects; j++)
-    {
-        RigidBodyComponent *testRB = objectList[j]->getComponent<RigidBodyComponent>();
-        if (testRB == nullptr || !testRB->hasCollision)
+        RigidBodyComponent *rb2 = objectList[i]->getComponent<RigidBodyComponent>();
+        if (rb2 == nullptr || !rb2->hasCollision)
         {
             continue;
         }
-        iVect maxB = objectList[j]->pos.toIVect() + testRB->getHitBox()[0];
-        iVect minB = objectList[j]->pos.toIVect() + testRB->getHitBox()[1];
+        iVect maxB = objectList[i]->pos.toIVect() + rb2->getHitBox()[0];
+        iVect minB = objectList[i]->pos.toIVect() + rb2->getHitBox()[1];
         double d1x = minB.x - maxA.x;
         double d1y = minB.y - maxA.y;
         double d2x = minA.x - maxB.x;
@@ -350,8 +346,9 @@ bool Scene::handleCollisions(int currObj)
         {
             continue;
         }
-        currRB->solveCollision(testRB);
-        testRB->solveCollision(currRB);
+        // std::cout << rb1->getParent()->getName() << " -> " << rb2->getParent()->getName() << std::endl;
+        rb2->solveCollision(rb1);
+        rb1->solveCollision(rb2);
     }
     return true;
 }

@@ -1,6 +1,6 @@
 #include "gComponents.h"
 
-#pragma region SpriteComponent definitions
+#pragma region SpriteComponent
 
 SpriteComponent::SpriteComponent(std::string newPath)
 {
@@ -93,7 +93,7 @@ void SpriteComponent::setScale(float newScale)
 
 #pragma endregion
 
-#pragma region RigidBodyComponent definitions
+#pragma region RigidBodyComponent
 
 RigidBodyComponent::RigidBodyComponent(double newMass)
 {
@@ -162,22 +162,22 @@ std::vector<iVect> &RigidBodyComponent::getHitBox()
 {
 	return hitBox;
 }
-Component *RigidBodyComponent::isColliding(RigidBodyComponent *obj)
+RigidBodyComponent *RigidBodyComponent::isColliding(RigidBodyComponent *obj)
 {
-	for (auto tobj : collisionList)
+	auto el = std::find(collisionList.begin(), collisionList.end(), obj);
+	if (el != collisionList.end())
 	{
-		if (tobj == obj)
-		{
-			return obj;
-		}
+		std::cout << *el << "\n";
+		return *el;
 	}
 	return nullptr;
 }
-Component *RigidBodyComponent::isColliding(TAG tag)
+RigidBodyComponent *RigidBodyComponent::isColliding(TAG tag)
 {
-	for (auto &obj : collisionList)
+	for (RigidBodyComponent *obj : collisionList)
 	{
-		for (auto &stag : obj->parent->linkedTags)
+		// std::cout << obj->getParent()->getName() << std::endl;
+		for (TAG stag : obj->parent->linkedTags)
 		{
 			if (stag == tag)
 			{
@@ -190,6 +190,7 @@ Component *RigidBodyComponent::isColliding(TAG tag)
 void RigidBodyComponent::solveCollision(RigidBodyComponent *obj)
 {
 	collisionList.push_back(obj);
+	// std::cout << collisionList.size();
 	if (!isTrigger)
 	{
 		// TODO: handle collision
