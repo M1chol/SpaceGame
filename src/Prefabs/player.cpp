@@ -9,6 +9,7 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     addTag(TAG_PLAYER);
     addComponent(new SpriteComponent("res/player-placeholder.png"));
     setName("PlayerObject");
+    addTag(TAG_PLAYER);
     PlayerRB = new RigidBodyComponent(10);
     bulletSpawner = new SpawnerComponent<genericBullet>(center, 0.2, 2);
     forceToApply = {0.0, 0.0};
