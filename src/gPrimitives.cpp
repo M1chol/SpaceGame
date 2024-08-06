@@ -256,7 +256,6 @@ int Scene::Update()
         }
     }
     handleCollisions();
-    // std::cout << getObjectByName("PlayerObject")->getComponent<RigidBodyComponent>()->collisionList.size();
     //  Late Update
     //  HACK: create list of objects for late update to optimize
     for (int i = 0; i < nrOfObjects; i++)
@@ -348,7 +347,6 @@ bool Scene::handleCollisions()
             {
                 continue;
             }
-            // std::cout << rb1->getParent()->getName() << " -> " << rb2->getParent()->getName() << std::endl;
             rb2->solveCollision(rb1);
             rb1->solveCollision(rb2);
         }

@@ -54,13 +54,3 @@ void PlayerObject::update()
     PlayerRB->applyForce(forceToApply.normalized() * playerSpeed);
     forceToApply = {0.0, 0.0};
 }
-
-void PlayerObject::lateUpdate()
-{
-    // RigidBodyComponent *targ = PlayerRB->isColliding(TAG_ENEMY);
-    // std::cout << targ;
-    // if (targ)
-    // {
-    //     targ->getParent()->destroy();
-    // }
-}

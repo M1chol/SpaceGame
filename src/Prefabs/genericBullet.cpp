@@ -22,11 +22,9 @@ void genericBullet::update()
 
 void genericBullet::lateUpdate()
 {
-    // std::cout << mainScene->getObjectByName("PlayerObject")->getComponent<RigidBodyComponent>()->collisionList.size();
-    RigidBodyComponent *targ = rb->isColliding(TAG_ENEMY, true);
+    RigidBodyComponent *targ = rb->isColliding(TAG_ENEMY);
     if (targ)
     {
-        // std::cout << "TEST\n";
         targ->getParent()->destroy();
     }
 }

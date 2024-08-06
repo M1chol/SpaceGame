@@ -8,7 +8,6 @@ class PlayerObject : public Object
 {
 public:
     PlayerObject(Scene *scene);
-    void lateUpdate() override;
     void update() override;
 
 private:

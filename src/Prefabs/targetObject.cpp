@@ -22,9 +22,7 @@ void targetObject::update()
 
 void targetObject::lateUpdate()
 {
-    // std::cout << getComponent<RigidBodyComponent>()->collisionList.size();
     RigidBodyComponent *targ = rb->isColliding(TAG_PLAYER);
-    // std::cout << targ;
     if (targ)
     {
         destroy();
