@@ -13,6 +13,7 @@ enum TAG
 #include <logger.h>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <gPrimitives.h>
 #include <gComponents.h>
 #include <genericBullet.h>

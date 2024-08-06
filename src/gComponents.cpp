@@ -259,3 +259,8 @@ bool SpawnerComponent<bulletType>::update()
 	return true;
 }
 #pragma endregion
+
+#pragma region TextComponent
+
+
+#pragma endregion

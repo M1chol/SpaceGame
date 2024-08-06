@@ -79,12 +79,10 @@ public:
     RigidBodyComponent *isColliding(TAG tag);
     /* add RB to colliding list @param objComp RB of object to be added to list */
     void solveCollision(RigidBodyComponent *objComp);
-    // TODO: TEMP
-    std::vector<RigidBodyComponent *> collisionList;
 
 private:
     std::vector<iVect> hitBox;
-
+    std::vector<RigidBodyComponent *> collisionList;
     double mass;
     double maxSpeed;
     double energyLoss;
