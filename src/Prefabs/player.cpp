@@ -7,6 +7,7 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
 {
     LOG_INIT_CERR();
     setName("PlayerObject");
+    addTag(TAG_PLAYER);
     PlayerRB = new RigidBodyComponent(10);
     bulletSpawner = new SpawnerComponent<genericBullet>(center, 0.2, 2);
     forceToApply = {0.0, 0.0};
@@ -56,9 +57,10 @@ void PlayerObject::update()
 
 void PlayerObject::lateUpdate()
 {
-    RigidBodyComponent *targ = PlayerRB->isColliding(TAG_ENEMY);
-    if (targ)
-    {
-        targ->getParent()->destroy();
-    }
+    // RigidBodyComponent *targ = PlayerRB->isColliding(TAG_ENEMY);
+    // std::cout << targ;
+    // if (targ)
+    // {
+    //     targ->getParent()->destroy();
+    // }
 }

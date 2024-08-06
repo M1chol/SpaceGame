@@ -76,7 +76,7 @@ public:
     /* Checks if `Object` is colliding with other `Object`. Value can be checked using `Object` pointer OR `TAG` @param objComp pointer to objects RB @param tag search by tag @returns pointer to found object, nullptr if collision is not accouring*/
     RigidBodyComponent *isColliding(RigidBodyComponent *objComp);
     /* Checks if `Object` is colliding with other `Object`. Value can be checked using `Object` pointer OR `TAG` @param objComp pointer to objects RB @param tag search by tag @returns pointer to found object, nullptr if collision is not accouring*/
-    RigidBodyComponent *isColliding(TAG tag);
+    RigidBodyComponent *isColliding(TAG tag, bool debug = false);
     /* add RB to colliding list @param objComp RB of object to be added to list */
     void solveCollision(RigidBodyComponent *objComp);
     // TODO: TEMP

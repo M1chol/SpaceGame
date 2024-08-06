@@ -167,16 +167,19 @@ RigidBodyComponent *RigidBodyComponent::isColliding(RigidBodyComponent *obj)
 	auto el = std::find(collisionList.begin(), collisionList.end(), obj);
 	if (el != collisionList.end())
 	{
-		std::cout << *el << "\n";
+		// std::cout << *el << "\n";
 		return *el;
 	}
 	return nullptr;
 }
-RigidBodyComponent *RigidBodyComponent::isColliding(TAG tag)
+RigidBodyComponent *RigidBodyComponent::isColliding(TAG tag, bool debug)
 {
+	if (debug)
+	{
+		// std::cout << getParent()->getComponent<RigidBodyComponent>()->collisionList.size() << std::endl;
+	}
 	for (RigidBodyComponent *obj : collisionList)
 	{
-		// std::cout << obj->getParent()->getName() << std::endl;
 		for (TAG stag : obj->parent->linkedTags)
 		{
 			if (stag == tag)
@@ -189,6 +192,7 @@ RigidBodyComponent *RigidBodyComponent::isColliding(TAG tag)
 }
 void RigidBodyComponent::solveCollision(RigidBodyComponent *obj)
 {
+	// std::cout << "Pushing " << obj << " to " << this << std::endl;
 	collisionList.push_back(obj);
 	// std::cout << collisionList.size();
 	if (!isTrigger)

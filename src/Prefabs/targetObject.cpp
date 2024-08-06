@@ -22,8 +22,11 @@ void targetObject::update()
 
 void targetObject::lateUpdate()
 {
-    // if (rb->isColliding(getScene()->getObjectByName("PlayerObject")->getComponent<RigidBodyComponent>()))
-    // {
-    //     destroy();
-    // }
+    // std::cout << getComponent<RigidBodyComponent>()->collisionList.size();
+    RigidBodyComponent *targ = rb->isColliding(TAG_PLAYER);
+    // std::cout << targ;
+    if (targ)
+    {
+        destroy();
+    }
 }

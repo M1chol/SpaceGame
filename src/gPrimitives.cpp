@@ -253,9 +253,9 @@ int Scene::Update()
             updatedObjects++;
             obj->render();
             obj->update();
-            handleCollisions(i);
         }
     }
+    handleCollisions();
     // std::cout << getObjectByName("PlayerObject")->getComponent<RigidBodyComponent>()->collisionList.size();
     //  Late Update
     //  HACK: create list of objects for late update to optimize
@@ -315,40 +315,43 @@ std::vector<Object *> Scene::getObjectByTag(TAG tag)
     }
     return objects;
 }
-bool Scene::handleCollisions(int currObj)
+bool Scene::handleCollisions()
 {
-    RigidBodyComponent *rb1 = objectList[currObj]->getComponent<RigidBodyComponent>();
-    if (rb1 == nullptr || !rb1->hasCollision)
+    for (int currObj = 0; currObj < nrOfObjects; currObj++)
     {
-        return false;
-    }
-    iVect maxA = objectList[currObj]->pos.toIVect() + rb1->getHitBox()[0];
-    iVect minA = objectList[currObj]->pos.toIVect() + rb1->getHitBox()[1];
+        RigidBodyComponent *rb1 = objectList[currObj]->getComponent<RigidBodyComponent>();
+        if (rb1 == nullptr || !rb1->hasCollision)
+        {
+            return false;
+        }
+        iVect maxA = objectList[currObj]->pos.toIVect() + rb1->getHitBox()[0];
+        iVect minA = objectList[currObj]->pos.toIVect() + rb1->getHitBox()[1];
 
-    for (int i = currObj + 1; i < nrOfObjects; i++)
-    {
-        RigidBodyComponent *rb2 = objectList[i]->getComponent<RigidBodyComponent>();
-        if (rb2 == nullptr || !rb2->hasCollision)
+        for (int i = currObj + 1; i < nrOfObjects; i++)
         {
-            continue;
+            RigidBodyComponent *rb2 = objectList[i]->getComponent<RigidBodyComponent>();
+            if (rb2 == nullptr || !rb2->hasCollision)
+            {
+                continue;
+            }
+            iVect maxB = objectList[i]->pos.toIVect() + rb2->getHitBox()[0];
+            iVect minB = objectList[i]->pos.toIVect() + rb2->getHitBox()[1];
+            double d1x = minB.x - maxA.x;
+            double d1y = minB.y - maxA.y;
+            double d2x = minA.x - maxB.x;
+            double d2y = minA.y - maxB.y;
+            if (d1x > 0.0 || d1y > 0.0)
+            {
+                continue;
+            }
+            if (d2x > 0.0 || d2y > 0.0)
+            {
+                continue;
+            }
+            // std::cout << rb1->getParent()->getName() << " -> " << rb2->getParent()->getName() << std::endl;
+            rb2->solveCollision(rb1);
+            rb1->solveCollision(rb2);
         }
-        iVect maxB = objectList[i]->pos.toIVect() + rb2->getHitBox()[0];
-        iVect minB = objectList[i]->pos.toIVect() + rb2->getHitBox()[1];
-        double d1x = minB.x - maxA.x;
-        double d1y = minB.y - maxA.y;
-        double d2x = minA.x - maxB.x;
-        double d2y = minA.y - maxB.y;
-        if (d1x > 0.0 || d1y > 0.0)
-        {
-            continue;
-        }
-        if (d2x > 0.0 || d2y > 0.0)
-        {
-            continue;
-        }
-        // std::cout << rb1->getParent()->getName() << " -> " << rb2->getParent()->getName() << std::endl;
-        rb2->solveCollision(rb1);
-        rb1->solveCollision(rb2);
     }
     return true;
 }

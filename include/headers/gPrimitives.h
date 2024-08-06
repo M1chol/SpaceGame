@@ -115,7 +115,7 @@ public:
     std::string getName();
     // Returns pointer to renderer linked to Scene
     SDL_Renderer *getRenderer();
-    bool handleCollisions(int objectNr);
+    bool handleCollisions();
     Object *getObjectByName(std::string name);
     std::vector<Object *> getObjectByTag(TAG);
     std::vector<Object *> toBeRemoved;
