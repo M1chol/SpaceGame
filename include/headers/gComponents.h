@@ -15,7 +15,7 @@ public:
     ~SpriteComponent() override;
 
     /* Loads texture on specified path @returns true if successfull */
-    bool load(std::string path);
+    virtual bool load(std::string path);
 
     // void destroy() override;
 
@@ -41,13 +41,15 @@ public:
     iVect *getDim();
     void setScale(float newScale);
 
-private:
-    SDL_Texture *texture;
-    std::string path;
+protected:
     SDL_Renderer *gRenderer;
-    SDL_Rect *renderBox;
+    SDL_Texture *texture;
     iVect *dim;
+    std::string path;
     float scale;
+
+private:
+    SDL_Rect *renderBox;
 };
 
 class RigidBodyComponent : public Component
@@ -116,6 +118,22 @@ private:
     double bulletLifeSpan;
     Vect shootOffset;
     std::vector<std::shared_ptr<bulletType>> pool;
+};
+
+class TextComponent : public SpriteComponent
+{
+public:
+    TextComponent(std::string setMessage, Vect setPos, std::string fontPath = "");
+    bool load(std::string newMessage) override;
+    bool load(std::string newMessage, SDL_Color color, std::string fontPath = "");
+    void setFont(std::string fontPath, int fontSize = 20);
+    void whenLinked() override;
+    bool update() override;
+
+private:
+    Vect pos;
+    TTF_Font *font;
+    SDL_Color color = {255, 255, 255};
 };
 
 #endif

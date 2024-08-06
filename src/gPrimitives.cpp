@@ -1,6 +1,6 @@
 #include "engine.h"
 
-#pragma region Vect math implementation
+#pragma region Vect
 
 Vect Vect::operator*(double scalar)
 {
@@ -67,7 +67,7 @@ iVect &iVect::operator*=(int scalar)
 
 #pragma endregion
 
-#pragma region Object definitions
+#pragma region Object
 
 Object::Object(Scene *scene)
 {
@@ -137,6 +137,10 @@ Scene *Object::getScene()
 void Object::setName(std::string newName)
 {
     name = newName;
+    if (showDebugNames)
+    {
+        addComponent(new TextComponent(name, pos, globalFont));
+    }
 }
 std::string Object::getName()
 {
@@ -155,13 +159,19 @@ bool Object::removeComponent(Component *comp)
 }
 void Object::render()
 {
+    LOG_INIT_CERR();
     for (auto &component : componentList)
     {
-        component->render();
+        if (!component->render())
+        {
+            removeComponent(component);
+            log(LOG_WARN) << "Removed faulty component (" << this << ") in " << this->getName() << "\n";
+        }
     }
 }
 void Object::update()
 {
+    LOG_INIT_CERR();
     for (auto &component : componentList)
     {
         component->update();
@@ -188,7 +198,7 @@ CompType *Object::getComponent()
 void Object::lateUpdate() {}
 #pragma endregion
 
-#pragma region Component definitions
+#pragma region Component
 
 void Component::setParent(Object *new_parent)
 {
@@ -208,7 +218,7 @@ Object *Component::getParent()
 
 #pragma endregion
 
-#pragma region Scene definitions
+#pragma region Scene
 
 Scene::Scene(SDL_Renderer *newRenderer)
 {

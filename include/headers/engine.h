@@ -27,7 +27,9 @@ extern double deltaTime;
 extern double drawTime;
 extern bool drawHitbox;
 extern bool waitToDebug;
+extern bool showDebugNames;
 extern int nrOfScenes;
+extern std::string globalFont;
 
 /*Initialize SDL wrapper "Engine" @return true if successfull*/
 bool EngineInit();

@@ -6,14 +6,14 @@
 PlayerObject::PlayerObject(Scene *scene) : Object(scene)
 {
     LOG_INIT_CERR();
-    setName("PlayerObject");
     addTag(TAG_PLAYER);
+    addComponent(new SpriteComponent("res/player-placeholder.png"));
+    setName("PlayerObject");
     PlayerRB = new RigidBodyComponent(10);
     bulletSpawner = new SpawnerComponent<genericBullet>(center, 0.2, 2);
     forceToApply = {0.0, 0.0};
     playerSpeed = 350.0;
     addComponent(bulletSpawner);
-    addComponent(new SpriteComponent("res/player-placeholder.png"));
     addComponent(PlayerRB);
     pos = {(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2};
     PlayerRB->setEnergyLoss(0.03);

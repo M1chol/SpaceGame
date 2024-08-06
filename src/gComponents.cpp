@@ -20,7 +20,11 @@ void SpriteComponent::whenLinked()
 {
 	LOG_INIT_CERR();
 	gRenderer = parent->getScene()->getRenderer();
-	load(path);
+	if (!load(path))
+	{
+		getParent()->removeComponent(this);
+		log(LOG_WARN) << "Removing faulty component (" << this << ")\n";
+	}
 	log(LOG_INFO) << "Sprite component (" << this << ") linked to " << parent->getName() << "\n";
 }
 bool SpriteComponent::load(std::string path)
@@ -262,5 +266,83 @@ bool SpawnerComponent<bulletType>::update()
 
 #pragma region TextComponent
 
+TextComponent::TextComponent(std::string setMessage, Vect setPos, std::string fontPath)
+{
+	font = nullptr;
+	pos = setPos;
+	path = setMessage;
+	texture = NULL;
+	dim = new iVect;
+	gRenderer = nullptr;
+	scale = 1;
+	if (fontPath != "")
+	{
+		setFont(fontPath);
+	}
+}
+
+bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string fontPath)
+{
+	LOG_INIT_CERR();
+	color = newColor;
+	if (fontPath != "")
+	{
+		setFont(fontPath);
+	}
+	if (font == NULL)
+	{
+		log(LOG_WARN) << "Text component failed to load font\n";
+		return false;
+	}
+	SDL_Surface *textSurface = TTF_RenderText_Solid(font, path.c_str(), newColor);
+	if (textSurface == NULL)
+	{
+		log(LOG_WARN) << "Text surface failed to render in TextComponent (" << this << ") " << TTF_GetError() << "\n";
+		return false;
+	}
+	texture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
+	if (texture == NULL)
+	{
+		log(LOG_WARN) << "Text surface failed to create texture in TextComponent (" << this << ") " << TTF_GetError() << "\n";
+		return false;
+	}
+	*dim = {textSurface->w, textSurface->h};
+	SDL_FreeSurface(textSurface);
+	return true;
+}
+
+bool TextComponent::load(std::string newMessage)
+{
+	return load(newMessage);
+}
+
+void TextComponent::whenLinked()
+{
+	LOG_INIT_CERR();
+	gRenderer = parent->getScene()->getRenderer();
+	if (!load(path, color))
+	{
+		getParent()->removeComponent(this);
+		log(LOG_WARN) << "Removing faulty component (" << this << ")\n";
+	}
+	log(LOG_INFO) << "Text component (" << this << ") linked to " << parent->getName() << "\n";
+}
+
+void TextComponent::setFont(std::string fontPath, int fontSize)
+{
+	LOG_INIT_CERR();
+	font = TTF_OpenFont(fontPath.c_str(), fontSize);
+	if (font == NULL)
+	{
+		log(LOG_WARN) << "Font file " << fontPath << " failed to load " << TTF_GetError() << "\n";
+	}
+}
+
+bool TextComponent::update()
+{
+	// For now updating text every frame
+	// TODO: Make system based on calls
+	// load(path);
+}
 
 #pragma endregion
