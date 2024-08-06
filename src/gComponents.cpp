@@ -1,6 +1,6 @@
 #include "gComponents.h"
 
-#pragma region SpriteComponent definitions
+#pragma region SpriteComponent
 
 SpriteComponent::SpriteComponent(std::string newPath)
 {
@@ -93,7 +93,7 @@ void SpriteComponent::setScale(float newScale)
 
 #pragma endregion
 
-#pragma region RigidBodyComponent definitions
+#pragma region RigidBodyComponent
 
 RigidBodyComponent::RigidBodyComponent(double newMass)
 {
@@ -130,6 +130,7 @@ bool RigidBodyComponent::render()
 }
 bool RigidBodyComponent::update()
 {
+	collisionList.clear();
 	// TODO: add check if speed is beeing changed, then disable energy loss to let objects move at real speed
 	if (mass == 0.0)
 	{
@@ -141,7 +142,6 @@ bool RigidBodyComponent::update()
 	velocity *= energyLoss;
 	parent->pos += velocity;
 	// momentum = velocity * mass;
-	collisionList.clear();
 	return true;
 }
 void RigidBodyComponent::setCollision(std::vector<iVect> *newHitBox, bool newisTrigger)
@@ -162,14 +162,28 @@ std::vector<iVect> &RigidBodyComponent::getHitBox()
 {
 	return hitBox;
 }
-bool RigidBodyComponent::isColliding(RigidBodyComponent *obj)
+RigidBodyComponent *RigidBodyComponent::isColliding(RigidBodyComponent *obj)
 {
 	auto el = std::find(collisionList.begin(), collisionList.end(), obj);
 	if (el != collisionList.end())
 	{
-		return true;
+		return *el;
 	}
-	return false;
+	return nullptr;
+}
+RigidBodyComponent *RigidBodyComponent::isColliding(TAG tag)
+{
+	for (RigidBodyComponent *obj : collisionList)
+	{
+		for (TAG stag : obj->parent->linkedTags)
+		{
+			if (stag == tag)
+			{
+				return obj;
+			}
+		}
+	}
+	return nullptr;
 }
 void RigidBodyComponent::solveCollision(RigidBodyComponent *obj)
 {

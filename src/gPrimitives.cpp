@@ -100,8 +100,9 @@ Object::~Object()
     linkedScene = nullptr;
     log(LOG_INFO) << "Removed object " << this->name << " (" << this << ")\n";
 }
-void Object::remove()
+void Object::destroy()
 {
+
     isActive = false;
     this->linkedScene->toBeRemoved.push_back(this);
 }
@@ -111,6 +112,10 @@ void Object::addComponent(Component *comp)
     comp->setParent(this);
     comp->whenLinked();
     nrOfComponents++;
+}
+void Object::addTag(TAG newTag)
+{
+    linkedTags.push_back(newTag);
 }
 void Object::setScene(Scene *parentScene)
 {
@@ -166,6 +171,10 @@ template <typename CompType>
 CompType *Object::getComponent()
 {
     LOG_INIT_CERR();
+    if (this == nullptr)
+    {
+        return nullptr;
+    }
     for (Component *comp : componentList)
     {
         if (CompType *specificComp = dynamic_cast<CompType *>(comp))
@@ -176,6 +185,7 @@ CompType *Object::getComponent()
     log(LOG_WARN) << "getComponent returned nullptr, this is not normal behaviour\n";
     return nullptr;
 }
+void Object::lateUpdate() {}
 #pragma endregion
 
 #pragma region Component definitions
@@ -184,17 +194,17 @@ void Component::setParent(Object *new_parent)
 {
     parent = new_parent;
 }
-
 bool Component::render() { return true; };
 bool Component::update() { return true; };
-
 Component::~Component()
 {
     // this->destroy();
 }
-
 void Component::whenLinked() {};
-// void Component::destroy() {};
+Object *Component::getParent()
+{
+    return parent;
+}
 
 #pragma endregion
 
@@ -212,11 +222,10 @@ Scene::~Scene()
     LOG_INIT_CERR();
     for (int i = nrOfObjects - 1; i > 0; i--)
     {
-        objectList[i]->remove();
+        objectList[i]->destroy();
     }
     objectList.clear();
 }
-
 void Scene::setName(std::string newName)
 {
     name = newName;
@@ -225,33 +234,41 @@ std::string Scene::getName()
 {
     return name;
 }
-
 bool Scene::addObject(Object *obj)
 {
     objectList.push_back(obj);
     nrOfObjects++;
 }
-
 int Scene::Update()
 {
     SDL_SetRenderDrawColor(sceneRenderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(sceneRenderer);
-    int temp = 0;
+    int updatedObjects = 0;
+    // True Update
     for (int i = 0; i < nrOfObjects; i++)
     {
         Object *obj = objectList[i];
         if (obj->isActive)
         {
-            // Calling the same 2 for loops. posisible fix here
-            temp++;
+            updatedObjects++;
             obj->render();
             obj->update();
-            handleCollisions(i);
+        }
+    }
+    handleCollisions();
+    //  Late Update
+    //  HACK: create list of objects for late update to optimize
+    for (int i = 0; i < nrOfObjects; i++)
+    {
+        Object *obj = objectList[i];
+        if (obj->isActive)
+        {
+            obj->lateUpdate();
         }
     }
     removeSheduled();
     SDL_RenderPresent(sceneRenderer);
-    return temp;
+    return updatedObjects;
 }
 SDL_Renderer *Scene::getRenderer()
 {
@@ -272,7 +289,6 @@ bool Scene::removeObject(Object *obj)
 }
 Object *Scene::getObjectByName(std::string name)
 {
-    LOG_INIT_CERR();
     for (auto &obj : objectList)
     {
         if (obj->getName() == name)
@@ -282,47 +298,61 @@ Object *Scene::getObjectByName(std::string name)
     }
     return nullptr;
 }
-
-bool Scene::handleCollisions(int currObj)
+std::vector<Object *> Scene::getObjectByTag(TAG tag)
 {
-    RigidBodyComponent *currRB = objectList[currObj]->getComponent<RigidBodyComponent>();
-    if (currRB == nullptr)
+    std::vector<Object *> objects;
+    LOG_INIT_CERR();
+    for (auto &obj : objectList)
     {
-        return false;
+        for (auto &ltag : obj->linkedTags)
+        {
+            if (tag == ltag)
+            {
+                objects.push_back(obj);
+            }
+        }
     }
-    if (!currRB->hasCollision)
+    return objects;
+}
+bool Scene::handleCollisions()
+{
+    for (int currObj = 0; currObj < nrOfObjects; currObj++)
     {
-        return false;
-    }
-    iVect maxA = objectList[currObj]->pos.toIVect() + currRB->getHitBox()[0];
-    iVect minA = objectList[currObj]->pos.toIVect() + currRB->getHitBox()[1];
-    for (int j = currObj + 1; j < nrOfObjects; j++)
-    {
-        RigidBodyComponent *testRB = objectList[j]->getComponent<RigidBodyComponent>();
-        if (testRB == nullptr || !testRB->hasCollision)
+        RigidBodyComponent *rb1 = objectList[currObj]->getComponent<RigidBodyComponent>();
+        if (rb1 == nullptr || !rb1->hasCollision)
         {
-            continue;
+            return false;
         }
-        iVect maxB = objectList[j]->pos.toIVect() + testRB->getHitBox()[0];
-        iVect minB = objectList[j]->pos.toIVect() + testRB->getHitBox()[1];
-        double d1x = minB.x - maxA.x;
-        double d1y = minB.y - maxA.y;
-        double d2x = minA.x - maxB.x;
-        double d2y = minA.y - maxB.y;
-        if (d1x > 0.0 || d1y > 0.0)
+        iVect maxA = objectList[currObj]->pos.toIVect() + rb1->getHitBox()[0];
+        iVect minA = objectList[currObj]->pos.toIVect() + rb1->getHitBox()[1];
+
+        for (int i = currObj + 1; i < nrOfObjects; i++)
         {
-            continue;
+            RigidBodyComponent *rb2 = objectList[i]->getComponent<RigidBodyComponent>();
+            if (rb2 == nullptr || !rb2->hasCollision)
+            {
+                continue;
+            }
+            iVect maxB = objectList[i]->pos.toIVect() + rb2->getHitBox()[0];
+            iVect minB = objectList[i]->pos.toIVect() + rb2->getHitBox()[1];
+            double d1x = minB.x - maxA.x;
+            double d1y = minB.y - maxA.y;
+            double d2x = minA.x - maxB.x;
+            double d2y = minA.y - maxB.y;
+            if (d1x > 0.0 || d1y > 0.0)
+            {
+                continue;
+            }
+            if (d2x > 0.0 || d2y > 0.0)
+            {
+                continue;
+            }
+            rb2->solveCollision(rb1);
+            rb1->solveCollision(rb2);
         }
-        if (d2x > 0.0 || d2y > 0.0)
-        {
-            continue;
-        }
-        currRB->solveCollision(testRB);
-        testRB->solveCollision(currRB);
     }
     return true;
 }
-
 void Scene::removeSheduled()
 {
     for (auto *obj : toBeRemoved)

@@ -7,6 +7,7 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
 {
     LOG_INIT_CERR();
     setName("PlayerObject");
+    addTag(TAG_PLAYER);
     PlayerRB = new RigidBodyComponent(10);
     bulletSpawner = new SpawnerComponent<genericBullet>(center, 0.2, 2);
     forceToApply = {0.0, 0.0};
@@ -42,7 +43,7 @@ void PlayerObject::update()
     }
     if (isKeyDown(SDL_SCANCODE_Q))
     {
-        remove();
+        destroy();
         LOG_INIT_CERR();
         log(LOG_INFO) << "Oh no! player destroyed!\n";
     }

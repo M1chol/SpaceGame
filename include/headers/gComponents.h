@@ -73,14 +73,18 @@ public:
     std::vector<iVect> &getHitBox();
     /* If true collisions will be checked for this object*/
     bool hasCollision;
-    /* Returns true if Object is colliding with `objComp` @param objComp pointer to objects RB*/
-    bool isColliding(RigidBodyComponent *objComp);
+    /* Checks if `Object` is colliding with other `Object`. Value can be checked using `Object` pointer OR `TAG` @param objComp pointer to objects RB @param tag search by tag @returns pointer to found object, nullptr if collision is not accouring*/
+    RigidBodyComponent *isColliding(RigidBodyComponent *objComp);
+    /* Checks if `Object` is colliding with other `Object`. Value can be checked using `Object` pointer OR `TAG` @param objComp pointer to objects RB @param tag search by tag @returns pointer to found object, nullptr if collision is not accouring*/
+    RigidBodyComponent *isColliding(TAG tag);
     /* add RB to colliding list @param objComp RB of object to be added to list */
     void solveCollision(RigidBodyComponent *objComp);
+    // TODO: TEMP
+    std::vector<RigidBodyComponent *> collisionList;
 
 private:
     std::vector<iVect> hitBox;
-    std::vector<RigidBodyComponent *> collisionList;
+
     double mass;
     double maxSpeed;
     double energyLoss;
@@ -115,4 +119,5 @@ private:
     Vect shootOffset;
     std::vector<std::shared_ptr<bulletType>> pool;
 };
+
 #endif

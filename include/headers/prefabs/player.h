@@ -1,6 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+class RigidBodyComponent;
+class SpriteComponent;
+
 class PlayerObject : public Object
 {
 public:
