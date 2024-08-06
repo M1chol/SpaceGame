@@ -12,10 +12,12 @@ double drawTime;
 int nrOfScenes = 1; // TODO: Imlement adding of scenes
 Uint8 currentKeyState[SDL_NUM_SCANCODES];
 Uint8 previousKeyState[SDL_NUM_SCANCODES];
+std::string globalFont = "res/Pixellettersfull-BnJ5.ttf";
 
 // SETUPS
 bool drawHitbox = true;
 bool waitToDebug = true;
+bool showDebugNames = true;
 
 // TODO: Text rendering
 
@@ -49,6 +51,11 @@ bool EngineInit()
     if (!(IMG_Init(imageFlags) & imageFlags))
     {
         log(LOG_ERR) << "SDL_Image failed to initialize " << IMG_GetError() << "\n";
+        return false;
+    }
+    if (TTF_Init() == -1)
+    {
+        log(LOG_ERR) << "SDL_ttf failed to initialize" << TTF_GetError() << "\n";
         return false;
     }
     mainScene = new Scene(gRenderer);

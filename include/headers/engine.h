@@ -13,6 +13,7 @@ enum TAG
 #include <logger.h>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <gPrimitives.h>
 #include <gComponents.h>
 #include <genericBullet.h>
@@ -26,7 +27,9 @@ extern double deltaTime;
 extern double drawTime;
 extern bool drawHitbox;
 extern bool waitToDebug;
+extern bool showDebugNames;
 extern int nrOfScenes;
+extern std::string globalFont;
 
 /*Initialize SDL wrapper "Engine" @return true if successfull*/
 bool EngineInit();

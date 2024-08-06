@@ -6,6 +6,8 @@
 PlayerObject::PlayerObject(Scene *scene) : Object(scene)
 {
     LOG_INIT_CERR();
+    addTag(TAG_PLAYER);
+    addComponent(new SpriteComponent("res/player-placeholder.png"));
     setName("PlayerObject");
     addTag(TAG_PLAYER);
     PlayerRB = new RigidBodyComponent(10);
@@ -13,7 +15,6 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     forceToApply = {0.0, 0.0};
     playerSpeed = 350.0;
     addComponent(bulletSpawner);
-    addComponent(new SpriteComponent("res/player-placeholder.png"));
     addComponent(PlayerRB);
     pos = {(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2};
     PlayerRB->setEnergyLoss(0.03);
