@@ -8,4 +8,5 @@ Grid::Grid(Scene *scene, iVect setSize, double setCellSize) : Object(scene)
 
 Grid::~Grid()
 {
+    
 }

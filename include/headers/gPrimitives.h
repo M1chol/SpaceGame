@@ -89,10 +89,13 @@ public:
     bool move(Vect newPos);
     Vect getPos();
     bool isActive;
+    bool posLocked;
     std::vector<TAG> linkedTags;
 
-private:
+protected:
     Vect pos;
+
+private:
     Scene *linkedScene;
     std::vector<Component *> componentList;
     std::string name;
@@ -123,6 +126,7 @@ public:
     std::vector<Object *> toBeRemoved;
     // Remove items scheduled for destruction
     void removeSheduled();
+    int getNrOfObjects();
 
 private:
     SDL_Renderer *sceneRenderer;

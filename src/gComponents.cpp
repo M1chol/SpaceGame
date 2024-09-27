@@ -135,7 +135,6 @@ bool RigidBodyComponent::render()
 bool RigidBodyComponent::update()
 {
 	collisionList.clear();
-	// TODO: add check if speed is beeing changed, then disable energy loss to let objects move at real speed
 	if (mass == 0.0)
 	{
 		parent->move(parent->getPos() + force * deltaTime);
@@ -143,8 +142,8 @@ bool RigidBodyComponent::update()
 	}
 	Vect acceleration = {force.x / mass, force.y / mass};
 	velocity += acceleration * deltaTime;
-	velocity *= energyLoss;
-	parent->move(parent->getPos() += velocity);
+	velocity *= std::pow(1 - energyLoss, deltaTime);
+	parent->move(parent->getPos() + velocity * deltaTime);
 	// momentum = velocity * mass;
 	return true;
 }

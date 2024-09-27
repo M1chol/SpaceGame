@@ -36,14 +36,14 @@ int main(int argc, char *args[])
 		drawTime = (double)(SDL_GetTicks() - currentTime) / 1000.0;
 
 		previousTime = currentTime;
-		EngineCapFrames(60);
+		// EngineCapFrames(60);
 		if (timer < 5)
 		{
 			timer += deltaTime;
 		}
 		else
 		{
-			log(LOG_INFO) << "Current frame rate " << (int)(1 / deltaTime) << " fps\n";
+			log(LOG_INFO) << "Current frame rate " << (double)(1 / deltaTime) << " fps. Nr of objects: " << mainScene->getNrOfObjects() << '\n';
 			timer = 0.0;
 		}
 		while (SDL_PollEvent(&e) != 0)

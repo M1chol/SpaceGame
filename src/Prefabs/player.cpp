@@ -10,10 +10,10 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     addComponent(new SpriteComponent("res/player-placeholder.png"));
     setName("PlayerObject");
     addTag(TAG_PLAYER);
-    PlayerRB = new RigidBodyComponent(10);
+    PlayerRB = new RigidBodyComponent(1);
     bulletSpawner = new SpawnerComponent<genericBullet>(center, 0.2, 2);
     forceToApply = {0.0, 0.0};
-    playerSpeed = 350.0;
+    playerSpeed = 3000.0;
     addComponent(bulletSpawner);
     addComponent(PlayerRB);
     move({(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2});

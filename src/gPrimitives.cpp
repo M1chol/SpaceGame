@@ -78,6 +78,7 @@ Object::Object(Scene *scene)
     name = "unnamed";
     nrOfComponents = 0;
     isActive = true;
+    posLocked = false;
 }
 Object::~Object()
 {
@@ -112,7 +113,13 @@ Vect Object::getPos()
 }
 bool Object::move(Vect newPos)
 {
+    LOG_INIT_CERR();
+    if (posLocked)
+    {
+        return false;
+    }
     pos = newPos;
+    return true;
 }
 void Object::addComponent(Component *comp)
 {
@@ -378,6 +385,11 @@ void Scene::removeSheduled()
         delete obj;
     }
     toBeRemoved.clear();
+}
+
+int Scene::getNrOfObjects()
+{
+    return objectList.size();
 }
 
 #pragma endregion
