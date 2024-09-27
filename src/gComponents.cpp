@@ -65,7 +65,7 @@ bool SpriteComponent::render(iVect offset, float newScale)
 		log(LOG_WARN) << "gRenderer is nullptr for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
 		return false;
 	}
-	*renderBox = {(int)parent->pos.x + offset.x, (int)parent->pos.y + offset.y, (int)((float)dim->x * scale), (int)((float)dim->y * scale)};
+	*renderBox = {(int)parent->getPos().x + offset.x, (int)parent->getPos().y + offset.y, (int)((float)dim->x * scale), (int)((float)dim->y * scale)};
 	if (SDL_RenderCopy(gRenderer, texture, NULL, renderBox))
 	{
 		log(LOG_WARN) << "Texture failed to render for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
@@ -126,7 +126,7 @@ bool RigidBodyComponent::render()
 	if (drawHitbox && hasCollision)
 	{
 		SDL_Renderer *renderer = parent->getScene()->getRenderer();
-		SDL_Rect hitBoxVisual{(int)parent->pos.x + hitBox[0].x, (int)parent->pos.y + hitBox[0].y, hitBox[1].x - hitBox[0].x, hitBox[1].y - hitBox[0].y};
+		SDL_Rect hitBoxVisual{(int)parent->getPos().x + hitBox[0].x, (int)parent->getPos().y + hitBox[0].y, hitBox[1].x - hitBox[0].x, hitBox[1].y - hitBox[0].y};
 		SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
 		SDL_RenderDrawRect(renderer, &hitBoxVisual);
 	}
@@ -138,13 +138,13 @@ bool RigidBodyComponent::update()
 	// TODO: add check if speed is beeing changed, then disable energy loss to let objects move at real speed
 	if (mass == 0.0)
 	{
-		parent->pos = parent->pos + force * deltaTime;
+		parent->move(parent->getPos() + force * deltaTime);
 		return true;
 	}
 	Vect acceleration = {force.x / mass, force.y / mass};
 	velocity += acceleration * deltaTime;
 	velocity *= energyLoss;
-	parent->pos += velocity;
+	parent->move(parent->getPos() += velocity);
 	// momentum = velocity * mass;
 	return true;
 }
@@ -232,14 +232,14 @@ bool SpawnerComponent<bulletType>::shoot()
 	}
 	if (poolsize < 1 || pool[0]->isActive)
 	{
-		std::shared_ptr<bulletType> projectile = std::make_shared<bulletType>(parent->getScene(), parent->pos + shootOffset);
+		std::shared_ptr<bulletType> projectile = std::make_shared<bulletType>(parent->getScene(), parent->getPos() + shootOffset);
 		projectile->isActive = true;
 		pool.push_back(projectile);
 		poolsize++;
 	}
 	else
 	{
-		pool[0]->pos = parent->pos;
+		pool[0]->move(parent->getPos());
 		pool[0]->isActive = true;
 		std::shared_ptr<bulletType> temp = pool[0];
 		pool.erase(pool.begin());

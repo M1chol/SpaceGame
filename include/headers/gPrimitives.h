@@ -86,11 +86,13 @@ public:
     Scene *getScene();
     void setName(std::string newName);
     std::string getName();
-    Vect pos;
+    bool move(Vect newPos);
+    Vect getPos();
     bool isActive;
     std::vector<TAG> linkedTags;
 
 private:
+    Vect pos;
     Scene *linkedScene;
     std::vector<Component *> componentList;
     std::string name;

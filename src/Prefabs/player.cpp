@@ -16,7 +16,7 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     playerSpeed = 350.0;
     addComponent(bulletSpawner);
     addComponent(PlayerRB);
-    pos = {(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2};
+    move({(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2});
     PlayerRB->setEnergyLoss(0.03);
     std::vector<iVect> box = {{66, 70}, {-66, -70}};
     PlayerRB->setCollision(&box);

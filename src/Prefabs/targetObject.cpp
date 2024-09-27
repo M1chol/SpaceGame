@@ -12,7 +12,7 @@ targetObject::targetObject(Scene *scene, int number) : Object(scene)
     rb = new RigidBodyComponent;
     addComponent(rb);
     rb->setCollision(&box);
-    pos = {(double)(rand() % 500), (double)(rand() % 500)};
+    move({(double)(rand() % 500), (double)(rand() % 500)});
 }
 
 void targetObject::update()

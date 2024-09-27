@@ -106,6 +106,14 @@ void Object::destroy()
     isActive = false;
     this->linkedScene->toBeRemoved.push_back(this);
 }
+Vect Object::getPos()
+{
+    return pos;
+}
+bool Object::move(Vect newPos)
+{
+    pos = newPos;
+}
 void Object::addComponent(Component *comp)
 {
     componentList.push_back(comp);
@@ -333,8 +341,8 @@ bool Scene::handleCollisions()
         {
             return false;
         }
-        iVect maxA = objectList[currObj]->pos.toIVect() + rb1->getHitBox()[0];
-        iVect minA = objectList[currObj]->pos.toIVect() + rb1->getHitBox()[1];
+        iVect maxA = objectList[currObj]->getPos().toIVect() + rb1->getHitBox()[0];
+        iVect minA = objectList[currObj]->getPos().toIVect() + rb1->getHitBox()[1];
 
         for (int i = currObj + 1; i < nrOfObjects; i++)
         {
@@ -343,8 +351,8 @@ bool Scene::handleCollisions()
             {
                 continue;
             }
-            iVect maxB = objectList[i]->pos.toIVect() + rb2->getHitBox()[0];
-            iVect minB = objectList[i]->pos.toIVect() + rb2->getHitBox()[1];
+            iVect maxB = objectList[i]->getPos().toIVect() + rb2->getHitBox()[0];
+            iVect minB = objectList[i]->getPos().toIVect() + rb2->getHitBox()[1];
             double d1x = minB.x - maxA.x;
             double d1y = minB.y - maxA.y;
             double d2x = minA.x - maxB.x;

@@ -8,6 +8,7 @@ enum TAG
     TAG_ENEMY
 };
 
+// Core files
 #include <string.h>
 #include <vector>
 #include <logger.h>
@@ -16,6 +17,9 @@ enum TAG
 #include <SDL_ttf.h>
 #include <gPrimitives.h>
 #include <gComponents.h>
+#include <gLayouts.h>
+
+// Prefab files
 #include <genericBullet.h>
 
 // Global engine variables
