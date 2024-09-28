@@ -136,4 +136,17 @@ private:
     SDL_Color color = {255, 255, 255};
 };
 
+class Layout;
+
+class LayoutHelperComponent : public Component
+{
+public:
+    LayoutHelperComponent(Layout *setLayout, int setId);
+    ~LayoutHelperComponent();
+
+private:
+    Layout *layout;
+    int id;
+};
+
 #endif

@@ -12,6 +12,7 @@ struct Vect
     double y;
 
     Vect operator+(const Vect &other);
+    Vect operator-(const Vect &other);
     Vect operator*(double scalar);
     Vect &operator+=(const Vect &other);
     Vect &operator*=(double scalar);
@@ -63,7 +64,7 @@ public:
     // virtual void destroy();
 
     /* goes through linked components and renders them if they support it */
-    void render();
+    virtual void render();
     /* goes through linked components and updates them if they support it */
     virtual void update();
     /* Runs after solving collisions */
@@ -79,18 +80,37 @@ public:
     bool removeComponent(Component *comp);
     /* Get pointer to component at specified index @param componentID id of component @return pointer to component */
     template <typename CompType>
-    CompType *getComponent();
+    CompType *getComponent()
+    {
+        LOG_INIT_CERR();
+        if (this == nullptr)
+        {
+            return nullptr;
+        }
+        for (Component *comp : componentList)
+        {
+            if (CompType *specificComp = dynamic_cast<CompType *>(comp))
+            {
+                return specificComp;
+            }
+        }
+        // LATER log(LOG_WARN) << "getComponent returned nullptr, this is not normal behaviour\n";
+        return nullptr;
+    }
     /* Set linked scene variable of Object @param scene pointer to scene */
     void setScene(Scene *scene);
     /* Get Scene pointer of linked scene @return pointer to linked scene*/
     Scene *getScene();
     void setName(std::string newName);
     std::string getName();
-    bool move(Vect newPos);
+    /*Move `Object` to `Scene` coordinets @param newPos position to be moved to @param Forced use only when `Object` should ignore `posLocked` state*/
+    bool move(Vect newPos, bool Forced = false);
+    /*Returns `Scene` coordinates of an Object*/
     Vect getPos();
     bool isActive;
-    bool posLocked;
     std::vector<TAG> linkedTags;
+    /*If true `Object` will ignore move commands*/
+    bool posLocked;
 
 protected:
     Vect pos;

@@ -10,6 +10,10 @@ Vect Vect::operator+(const Vect &other)
 {
     return Vect{x + other.x, y + other.y};
 }
+Vect Vect::operator-(const Vect &other)
+{
+    return Vect{x - other.x, y - other.y};
+}
 Vect &Vect::operator+=(const Vect &other)
 {
     x += other.x;
@@ -111,10 +115,10 @@ Vect Object::getPos()
 {
     return pos;
 }
-bool Object::move(Vect newPos)
+bool Object::move(Vect newPos, bool Forced)
 {
     LOG_INIT_CERR();
-    if (posLocked)
+    if (posLocked && !Forced)
     {
         return false;
     }
@@ -163,6 +167,11 @@ std::string Object::getName()
 }
 bool Object::removeComponent(Component *comp)
 {
+    if (comp == nullptr)
+    {
+        return false;
+    }
+    std::cout << componentList.size();
     auto el = std::find(componentList.begin(), componentList.end(), comp);
     if (el != componentList.end())
     {
@@ -191,24 +200,6 @@ void Object::update()
     {
         component->update();
     }
-}
-template <typename CompType>
-CompType *Object::getComponent()
-{
-    LOG_INIT_CERR();
-    if (this == nullptr)
-    {
-        return nullptr;
-    }
-    for (Component *comp : componentList)
-    {
-        if (CompType *specificComp = dynamic_cast<CompType *>(comp))
-        {
-            return specificComp;
-        }
-    }
-    log(LOG_WARN) << "getComponent returned nullptr, this is not normal behaviour\n";
-    return nullptr;
 }
 void Object::lateUpdate() {}
 #pragma endregion

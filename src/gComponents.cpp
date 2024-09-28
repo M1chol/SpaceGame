@@ -345,3 +345,18 @@ bool TextComponent::update()
 }
 
 #pragma endregion
+
+#pragma region LayoutHelper
+
+LayoutHelperComponent::LayoutHelperComponent(Layout *setLayout, int setId)
+{
+	layout = setLayout;
+	id = setId;
+}
+LayoutHelperComponent::~LayoutHelperComponent()
+{
+	layout->removeObj(id);
+	layout = nullptr;
+}
+
+#pragma endregion

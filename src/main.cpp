@@ -19,6 +19,12 @@ int main(int argc, char *args[])
 	targetObject *target2 = new targetObject(mainScene, 2);
 	targetObject *target3 = new targetObject(mainScene, 3);
 
+	Grid *testGrid = new Grid(mainScene, {4, 3}, 70);
+	testGrid->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT / 2});
+	testGrid->addObj({0, 0}, target1);
+	testGrid->addObj({2, 1}, target2);
+	testGrid->addObj({3, 2}, target3);
+
 	bool quit = false;
 	SDL_Event e;
 	double timer = 0.0;
@@ -36,7 +42,7 @@ int main(int argc, char *args[])
 		drawTime = (double)(SDL_GetTicks() - currentTime) / 1000.0;
 
 		previousTime = currentTime;
-		// EngineCapFrames(60);
+		EngineCapFrames(60);
 		if (timer < 5)
 		{
 			timer += deltaTime;

@@ -19,7 +19,7 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     move({(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2});
     PlayerRB->setEnergyLoss(0.03);
     std::vector<iVect> box = {{66, 70}, {-66, -70}};
-    PlayerRB->setCollision(&box);
+    // PlayerRB->setCollision(&box);
     log(LOG_INFO) << "Created player object (" << this << ")\n";
 }
 
