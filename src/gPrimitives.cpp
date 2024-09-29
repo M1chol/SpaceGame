@@ -117,8 +117,7 @@ Vect Object::getPos()
 }
 bool Object::move(Vect newPos, bool Forced)
 {
-    LOG_INIT_CERR();
-    if (posLocked && !Forced)
+    if (!Forced && posLocked)
     {
         return false;
     }

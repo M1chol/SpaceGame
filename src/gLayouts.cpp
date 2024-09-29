@@ -7,15 +7,16 @@ bool Layout::removeObj(int id) {};
 
 Grid::Grid(Scene *scene, iVect setSize, double setCellSize) : Layout(scene)
 {
+    LOG_INIT_CERR();
     size = setSize;
+    setName("Grid Object");
     cellSize = setCellSize;
     renderer = scene->getRenderer();
     gridCenter = {size.x * cellSize / 2, size.y * (double)cellSize / 2};
-    linkedObjects.resize(size.y);
-    for (auto &row : linkedObjects)
-    {
-        row.resize(size.x);
-    }
+    linkedObjects = std::vector<std::vector<Object *>>(
+        size.x,
+        std::vector<Object *>(size.y, nullptr));
+    log(LOG_INFO) << "Created Grid\n";
 }
 
 void Grid::render()
@@ -55,6 +56,7 @@ bool Grid::addObj(iVect loc, Object *obj)
     obj->posLocked = true;
     linkedObjects[loc.x][loc.y] = obj;
     obj->addComponent(new LayoutHelperComponent(this, size.x * loc.x + loc.y));
+    log(LOG_INFO) << "Object " << obj->getName() << " added to Grid " << this << "\n";
     return true;
 }
 
@@ -79,9 +81,9 @@ void Grid::update()
     {
         for (int j = 0; j < size.x; j++)
         {
-            if (linkedObjects[i][j] != nullptr)
+            if (linkedObjects[j][i] != nullptr)
             {
-                linkedObjects[i][j]->move(calculateSpaceCoordinates({i, j}), true);
+                linkedObjects[j][i]->move(calculateSpaceCoordinates({j, i}), true);
             }
         }
     }
