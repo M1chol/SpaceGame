@@ -12,7 +12,7 @@ Go to [readme.md](https://github.com/M1chol/SpaceGame/blob/master/README.md) for
 
 ## Table of contents
 - [primitive.md](https://github.com/M1chol/SpaceGame/blob/master/doc/primitive.md)
-- [components.md]((https://github.com/M1chol/SpaceGame/blob/master/doc/components.md))
+- [components.md](https://github.com/M1chol/SpaceGame/blob/master/doc/components.md)
 
 ---
 

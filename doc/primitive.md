@@ -90,5 +90,5 @@ This block of code is creating new Object and then linking newly created `Sprite
 - `RigidBodyComponent`
 - `SpawnerComponent`
 - `TextComponent`
-- `LayoutHelperComponent`
-Later documented in components.md
+- `LayoutHelperComponent`  
+Later documented in [components.md](https://github.com/M1chol/SpaceGame/blob/master/doc/components.md)
