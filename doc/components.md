@@ -1,31 +1,3 @@
-# All classes and functions
-
-There are 3 primitive structures their respective definitions are located in `gPrimitives.h`
-- `Sceme`
-- `Object`
-- `Component`
-
-## Scene class
-Scene class holds list of `Object` It is used to keep all Objects for ease of clearing memory. It holds name for debugging purpouses.
-
-
-## Object class
-Object class is the most primitive object that can be created. It has position and a list of linked components.
-
-Example usecase:
-```cpp
-Object player;
-SpriteComponent *component = new SpriteComponent(gRenderer)
-player.addComponent(component);
-```
-This block of code is creating new Object and then linking newly created `SpriteComponent` to it.
-
-## Component class
-`Component` is an abstract parent class for:   
-- `SpriteComponent`
-- `RigidBodyComponent`
-- `SpawnerComponent`
-
 ### SpriteComponent class
 You can use this class to add sprites to any `Object`.   
    

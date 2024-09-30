@@ -10,6 +10,12 @@ Go to [readme.md](https://github.com/M1chol/SpaceGame/blob/master/README.md) for
 
 ---
 
+## Table of contents
+- [primitive.md](https://github.com/M1chol/SpaceGame/blob/master/doc/primitive.md)
+- [components.md]((https://github.com/M1chol/SpaceGame/blob/master/doc/components.md))
+
+---
+
 ## Stucture of the project
 `src` - place for cpp files, all cpp files included here will be compiled to exe   
 `include` - files to be included to compilation   
