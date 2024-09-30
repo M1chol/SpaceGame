@@ -21,6 +21,7 @@ Grid::Grid(Scene *scene, iVect setSize, double setCellSize) : Layout(scene)
 
 void Grid::render()
 {
+    Object::render();
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     Vect offsetPos = pos - gridCenter;
     double drawWidth = (int)(offsetPos.x + size.x * cellSize);
@@ -70,7 +71,8 @@ bool Grid::removeObj(int id)
         return false;
     }
     Object *obj = linkedObjects[result.rem][result.quot];
-    obj->removeComponent(obj->getComponent<LayoutHelperComponent>());
+    log(LOG_INFO) << "Object of id: " << id << "removed from grid " << this << "\n";
+    obj = nullptr;
     return true;
 }
 

@@ -170,7 +170,6 @@ bool Object::removeComponent(Component *comp)
     {
         return false;
     }
-    std::cout << componentList.size();
     auto el = std::find(componentList.begin(), componentList.end(), comp);
     if (el != componentList.end())
     {
