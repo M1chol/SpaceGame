@@ -117,7 +117,7 @@ private:
     int poolsize;
     double bulletLifeSpan;
     Vect shootOffset;
-    std::vector<std::shared_ptr<bulletType>> pool;
+    std::vector<bulletType *> pool;
 };
 
 class TextComponent : public SpriteComponent

@@ -6,7 +6,7 @@
 int main(int argc, char *args[])
 {
 	// SETUP
-	LOG_INIT_CERR();
+	// LOG_INIT_CERR();
 	uint32_t previousTime = SDL_GetTicks();
 	uint32_t currentTime;
 	EngineInit();

@@ -7,14 +7,30 @@ enum TAG
     TAG_PLAYER,
     TAG_ENEMY
 };
+#define LOG_INFO "\x1B[34m[ INF ]\033[0m"
+#define LOG_ERR "\x1B[31m[ ERR ]\033[0m"
+#define LOG_WARN "\x1B[33m[ WRN ]\033[0m"
 
 // Core files
-#include <string.h>
+#include <iostream>
+
+#include <algorithm>
+#include <cstring>
+#include <sstream>
+#include <chrono>
+#include <memory>
+#include <math.h>
+#include <ctime>
+#include <iomanip>
 #include <vector>
-#include <logger.h>
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+
+#include <logger.h>
+#define log(name) Logger(name)
+
 #include <gPrimitives.h>
 #include <gComponents.h>
 #include <gLayouts.h>

@@ -7,7 +7,7 @@ bool Layout::removeObj(int id, bool manual = true) {};
 
 Grid::Grid(Scene *scene, iVect setSize, double setCellSize) : Layout(scene)
 {
-    LOG_INIT_CERR();
+    // LOG_INIT_CERR();
     size = setSize;
     setName("Grid Object");
     cellSize = setCellSize;
@@ -38,7 +38,7 @@ void Grid::render()
 
 bool Grid::addObj(iVect loc, Object *obj)
 {
-    LOG_INIT_CERR();
+    // LOG_INIT_CERR();
     if (loc.x > size.x - 1 || loc.y > size.y - 1)
     {
         log(LOG_WARN) << "Grid::addObj error index out of bounds for grid " << this << "\n";
@@ -63,7 +63,7 @@ bool Grid::addObj(iVect loc, Object *obj)
 
 bool Grid::removeObj(int id, bool manual = true)
 {
-    LOG_INIT_CERR();
+    // LOG_INIT_CERR();
     std::div_t result = std::div(id, size.x);
     if (result.rem > size.y)
     {
@@ -108,7 +108,7 @@ Family::Family(Scene *scene) : Layout(scene)
 
 bool Family::addObj(Object *obj, Vect objPos)
 {
-    LOG_INIT_CERR();
+    // LOG_INIT_CERR();
     if (obj == nullptr)
     {
         return false;

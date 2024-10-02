@@ -86,7 +86,7 @@ Object::Object(Scene *scene)
 }
 Object::~Object()
 {
-    LOG_INIT_CERR();
+    // LOG_INIT_CERR();
     log(LOG_INFO) << "Destroying " << this->name << "\n";
     for (int i = nrOfComponents - 1; i >= 0; i--)
     {
@@ -142,7 +142,7 @@ void Object::setScene(Scene *parentScene)
 }
 Scene *Object::getScene()
 {
-    LOG_INIT_CERR();
+    // LOG_INIT_CERR();
     if (linkedScene != nullptr)
     {
         return linkedScene;
@@ -158,7 +158,7 @@ void Object::setName(std::string newName)
     name = newName;
     if (showDebugNames)
     {
-        new TextComponent(name, pos, globalFont, this);
+        new TextComponent(name, pos, "res/Pixellettersfull-BnJ5.ttf", this);
     }
 }
 std::string Object::getName()
@@ -187,7 +187,7 @@ void Object::render()
         if (!component->render())
         {
             removeComponent(component);
-            LOG_INIT_CERR();
+            // LOG_INIT_CERR();
             log(LOG_WARN) << "Removed faulty component (" << this << ") in " << this->getName() << "\n";
         }
     }
@@ -233,7 +233,7 @@ Scene::Scene(SDL_Renderer *newRenderer)
 }
 Scene::~Scene()
 {
-    LOG_INIT_CERR();
+    // LOG_INIT_CERR();
     for (int i = nrOfObjects - 1; i > 0; i--)
     {
         objectList[i]->destroy();
@@ -290,11 +290,11 @@ SDL_Renderer *Scene::getRenderer()
 }
 bool Scene::removeObject(Object *obj)
 {
-    LOG_INIT_CERR();
+    // LOG_INIT_CERR();
     auto el = std::find(objectList.begin(), objectList.end(), obj);
     if (el != objectList.end())
     {
-        log(LOG_DEBUG) << "Removed " << obj->getName() << " from " << this->getName() << "\n";
+        log(LOG_INFO) << "Removed " << obj->getName() << " from " << this->getName() << "\n";
         objectList.erase(el);
         nrOfObjects--;
         return true;
@@ -315,7 +315,7 @@ Object *Scene::getObjectByName(std::string name)
 std::vector<Object *> Scene::getObjectByTag(TAG tag)
 {
     std::vector<Object *> objects;
-    LOG_INIT_CERR();
+    // LOG_INIT_CERR();
     for (auto &obj : objectList)
     {
         for (auto &ltag : obj->linkedTags)

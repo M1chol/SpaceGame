@@ -22,7 +22,7 @@ SpriteComponent::~SpriteComponent()
 }
 void SpriteComponent::whenLinked()
 {
-	LOG_INIT_CERR();
+	// LOG_INIT_CERR();
 	gRenderer = parent->getScene()->getRenderer();
 	if (!load(path))
 	{
@@ -33,7 +33,7 @@ void SpriteComponent::whenLinked()
 }
 bool SpriteComponent::load(std::string path)
 {
-	LOG_INIT_CERR();
+	// LOG_INIT_CERR();
 	SDL_Texture *new_texture = NULL;
 
 	SDL_Surface *loaded = IMG_Load(path.c_str());
@@ -63,7 +63,7 @@ bool SpriteComponent::render(iVect offset, float newScale)
 	{
 		scale = newScale;
 	}
-	LOG_INIT_CERR();
+	// LOG_INIT_CERR();
 	if (gRenderer == nullptr)
 	{
 		std::cout << "gRenderer is nullptr for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
@@ -122,7 +122,7 @@ RigidBodyComponent::~RigidBodyComponent()
 }
 void RigidBodyComponent::whenLinked()
 {
-	LOG_INIT_CERR();
+	// LOG_INIT_CERR();
 	renderer = parent->getScene()->getRenderer();
 	// log(LOG_INFO) << "RigidBody component (" << this << ") linked to " << parent->getName() << "\n";
 }
@@ -222,7 +222,7 @@ SpawnerComponent<bulletType>::SpawnerComponent(Vect newPos, double setCooldown, 
 template <typename bulletType>
 void SpawnerComponent<bulletType>::whenLinked()
 {
-	LOG_INIT_CERR();
+	// LOG_INIT_CERR();
 	log(LOG_INFO) << "Spawner component (" << this << ") linked to " << parent->getName() << "\n";
 }
 template <typename bulletType>
@@ -239,16 +239,18 @@ bool SpawnerComponent<bulletType>::shoot()
 	}
 	if (poolsize < 1 || pool[0]->isActive)
 	{
-		std::shared_ptr<bulletType> projectile = std::make_shared<bulletType>(parent->getScene(), parent->getPos() + shootOffset);
+		// Create new bullet
+		genericBullet *projectile = new bulletType(parent->getScene(), parent->getPos() + shootOffset);
 		projectile->isActive = true;
 		pool.push_back(projectile);
 		poolsize++;
 	}
 	else
 	{
+		// Reuse latest bullet
 		pool[0]->move(parent->getPos());
 		pool[0]->isActive = true;
-		std::shared_ptr<bulletType> temp = pool[0];
+		genericBullet *temp = pool[0];
 		pool.erase(pool.begin());
 		pool.push_back(temp);
 	}
@@ -259,7 +261,7 @@ template <typename bulletType>
 bool SpawnerComponent<bulletType>::update()
 {
 	cooldownTimer += deltaTime;
-	for (std::shared_ptr<genericBullet> bullet : pool)
+	for (genericBullet *bullet : pool)
 	{
 		if (bullet->aliveFor > bulletLifeSpan)
 		{
@@ -293,7 +295,7 @@ TextComponent::TextComponent(std::string setMessage, Vect setPos, std::string fo
 
 bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string fontPath)
 {
-	LOG_INIT_CERR();
+	// LOG_INIT_CERR();
 	color = newColor;
 	if (fontPath != "")
 	{
@@ -323,7 +325,7 @@ bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string
 
 void TextComponent::whenLinked()
 {
-	LOG_INIT_CERR();
+	// LOG_INIT_CERR();
 	gRenderer = parent->getScene()->getRenderer();
 	if (!load(path, color))
 	{
@@ -335,7 +337,7 @@ void TextComponent::whenLinked()
 
 void TextComponent::setFont(std::string fontPath, int fontSize)
 {
-	LOG_INIT_CERR();
+	// LOG_INIT_CERR();
 	font = TTF_OpenFont(fontPath.c_str(), fontSize);
 	if (font == NULL)
 	{
@@ -367,7 +369,7 @@ LayoutHelperComponent::~LayoutHelperComponent()
 
 void LayoutHelperComponent::whenLinked()
 {
-	LOG_INIT_CERR();
+	// LOG_INIT_CERR();
 	log(LOG_INFO) << "LayoutHelper component (" << this << ") linked to " << parent->getName() << "\n";
 }
 

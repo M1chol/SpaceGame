@@ -1,5 +1,4 @@
 This product includes software developed by
-Bastian Schiffthaler - BSlogger (https://github.com/bschiffthaler/BSlogger)
 libsdl-org - SDL - (https://github.com/libsdl-org/SDL)
 libsdl-org - SDL_image (https://github.com/libsdl-org/SDL_image)
 libsdl-org - SDL_ttf (https://github.com/libsdl-org/SDL_ttf)

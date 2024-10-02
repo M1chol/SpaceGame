@@ -5,7 +5,7 @@
 
 PlayerObject::PlayerObject(Scene *scene) : Object(scene)
 {
-    LOG_INIT_CERR();
+    // LOG_INIT_CERR();
     addTag(TAG_PLAYER);
     setName("PlayerObject");
     addComponent(new SpriteComponent("res/player-placeholder.png"));
@@ -19,7 +19,7 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     PlayerRB->setEnergyLoss(0.03);
     std::vector<iVect> box = {{66, 70}, {-66, -70}};
     PlayerRB->setCollision(&box);
-    log(LOG_INFO) << "Created player object (" << this << ")\n";
+    log(LOG_INFO) << "Created player object (" << this << ")" << std::endl;
 }
 
 void PlayerObject::update()
@@ -44,7 +44,7 @@ void PlayerObject::update()
     if (isKeyDown(SDL_SCANCODE_Q))
     {
         destroy();
-        LOG_INIT_CERR();
+        // LOG_INIT_CERR();
         log(LOG_INFO) << "Oh no! player destroyed!\n";
     }
     if (isKeyDown(SDL_SCANCODE_SPACE))

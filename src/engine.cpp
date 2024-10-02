@@ -17,18 +17,18 @@ std::string globalFont = "res/Pixellettersfull-BnJ5.ttf";
 // SETUPS
 bool drawHitbox = true;
 bool waitToDebug = true;
-bool showDebugNames = true;
+bool showDebugNames = false;
 
 // TODO: Text rendering
 
 bool EngineInit()
 {
-    LOG_INIT_CERR();
+    // LOG_INIT_CERR();
 
     // Try Init
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        log(LOG_ERROR) << "SDL could not initialize successfuly " << SDL_GetError() << "\n";
+        log(LOG_ERR) << "SDL could not initialize successfuly " << SDL_GetError() << "\n";
         return false;
     }
     // Try to create window
@@ -67,7 +67,7 @@ bool EngineInit()
 
 void EngineCapFrames(int targetFrames)
 {
-    LOG_INIT_CERR();
+    // LOG_INIT_CERR();
     double targetFrameTime = 1 / (double)targetFrames;
     if (targetFrameTime > deltaTime)
     {
@@ -82,7 +82,7 @@ void EngineCapFrames(int targetFrames)
 
 void EngineClose()
 {
-    LOG_INIT_CERR();
+    // LOG_INIT_CERR();
     for (int i = nrOfScenes - 1; i >= 0; i--)
     {
         Scene *scene = sceneList[i];
