@@ -9,7 +9,7 @@ class SpriteComponent : public Component
 {
 public:
     /* Create SpriteComponent @param path optional path to image that will be loaded automaticly*/
-    SpriteComponent(std::string path = "");
+    SpriteComponent(std::string path = "", Object *parent = nullptr);
 
     /* Destroy SpriteComponent*/
     ~SpriteComponent() override;
@@ -56,7 +56,7 @@ class RigidBodyComponent : public Component
 {
 public:
     /* Creates RigidBodyComponent @param mass mass of the object, default 0*/
-    RigidBodyComponent(double mass = 0);
+    RigidBodyComponent(double mass = 0, Object *parent = nullptr);
     ~RigidBodyComponent() override;
     /* Updates velocity and position of paren `Object`*/
     bool update() override;
@@ -86,13 +86,13 @@ private:
     std::vector<iVect> hitBox;
     std::vector<RigidBodyComponent *> collisionList;
     double mass;
-    double maxSpeed;
     double energyLoss;
     // double elasticity;
     Vect velocity;
     Vect force;
     // Vect momentum;
     bool isTrigger;
+    SDL_Renderer *renderer;
 };
 
 template <typename bulletType>
@@ -123,9 +123,8 @@ private:
 class TextComponent : public SpriteComponent
 {
 public:
-    TextComponent(std::string setMessage, Vect setPos, std::string fontPath = "");
-    bool load(std::string newMessage) override;
-    bool load(std::string newMessage, SDL_Color color, std::string fontPath = "");
+    TextComponent(std::string setMessage, Vect setPos, std::string fontPath = "", Object *parent = nullptr);
+    bool load(std::string newMessage, SDL_Color color = {255, 255, 255}, std::string fontPath = "");
     void setFont(std::string fontPath, int fontSize = 20);
     void whenLinked() override;
     bool update() override;
@@ -143,6 +142,7 @@ class LayoutHelperComponent : public Component
 public:
     LayoutHelperComponent(Layout *setLayout, int setId);
     ~LayoutHelperComponent();
+    void whenLinked() override;
 
 private:
     Layout *layout;

@@ -82,7 +82,6 @@ public:
     template <typename CompType>
     CompType *getComponent()
     {
-        LOG_INIT_CERR();
         if (this == nullptr)
         {
             return nullptr;
@@ -94,7 +93,6 @@ public:
                 return specificComp;
             }
         }
-        // LATER log(LOG_WARN) << "getComponent returned nullptr, this is not normal behaviour\n";
         return nullptr;
     }
     /* Set linked scene variable of Object @param scene pointer to scene */

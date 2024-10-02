@@ -3,7 +3,7 @@
 Layout::Layout(Scene *scene) : Object(scene) {}
 Layout::~Layout() {};
 bool Layout::addObj() {};
-bool Layout::removeObj(int id) {};
+bool Layout::removeObj(int id, bool manual = true) {};
 
 Grid::Grid(Scene *scene, iVect setSize, double setCellSize) : Layout(scene)
 {
@@ -46,12 +46,12 @@ bool Grid::addObj(iVect loc, Object *obj)
     }
     if (linkedObjects[loc.x][loc.y] != nullptr)
     {
-        log(LOG_WARN) << "Grid::adObj err, space is already occupied\n";
+        log(LOG_WARN) << "Grid::addObj err, space is already occupied\n";
         return false;
     }
     if (obj->getComponent<LayoutHelperComponent>() != nullptr)
     {
-        log(LOG_WARN) << "Grid::adObj err, obj is already part of Layout\n";
+        log(LOG_WARN) << "Grid::addObj err, obj is already part of Layout\n";
         return false;
     }
     obj->posLocked = true;
@@ -61,7 +61,7 @@ bool Grid::addObj(iVect loc, Object *obj)
     return true;
 }
 
-bool Grid::removeObj(int id)
+bool Grid::removeObj(int id, bool manual = true)
 {
     LOG_INIT_CERR();
     std::div_t result = std::div(id, size.x);
@@ -71,7 +71,11 @@ bool Grid::removeObj(int id)
         return false;
     }
     Object *obj = linkedObjects[result.rem][result.quot];
-    log(LOG_INFO) << "Object of id: " << id << "removed from grid " << this << "\n";
+    if (manual)
+    {
+        obj->removeComponent(obj->getComponent<LayoutHelperComponent>());
+    }
+    log(LOG_INFO) << "Object of id: " << id << " removed from grid " << this << "\n";
     obj = nullptr;
     return true;
 }
@@ -95,4 +99,55 @@ Vect Grid::calculateSpaceCoordinates(iVect loc)
 {
     Vect result = {loc.x * cellSize + cellSize / 2, loc.y * cellSize + cellSize / 2};
     return pos + result - gridCenter;
+}
+
+Family::Family(Scene *scene) : Layout(scene)
+{
+    familySize = 0;
+}
+
+bool Family::addObj(Object *obj, Vect objPos)
+{
+    LOG_INIT_CERR();
+    if (obj == nullptr)
+    {
+        return false;
+    }
+    if (obj->getComponent<LayoutHelperComponent>() != nullptr)
+    {
+        log(LOG_WARN) << "Family::addObj err, obj is already part of Layout\n";
+        return false;
+    }
+    obj->posLocked = true;
+    linkedObjects.push_back(obj);
+    lookupOffset.push_back(objPos);
+    LayoutHelperComponent *helper = new LayoutHelperComponent(this, familySize);
+    obj->addComponent(helper);
+    obj->move(objPos, true);
+    familySize++;
+    log(LOG_INFO) << "Object " << obj->getName() << " added to family " << this << "\n";
+    return true;
+}
+
+bool Family::removeObj(int id, bool manual = true)
+{
+    if (id >= 0 && id < familySize)
+    {
+        Object *obj = linkedObjects[id];
+        obj->removeComponent(obj->getComponent<LayoutHelperComponent>());
+        linkedObjects.erase(linkedObjects.begin() + id);
+        lookupOffset.erase(lookupOffset.begin() + id);
+        familySize--;
+        return true;
+    }
+    return false;
+}
+
+void Family::update()
+{
+    Object::update();
+    for (int i = 0; i < familySize; i++)
+    {
+        linkedObjects[i]->move(pos + lookupOffset[i], true);
+    }
 }

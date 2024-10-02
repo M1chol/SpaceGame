@@ -2,7 +2,7 @@
 
 #pragma region SpriteComponent
 
-SpriteComponent::SpriteComponent(std::string newPath)
+SpriteComponent::SpriteComponent(std::string newPath, Object *parent)
 {
 	path = newPath;
 	texture = NULL;
@@ -11,6 +11,10 @@ SpriteComponent::SpriteComponent(std::string newPath)
 	gRenderer = nullptr;
 	renderBox = new SDL_Rect;
 	scale = 1;
+	if (parent != nullptr)
+	{
+		parent->addComponent(this);
+	}
 }
 SpriteComponent::~SpriteComponent()
 {
@@ -62,13 +66,13 @@ bool SpriteComponent::render(iVect offset, float newScale)
 	LOG_INIT_CERR();
 	if (gRenderer == nullptr)
 	{
-		log(LOG_WARN) << "gRenderer is nullptr for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
+		std::cout << "gRenderer is nullptr for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
 		return false;
 	}
 	*renderBox = {(int)parent->getPos().x + offset.x, (int)parent->getPos().y + offset.y, (int)((float)dim->x * scale), (int)((float)dim->y * scale)};
 	if (SDL_RenderCopy(gRenderer, texture, NULL, renderBox))
 	{
-		log(LOG_WARN) << "Texture failed to render for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
+		std::cout << "Texture failed to render for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
 		return false;
 	}
 	return true;
@@ -99,7 +103,7 @@ void SpriteComponent::setScale(float newScale)
 
 #pragma region RigidBodyComponent
 
-RigidBodyComponent::RigidBodyComponent(double newMass)
+RigidBodyComponent::RigidBodyComponent(double newMass, Object *parent)
 {
 	mass = newMass;
 	velocity = {0.0, 0.0};
@@ -107,6 +111,10 @@ RigidBodyComponent::RigidBodyComponent(double newMass)
 	energyLoss = 1.0;
 	hasCollision = false;
 	isTrigger = false;
+	if (parent != nullptr)
+	{
+		parent->addComponent(this);
+	}
 }
 RigidBodyComponent::~RigidBodyComponent()
 {
@@ -115,7 +123,8 @@ RigidBodyComponent::~RigidBodyComponent()
 void RigidBodyComponent::whenLinked()
 {
 	LOG_INIT_CERR();
-	log(LOG_INFO) << "RigidBody (" << this << ") linked to " << parent->getName() << "\n";
+	renderer = parent->getScene()->getRenderer();
+	// log(LOG_INFO) << "RigidBody component (" << this << ") linked to " << parent->getName() << "\n";
 }
 void RigidBodyComponent::applyForce(Vect newForce)
 {
@@ -125,7 +134,6 @@ bool RigidBodyComponent::render()
 {
 	if (drawHitbox && hasCollision)
 	{
-		SDL_Renderer *renderer = parent->getScene()->getRenderer();
 		SDL_Rect hitBoxVisual{(int)parent->getPos().x + hitBox[0].x, (int)parent->getPos().y + hitBox[0].y, hitBox[1].x - hitBox[0].x, hitBox[1].y - hitBox[0].y};
 		SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
 		SDL_RenderDrawRect(renderer, &hitBoxVisual);
@@ -206,7 +214,7 @@ template <typename bulletType>
 SpawnerComponent<bulletType>::SpawnerComponent(Vect newPos, double setCooldown, double setBulletLifeSpan)
 {
 	cooldown = setCooldown;
-	newPos = shootOffset;
+	shootOffset = newPos;
 	poolsize = 0;
 	cooldownTimer = 0.0;
 	bulletLifeSpan = setBulletLifeSpan;
@@ -265,18 +273,21 @@ bool SpawnerComponent<bulletType>::update()
 
 #pragma region TextComponent
 
-TextComponent::TextComponent(std::string setMessage, Vect setPos, std::string fontPath)
+TextComponent::TextComponent(std::string setMessage, Vect setPos, std::string fontPath, Object *parent)
 {
 	font = nullptr;
 	pos = setPos;
 	path = setMessage;
 	texture = NULL;
-	dim = new iVect;
 	gRenderer = nullptr;
 	scale = 1;
 	if (fontPath != "")
 	{
 		setFont(fontPath);
+	}
+	if (parent != nullptr)
+	{
+		parent->addComponent(this);
 	}
 }
 
@@ -308,11 +319,6 @@ bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string
 	*dim = {textSurface->w, textSurface->h};
 	SDL_FreeSurface(textSurface);
 	return true;
-}
-
-bool TextComponent::load(std::string newMessage)
-{
-	return load(newMessage);
 }
 
 void TextComponent::whenLinked()
@@ -355,8 +361,14 @@ LayoutHelperComponent::LayoutHelperComponent(Layout *setLayout, int setId)
 }
 LayoutHelperComponent::~LayoutHelperComponent()
 {
-	layout->removeObj(id);
+	layout->removeObj(id, false);
 	layout = nullptr;
+}
+
+void LayoutHelperComponent::whenLinked()
+{
+	LOG_INIT_CERR();
+	log(LOG_INFO) << "LayoutHelper component (" << this << ") linked to " << parent->getName() << "\n";
 }
 
 #pragma endregion

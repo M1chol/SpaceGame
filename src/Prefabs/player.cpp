@@ -7,15 +7,14 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
 {
     LOG_INIT_CERR();
     addTag(TAG_PLAYER);
-    addComponent(new SpriteComponent("res/player-placeholder.png"));
     setName("PlayerObject");
+    addComponent(new SpriteComponent("res/player-placeholder.png"));
     addTag(TAG_PLAYER);
-    PlayerRB = new RigidBodyComponent(1);
+    PlayerRB = new RigidBodyComponent(1, this);
     bulletSpawner = new SpawnerComponent<genericBullet>(center, 0.2, 2);
     forceToApply = {0.0, 0.0};
     playerSpeed = 3000.0;
     addComponent(bulletSpawner);
-    addComponent(PlayerRB);
     move({(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2});
     PlayerRB->setEnergyLoss(0.03);
     std::vector<iVect> box = {{66, 70}, {-66, -70}};

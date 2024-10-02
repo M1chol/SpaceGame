@@ -67,7 +67,7 @@ bool EngineInit()
 
 void EngineCapFrames(int targetFrames)
 {
-    static LOG_INIT_CERR();
+    LOG_INIT_CERR();
     double targetFrameTime = 1 / (double)targetFrames;
     if (targetFrameTime > deltaTime)
     {
@@ -95,7 +95,7 @@ void EngineClose()
     log(LOG_INFO) << "Quit successfull, bye bye!\n";
 }
 
-#pragma region KEYBOARD FUNCTIONS
+#pragma region KEYBOARD
 
 void EngineUpdateKeyboard()
 {

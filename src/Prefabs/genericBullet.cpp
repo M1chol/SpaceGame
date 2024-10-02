@@ -2,11 +2,9 @@
 
 genericBullet::genericBullet(Scene *scene, Vect newPos) : Object(scene)
 {
-    rb = new RigidBodyComponent(0);
-    sp = new SpriteComponent("res/bullet.png");
     setName("GenericBullet");
-    addComponent(rb);
-    addComponent(sp);
+    rb = new RigidBodyComponent(0, this);
+    sp = new SpriteComponent("res/bullet.png", this);
     sp->setScale(0.2);
     move(newPos);
     rb->applyForce({0.0, -1000.0});

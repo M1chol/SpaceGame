@@ -103,7 +103,7 @@ Object::~Object()
         log(LOG_WARN) << "Could not remove " << name << " Object from linked scene\n";
     }
     linkedScene = nullptr;
-    log(LOG_INFO) << "Removed object " << this->name << " (" << this << ")\n";
+    log(LOG_INFO) << "Removed object " << name << " (" << this << ")\n";
 }
 void Object::destroy()
 {
@@ -126,6 +126,7 @@ bool Object::move(Vect newPos, bool Forced)
 }
 void Object::addComponent(Component *comp)
 {
+    // TODO: add check if component is already added
     componentList.push_back(comp);
     comp->setParent(this);
     comp->whenLinked();
@@ -157,7 +158,7 @@ void Object::setName(std::string newName)
     name = newName;
     if (showDebugNames)
     {
-        addComponent(new TextComponent(name, pos, globalFont));
+        new TextComponent(name, pos, globalFont, this);
     }
 }
 std::string Object::getName()
@@ -181,19 +182,18 @@ bool Object::removeComponent(Component *comp)
 }
 void Object::render()
 {
-    LOG_INIT_CERR();
-    for (auto &component : componentList)
+    for (Component *component : componentList)
     {
         if (!component->render())
         {
             removeComponent(component);
+            LOG_INIT_CERR();
             log(LOG_WARN) << "Removed faulty component (" << this << ") in " << this->getName() << "\n";
         }
     }
 }
 void Object::update()
 {
-    LOG_INIT_CERR();
     for (auto &component : componentList)
     {
         component->update();

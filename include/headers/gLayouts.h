@@ -10,7 +10,7 @@ public:
     Layout(Scene *scene);
     virtual ~Layout();
     virtual bool addObj();
-    virtual bool removeObj(int id);
+    virtual bool removeObj(int id, bool manual);
 };
 
 class Grid : public Layout
@@ -18,7 +18,7 @@ class Grid : public Layout
 public:
     Grid(Scene *scene, iVect size, double setCellSize);
     bool addObj(iVect loc, Object *obj);
-    bool removeObj(int id) override;
+    bool removeObj(int id, bool manual) override;
     void render() override;
     void update() override;
 
@@ -28,7 +28,6 @@ private:
     Vect gridCenter;
     double cellSize;
     std::vector<std::vector<Object *>> linkedObjects;
-    bool isActive;
     bool draw;
     SDL_Renderer *renderer;
 };
@@ -36,15 +35,15 @@ private:
 class Family : public Layout
 {
 public:
-    Family(Scene *scene, int familySize);
-    ~Family();
-    bool addObj() override;
-    bool addObj(Vect pos);
-    bool removeObj(int id) override;
+    Family(Scene *scene);
+    void update() override;
+    bool addObj(Object *obj, Vect objPos);
+    bool removeObj(int id, bool manual) override;
 
 private:
     int familySize;
-    bool isActive;
+    std::vector<Object *> linkedObjects;
+    std::vector<Vect> lookupOffset;
 };
 
 #endif
