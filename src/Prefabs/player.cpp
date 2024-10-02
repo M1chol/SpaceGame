@@ -5,8 +5,9 @@
 
 PlayerObject::PlayerObject(Scene *scene) : Object(scene)
 {
-    // LOG_INIT_CERR();
+
     addTag(TAG_PLAYER);
+    // TODO: Create Layering system for rendering queue
     setName("PlayerObject");
     addComponent(new SpriteComponent("res/player-placeholder.png"));
     addTag(TAG_PLAYER);
@@ -44,7 +45,7 @@ void PlayerObject::update()
     if (isKeyDown(SDL_SCANCODE_Q))
     {
         destroy();
-        // LOG_INIT_CERR();
+
         log(LOG_INFO) << "Oh no! player destroyed!\n";
     }
     if (isKeyDown(SDL_SCANCODE_SPACE))

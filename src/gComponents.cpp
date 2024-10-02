@@ -22,7 +22,7 @@ SpriteComponent::~SpriteComponent()
 }
 void SpriteComponent::whenLinked()
 {
-	// LOG_INIT_CERR();
+
 	gRenderer = parent->getScene()->getRenderer();
 	if (!load(path))
 	{
@@ -33,7 +33,7 @@ void SpriteComponent::whenLinked()
 }
 bool SpriteComponent::load(std::string path)
 {
-	// LOG_INIT_CERR();
+
 	SDL_Texture *new_texture = NULL;
 
 	SDL_Surface *loaded = IMG_Load(path.c_str());
@@ -63,16 +63,16 @@ bool SpriteComponent::render(iVect offset, float newScale)
 	{
 		scale = newScale;
 	}
-	// LOG_INIT_CERR();
+
 	if (gRenderer == nullptr)
 	{
-		std::cout << "gRenderer is nullptr for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
+		log(LOG_WARN) << "gRenderer is nullptr for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
 		return false;
 	}
 	*renderBox = {(int)parent->getPos().x + offset.x, (int)parent->getPos().y + offset.y, (int)((float)dim->x * scale), (int)((float)dim->y * scale)};
 	if (SDL_RenderCopy(gRenderer, texture, NULL, renderBox))
 	{
-		std::cout << "Texture failed to render for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
+		log(LOG_WARN) << "Texture failed to render for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
 		return false;
 	}
 	return true;
@@ -122,9 +122,9 @@ RigidBodyComponent::~RigidBodyComponent()
 }
 void RigidBodyComponent::whenLinked()
 {
-	// LOG_INIT_CERR();
+
 	renderer = parent->getScene()->getRenderer();
-	// log(LOG_INFO) << "RigidBody component (" << this << ") linked to " << parent->getName() << "\n";
+	log(LOG_INFO) << "RigidBody component (" << this << ") linked to " << parent->getName() << "\n";
 }
 void RigidBodyComponent::applyForce(Vect newForce)
 {
@@ -222,7 +222,7 @@ SpawnerComponent<bulletType>::SpawnerComponent(Vect newPos, double setCooldown, 
 template <typename bulletType>
 void SpawnerComponent<bulletType>::whenLinked()
 {
-	// LOG_INIT_CERR();
+
 	log(LOG_INFO) << "Spawner component (" << this << ") linked to " << parent->getName() << "\n";
 }
 template <typename bulletType>
@@ -295,7 +295,7 @@ TextComponent::TextComponent(std::string setMessage, Vect setPos, std::string fo
 
 bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string fontPath)
 {
-	// LOG_INIT_CERR();
+
 	color = newColor;
 	if (fontPath != "")
 	{
@@ -325,7 +325,7 @@ bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string
 
 void TextComponent::whenLinked()
 {
-	// LOG_INIT_CERR();
+
 	gRenderer = parent->getScene()->getRenderer();
 	if (!load(path, color))
 	{
@@ -337,7 +337,7 @@ void TextComponent::whenLinked()
 
 void TextComponent::setFont(std::string fontPath, int fontSize)
 {
-	// LOG_INIT_CERR();
+
 	font = TTF_OpenFont(fontPath.c_str(), fontSize);
 	if (font == NULL)
 	{
@@ -364,12 +364,11 @@ LayoutHelperComponent::LayoutHelperComponent(Layout *setLayout, int setId)
 LayoutHelperComponent::~LayoutHelperComponent()
 {
 	layout->removeObj(id, false);
-	layout = nullptr;
 }
 
 void LayoutHelperComponent::whenLinked()
 {
-	// LOG_INIT_CERR();
+
 	log(LOG_INFO) << "LayoutHelper component (" << this << ") linked to " << parent->getName() << "\n";
 }
 

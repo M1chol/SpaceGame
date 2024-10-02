@@ -4,7 +4,7 @@ std::vector<iVect> box{{25, 25}, {-25, -25}};
 
 targetObject::targetObject(Scene *scene, int number) : Object(scene)
 {
-    // LOG_INIT_CERR();
+
     std::string newName = "TARGET " + std::to_string(number);
     setName(newName);
     addTag(TAG_ENEMY);

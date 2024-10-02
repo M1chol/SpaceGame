@@ -17,13 +17,12 @@ std::string globalFont = "res/Pixellettersfull-BnJ5.ttf";
 // SETUPS
 bool drawHitbox = true;
 bool waitToDebug = true;
-bool showDebugNames = false;
+bool showDebugNames = true;
 
 // TODO: Text rendering
 
 bool EngineInit()
 {
-    // LOG_INIT_CERR();
 
     // Try Init
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -67,7 +66,7 @@ bool EngineInit()
 
 void EngineCapFrames(int targetFrames)
 {
-    // LOG_INIT_CERR();
+
     double targetFrameTime = 1 / (double)targetFrames;
     if (targetFrameTime > deltaTime)
     {
@@ -82,7 +81,7 @@ void EngineCapFrames(int targetFrames)
 
 void EngineClose()
 {
-    // LOG_INIT_CERR();
+
     for (int i = nrOfScenes - 1; i >= 0; i--)
     {
         Scene *scene = sceneList[i];
