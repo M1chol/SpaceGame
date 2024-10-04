@@ -95,6 +95,7 @@ private:
     SDL_Renderer *renderer;
 };
 
+// TODO: Remake SpawnerComponent to not use templates
 template <typename bulletType>
 class SpawnerComponent : public Component
 {

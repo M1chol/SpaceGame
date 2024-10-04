@@ -4,6 +4,8 @@
 
 SpriteComponent::SpriteComponent(std::string newPath, Object *parent)
 {
+	// TODO: Fix dim and renderbox memory spill
+	// TODO: Add renderbox feature
 	path = newPath;
 	texture = NULL;
 	renderBox = NULL;
@@ -155,6 +157,7 @@ bool RigidBodyComponent::update()
 	// momentum = velocity * mass;
 	return true;
 }
+// TODO: Remake setCollision to work with SDL_Rect
 void RigidBodyComponent::setCollision(std::vector<iVect> *newHitBox, bool newisTrigger)
 {
 	hasCollision = true;
