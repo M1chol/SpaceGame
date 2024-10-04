@@ -124,13 +124,21 @@ bool Object::move(Vect newPos, bool Forced)
     pos = newPos;
     return true;
 }
-void Object::addComponent(Component *comp)
+bool Object::addComponent(Component *comp)
 {
-    // TODO: add check if component is already added
+    for (Component *cp : componentList)
+    {
+        if (comp == cp)
+        {
+            log(LOG_WARN) << "Object::addComponent failed " << cp << " alrady added to " << getName() << "\n";
+            return false;
+        }
+    }
     componentList.push_back(comp);
     comp->setParent(this);
     comp->whenLinked();
     nrOfComponents++;
+    return true;
 }
 void Object::addTag(TAG newTag)
 {

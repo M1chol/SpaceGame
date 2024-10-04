@@ -72,7 +72,7 @@ public:
     // Handles scheduling of objects for deconstruction
     void destroy();
     /* add Component to vector componentList of Object @param comp Component to be linked */
-    void addComponent(Component *comp);
+    bool addComponent(Component *comp);
     /* add Tag to existing `Object` @param newTag tag to be added*/
     void addTag(TAG newTag);
     /* remove Component from vector componentList of Object @param comp Component to be removed

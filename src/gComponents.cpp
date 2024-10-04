@@ -295,7 +295,6 @@ TextComponent::TextComponent(std::string setMessage, Vect setPos, std::string fo
 
 bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string fontPath)
 {
-
 	color = newColor;
 	if (fontPath != "")
 	{

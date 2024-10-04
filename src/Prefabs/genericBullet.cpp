@@ -10,6 +10,7 @@ genericBullet::genericBullet(Scene *scene, Vect newPos) : Object(scene)
     rb->applyForce({0.0, -1000.0});
     std::vector<iVect> box = {{10, 15}, {-10, -15}};
     rb->setCollision(&box);
+    aliveFor = 0;
 }
 
 void genericBullet::update()

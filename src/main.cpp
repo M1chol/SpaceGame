@@ -22,9 +22,9 @@ int main(int argc, char *args[])
 	Grid *testGrid = new Grid(mainScene, {4, 3}, 70);
 	testGrid->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT / 2});
 	testGrid->addObj({0, 0}, target1);
-	// Family *testFamily = new Family(mainScene);
-	// testFamily->addObj(target2, {100, 50});
-	// testFamily->addObj(target3, {300, 50});
+	Family *testFamily = new Family(mainScene);
+	testFamily->addObj(target2, {100, 50});
+	testFamily->addObj(target3, {200, 50});
 
 	bool quit = false;
 	SDL_Event e;

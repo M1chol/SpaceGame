@@ -19,8 +19,6 @@ bool drawHitbox = true;
 bool waitToDebug = true;
 bool showDebugNames = true;
 
-// TODO: Text rendering
-
 bool EngineInit()
 {
 
