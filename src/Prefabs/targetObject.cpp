@@ -1,6 +1,6 @@
 #include "targetObject.h"
 
-std::vector<iVect> box{{25, 25}, {-25, -25}};
+SDL_Rect box{25, 25, 50, 50};
 
 targetObject::targetObject(Scene *scene, int number) : Object(scene)
 {

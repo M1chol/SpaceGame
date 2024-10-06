@@ -47,6 +47,8 @@ public:
     virtual bool render();
     /* Call update function of child object */
     virtual bool update();
+    virtual void saveBin(std::ofstream &out);
+    virtual void loadBin(std::ifstream &in);
     Object *getParent();
 
 protected:
@@ -69,6 +71,10 @@ public:
     virtual void update();
     /* Runs after solving collisions */
     virtual void lateUpdate();
+    /* Saving to binary for Object type */
+    virtual void saveBin(std::ofstream &out);
+    /* Loading to binary for Object type */
+    virtual void loadBin(std::ifstream &in);
     // Handles scheduling of objects for deconstruction
     void destroy();
     /* add Component to vector componentList of Object @param comp Component to be linked */

@@ -1,13 +1,16 @@
 #include "engine.h"
 
-Layout::Layout(Scene *scene) : Object(scene) {}
+Layout::Layout(Scene *scene) : Object(scene)
+{
+    ID = LayoutGetID();
+}
 Layout::~Layout() {};
 bool Layout::addObj() {};
 bool Layout::removeObj(int id, bool manual = true) {};
 
 Grid::Grid(Scene *scene, iVect setSize, double setCellSize) : Layout(scene)
 {
-
+    ID = LayoutGetID();
     size = setSize;
     setName("Grid Object");
     cellSize = setCellSize;
@@ -103,6 +106,7 @@ Vect Grid::calculateSpaceCoordinates(iVect loc)
 
 Family::Family(Scene *scene) : Layout(scene)
 {
+    ID = LayoutGetID();
     familySize = 0;
 }
 

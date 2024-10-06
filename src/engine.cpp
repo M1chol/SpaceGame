@@ -6,10 +6,10 @@ SDL_Renderer *gRenderer = NULL;
 const int SCREEN_WIDTH = 960;
 const int SCREEN_HEIGHT = 540;
 std::vector<Scene *> sceneList;
-Scene *mainScene = nullptr;
 double deltaTime;
 double drawTime;
-int nrOfScenes = 1; // TODO: Imlement adding of scenes
+int nrOfScenes = 0;
+int nrOfLayouts = 0;
 Uint8 currentKeyState[SDL_NUM_SCANCODES];
 Uint8 previousKeyState[SDL_NUM_SCANCODES];
 std::string globalFont = "res/Pixellettersfull-BnJ5.ttf";
@@ -55,9 +55,7 @@ bool EngineInit()
         log(LOG_ERR) << "SDL_ttf failed to initialize" << TTF_GetError() << "\n";
         return false;
     }
-    mainScene = new Scene(gRenderer);
-    mainScene->setName("MAIN");
-    sceneList.push_back(mainScene);
+    addScene("MAIN");
     log(LOG_INFO) << "Initilization succesfull created MAIN Scene\n";
     return true;
 }
@@ -92,6 +90,11 @@ void EngineClose()
     log(LOG_INFO) << "Quit successfull, bye bye!\n";
 }
 
+int LayoutGetID()
+{
+    return nrOfLayouts++;
+}
+
 #pragma region KEYBOARD
 
 void EngineUpdateKeyboard()
@@ -116,3 +119,57 @@ bool isKeyPushed(SDL_Scancode key)
     return currentKeyState[key] && !previousKeyState[key];
 }
 #pragma endregion
+
+#pragma region SCENE SETUP
+
+Scene *addScene(std::string name)
+{
+    Scene *newScene = new Scene(gRenderer);
+    newScene->setName(name);
+    sceneList.push_back(newScene);
+    nrOfScenes++;
+    return newScene;
+}
+
+int getSceneID(Scene *scene)
+{
+    for (int i = 0; i < nrOfScenes; i++)
+    {
+        if (scene == sceneList[i])
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+#pragma endregion
+
+bool saveObj(Object *obj, std::string filename)
+{
+    log(LOG_INFO) << "Saving " << obj->getName() << " to binary file " << filename.c_str() << "\n";
+    std::ofstream out(filename, std::ios::binary);
+    if (!out)
+    {
+        log(LOG_WARN) << "Failed save for" << obj->getName() << ", " << filename.c_str() << " failed to open\n";
+        return false;
+    }
+    obj->saveBin(out);
+    out.close();
+    return true;
+}
+
+Object *loadObj(std::string filename, Scene *scene)
+{
+    log(LOG_INFO) << "Loading Object from " << filename.c_str() << "\n";
+    Object *obj = new Object(scene);
+    std::ifstream in(filename, std::ios::binary);
+    if (!in)
+    {
+        log(LOG_WARN) << "Failed to load object from" << filename.c_str() << " (failed to open)\n";
+        return nullptr;
+    }
+    obj->loadBin(in);
+    in.close();
+    return obj;
+}

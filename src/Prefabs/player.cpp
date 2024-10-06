@@ -18,7 +18,7 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     addComponent(bulletSpawner);
     move({(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2});
     PlayerRB->setEnergyLoss(0.03);
-    std::vector<iVect> box = {{66, 70}, {-66, -70}};
+    SDL_Rect box = {66, 70, 132, 140};
     PlayerRB->setCollision(&box);
     log(LOG_INFO) << "Created player object (" << this << ")" << std::endl;
 }

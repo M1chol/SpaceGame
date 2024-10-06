@@ -4,7 +4,6 @@
 
 SpriteComponent::SpriteComponent(std::string newPath, Object *parent)
 {
-	// TODO: Fix dim and renderbox memory spill
 	// TODO: Add renderbox feature
 	path = newPath;
 	texture = NULL;
@@ -20,7 +19,10 @@ SpriteComponent::SpriteComponent(std::string newPath, Object *parent)
 }
 SpriteComponent::~SpriteComponent()
 {
-	// this->destroy();
+	delete dim;
+	delete renderBox;
+	texture = nullptr;
+	gRenderer = nullptr;
 }
 void SpriteComponent::whenLinked()
 {
@@ -33,9 +35,12 @@ void SpriteComponent::whenLinked()
 	}
 	log(LOG_INFO) << "Sprite component (" << this << ") linked to " << parent->getName() << "\n";
 }
-bool SpriteComponent::load(std::string path)
+bool SpriteComponent::load(std::string setPath)
 {
-
+	if (setPath != "")
+	{
+		path = setPath;
+	}
 	SDL_Texture *new_texture = NULL;
 
 	SDL_Surface *loaded = IMG_Load(path.c_str());
@@ -136,7 +141,8 @@ bool RigidBodyComponent::render()
 {
 	if (drawHitbox && hasCollision)
 	{
-		SDL_Rect hitBoxVisual{(int)parent->getPos().x + hitBox[0].x, (int)parent->getPos().y + hitBox[0].y, hitBox[1].x - hitBox[0].x, hitBox[1].y - hitBox[0].y};
+		iVect parentPos = parent->getPos().toIVect();
+		SDL_Rect hitBoxVisual{parentPos.x - hitBox.x, parentPos.y - hitBox.y, hitBox.w, hitBox.h};
 		SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
 		SDL_RenderDrawRect(renderer, &hitBoxVisual);
 	}
@@ -157,8 +163,7 @@ bool RigidBodyComponent::update()
 	// momentum = velocity * mass;
 	return true;
 }
-// TODO: Remake setCollision to work with SDL_Rect
-void RigidBodyComponent::setCollision(std::vector<iVect> *newHitBox, bool newisTrigger)
+void RigidBodyComponent::setCollision(SDL_Rect *newHitBox, bool newisTrigger)
 {
 	hasCollision = true;
 	isTrigger = newisTrigger;
@@ -172,10 +177,29 @@ void RigidBodyComponent::setEnergyLoss(double newEnergyLoss)
 {
 	energyLoss = 1 - newEnergyLoss;
 }
-std::vector<iVect> &RigidBodyComponent::getHitBox()
+SDL_Rect *RigidBodyComponent::getHitBox()
 {
-	return hitBox;
+	return &hitBox;
 }
+
+iVect RigidBodyComponent::getHitBox(int index)
+{
+	iVect result = {0, 0};
+	if (index == 0)
+	{
+		result = {hitBox.x, hitBox.y};
+	}
+	else if (index == 1)
+	{
+		result = {hitBox.x - hitBox.w, hitBox.y - hitBox.h};
+	}
+	else
+	{
+		log(LOG_WARN) << "RigidBodyComponent::getHitBox ( " << this << " ), not supported index\n";
+	}
+	return result;
+}
+
 RigidBodyComponent *RigidBodyComponent::isColliding(RigidBodyComponent *obj)
 {
 	auto el = std::find(collisionList.begin(), collisionList.end(), obj);
@@ -185,6 +209,7 @@ RigidBodyComponent *RigidBodyComponent::isColliding(RigidBodyComponent *obj)
 	}
 	return nullptr;
 }
+
 RigidBodyComponent *RigidBodyComponent::isColliding(TAG tag)
 {
 	for (RigidBodyComponent *obj : collisionList)
@@ -213,6 +238,7 @@ void RigidBodyComponent::solveCollision(RigidBodyComponent *obj)
 #pragma region SpawnerComponent
 template class SpawnerComponent<genericBullet>;
 
+// TODO: Remake SpawnerComponent to use Object * instead of template
 template <typename bulletType>
 SpawnerComponent<bulletType>::SpawnerComponent(Vect newPos, double setCooldown, double setBulletLifeSpan)
 {
@@ -278,30 +304,43 @@ bool SpawnerComponent<bulletType>::update()
 
 #pragma region TextComponent
 
-TextComponent::TextComponent(std::string setMessage, Vect setPos, std::string fontPath, Object *parent)
+TextComponent::TextComponent(std::string setMessage, Vect setPos, std::string setfontPath, Object *setParent)
 {
 	font = nullptr;
 	pos = setPos;
 	path = setMessage;
 	texture = NULL;
 	gRenderer = nullptr;
+	parent = nullptr;
 	scale = 1;
-	if (fontPath != "")
+	fontPath = "";
+	if (setfontPath != "")
 	{
-		setFont(fontPath);
+		fontPath = setfontPath;
+		setFont(setfontPath);
+	}
+	if (setParent != nullptr)
+	{
+		parent = setParent;
+		parent->addComponent(this);
 	}
 	if (parent != nullptr)
 	{
-		parent->addComponent(this);
+		gRenderer = parent->getScene()->getRenderer();
 	}
 }
 
-bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string fontPath)
+bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string setFontPath)
 {
 	color = newColor;
-	if (fontPath != "")
+	if (newMessage != "")
 	{
-		setFont(fontPath);
+		path = newMessage;
+	}
+	if (setFontPath != "")
+	{
+		fontPath = setFontPath;
+		setFont(setFontPath);
 	}
 	if (font == NULL)
 	{
@@ -337,21 +376,23 @@ void TextComponent::whenLinked()
 	log(LOG_INFO) << "Text component (" << this << ") linked to " << parent->getName() << "\n";
 }
 
-void TextComponent::setFont(std::string fontPath, int fontSize)
+void TextComponent::setFont(std::string setFontPath, int fontSize)
 {
 
-	font = TTF_OpenFont(fontPath.c_str(), fontSize);
+	font = TTF_OpenFont(setFontPath.c_str(), fontSize);
+	fontPath = setFontPath;
 	if (font == NULL)
 	{
-		log(LOG_WARN) << "Font file " << fontPath << " failed to load " << TTF_GetError() << "\n";
+		log(LOG_WARN) << "Font file " << setFontPath << " failed to load " << TTF_GetError() << "\n";
 	}
 }
 
 bool TextComponent::update()
 {
-	// For now updating text every frame
-	// TODO: Make system based on calls
-	// load(path);
+	if (parent->getName() != path)
+	{
+		load(parent->getName());
+	}
 }
 
 #pragma endregion
@@ -362,6 +403,10 @@ LayoutHelperComponent::LayoutHelperComponent(Layout *setLayout, int setId)
 {
 	layout = setLayout;
 	id = setId;
+	if (layout != nullptr)
+	{
+		layoutID = layout->ID;
+	}
 }
 LayoutHelperComponent::~LayoutHelperComponent()
 {

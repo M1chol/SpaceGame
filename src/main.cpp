@@ -6,25 +6,29 @@
 int main(int argc, char *args[])
 {
 	// SETUP
-
 	uint32_t previousTime = SDL_GetTicks();
 	uint32_t currentTime;
 	EngineInit();
 
 	// CREATE PLAYER
+	Scene *mainScene = sceneList[0];
 	PlayerObject *player = new PlayerObject(mainScene);
 
 	// CREATE TARGETS
-	targetObject *target1 = new targetObject(mainScene, 1);
-	targetObject *target2 = new targetObject(mainScene, 2);
-	targetObject *target3 = new targetObject(mainScene, 3);
+	// targetObject *target1 = new targetObject(mainScene, 1);
+	// targetObject *target2 = new targetObject(mainScene, 2);
+	// targetObject *target3 = new targetObject(mainScene, 3);
 
-	Grid *testGrid = new Grid(mainScene, {4, 3}, 70);
-	testGrid->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT / 2});
-	testGrid->addObj({0, 0}, target1);
-	Family *testFamily = new Family(mainScene);
-	testFamily->addObj(target2, {100, 50});
-	testFamily->addObj(target3, {200, 50});
+	// Grid *testGrid = new Grid(mainScene, {4, 3}, 70);
+	// testGrid->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT / 2});
+	// testGrid->addObj({0, 0}, target1);
+	// Family *testFamily = new Family(mainScene);
+	// testFamily->addObj(target2, {100, 50});
+	// testFamily->addObj(target3, {200, 50});
+
+	saveObj(player, "res/player.bin");
+	player->destroy();
+	loadObj("res/player.bin", mainScene);
 
 	bool quit = false;
 	SDL_Event e;

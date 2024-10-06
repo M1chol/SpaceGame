@@ -8,12 +8,26 @@ enum TAG
     TAG_ENEMY
 };
 
+enum ComponentType
+{
+    COMP_TYPE_SPRITE,
+    COMP_TYPE_RIGIDBODY,
+    COMP_TYPE_SPAWNER,
+    COMP_TYPE_TEXT,
+    COMP_TYPE_LAYOUT
+};
+enum SpawnerBulletType
+{
+    SPAWNER_BULLET_GENERIC
+};
+
 // Core libraries
 #include <iostream>
 
 #include <algorithm>
 #include <cstring>
 #include <sstream>
+#include <fstream>
 #include <chrono>
 #include <memory>
 #include <math.h>
@@ -42,7 +56,6 @@ enum TAG
 // Global engine variables
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
-extern Scene *mainScene;
 extern std::vector<Scene *> sceneList;
 extern double deltaTime;
 extern double drawTime;
@@ -51,6 +64,7 @@ extern bool waitToDebug;
 extern bool showDebugNames;
 extern int nrOfScenes;
 extern std::string globalFont;
+extern int nrOfLayouts;
 
 /*Initialize SDL wrapper "Engine" @return true if successfull*/
 bool EngineInit();
@@ -66,5 +80,14 @@ bool isKeyDown(SDL_Scancode);
 bool isKeyReleased(SDL_Scancode);
 /* Check if key just has been pressed @param key key to check @return true if key just has been pressed*/
 bool isKeyPushed(SDL_Scancode);
+/* Add scene to sceneList */
+Scene *addScene(std::string name);
+/* Returns the id of Scene*/
+int getSceneID(Scene *scene);
+
+int LayoutGetID();
+
+bool saveObj(Object *obj, std::string filename);
+Object *loadObj(std::string filename, Scene* scene);
 
 #endif

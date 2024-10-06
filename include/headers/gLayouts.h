@@ -11,6 +11,7 @@ public:
     virtual ~Layout();
     virtual bool addObj();
     virtual bool removeObj(int id, bool manual);
+    int ID;
 };
 
 class Grid : public Layout

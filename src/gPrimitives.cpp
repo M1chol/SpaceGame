@@ -177,7 +177,14 @@ bool Object::removeComponent(Component *comp)
 {
     if (comp == nullptr)
     {
-        return false;
+        for (int i = nrOfComponents; i > 0; i--)
+        {
+            if (componentList[i] == nullptr)
+            {
+                log(LOG_WARN) << "Removing faulty nullptr component from " << this->getName() << "\n";
+                componentList.erase(componentList.begin() + i);
+            }
+        }
     }
     auto el = std::find(componentList.begin(), componentList.end(), comp);
     if (el != componentList.end())
@@ -192,6 +199,11 @@ void Object::render()
 {
     for (Component *component : componentList)
     {
+        if (component == nullptr)
+        {
+            removeComponent(component);
+            break;
+        }
         if (!component->render())
         {
             removeComponent(component);
@@ -204,6 +216,11 @@ void Object::update()
 {
     for (auto &component : componentList)
     {
+        if (component == nullptr)
+        {
+            removeComponent(component);
+            break;
+        }
         component->update();
     }
 }
@@ -345,8 +362,8 @@ bool Scene::handleCollisions()
         {
             return false;
         }
-        iVect maxA = objectList[currObj]->getPos().toIVect() + rb1->getHitBox()[0];
-        iVect minA = objectList[currObj]->getPos().toIVect() + rb1->getHitBox()[1];
+        iVect maxA = objectList[currObj]->getPos().toIVect() + rb1->getHitBox(0);
+        iVect minA = objectList[currObj]->getPos().toIVect() + rb1->getHitBox(1);
 
         for (int i = currObj + 1; i < nrOfObjects; i++)
         {
@@ -355,8 +372,8 @@ bool Scene::handleCollisions()
             {
                 continue;
             }
-            iVect maxB = objectList[i]->getPos().toIVect() + rb2->getHitBox()[0];
-            iVect minB = objectList[i]->getPos().toIVect() + rb2->getHitBox()[1];
+            iVect maxB = objectList[i]->getPos().toIVect() + rb2->getHitBox(0);
+            iVect minB = objectList[i]->getPos().toIVect() + rb2->getHitBox(1);
             double d1x = minB.x - maxA.x;
             double d1y = minB.y - maxA.y;
             double d2x = minA.x - maxB.x;

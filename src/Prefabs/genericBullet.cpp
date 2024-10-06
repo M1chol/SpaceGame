@@ -8,7 +8,7 @@ genericBullet::genericBullet(Scene *scene, Vect newPos) : Object(scene)
     sp->setScale(0.2);
     move(newPos);
     rb->applyForce({0.0, -1000.0});
-    std::vector<iVect> box = {{10, 15}, {-10, -15}};
+    SDL_Rect box = {10, 15, 20, 30};
     rb->setCollision(&box);
     aliveFor = 0;
 }
