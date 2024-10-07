@@ -21,6 +21,12 @@ enum SpawnerBulletType
     SPAWNER_BULLET_GENERIC
 };
 
+enum LoadFlag
+{
+    OBJECT,
+    GRID
+};
+
 // Core libraries
 #include <iostream>
 
@@ -41,6 +47,7 @@ enum SpawnerBulletType
 #define LOG_INFO "\x1B[34m[ INF ]\033[0m"
 #define LOG_ERR "\x1B[31m[ ERR ]\033[0m"
 #define LOG_WARN "\x1B[33m[ WRN ]\033[0m"
+#define LOG_OK "\x1B[32m[ SUC ]\033[0m"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -59,7 +66,7 @@ extern const int SCREEN_HEIGHT;
 extern std::vector<Scene *> sceneList;
 extern double deltaTime;
 extern double drawTime;
-extern bool drawHitbox;
+extern bool drawDebug;
 extern bool waitToDebug;
 extern bool showDebugNames;
 extern int nrOfScenes;
@@ -87,7 +94,7 @@ int getSceneID(Scene *scene);
 
 int LayoutGetID();
 
-bool saveObj(Object *obj, std::string filename);
-Object *loadObj(std::string filename, Scene* scene);
+bool saveBin(Object *obj, std::string filename);
+Object *loadBin(std::string filename, Scene *scene);
 
 #endif

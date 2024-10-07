@@ -15,7 +15,7 @@ Uint8 previousKeyState[SDL_NUM_SCANCODES];
 std::string globalFont = "res/Pixellettersfull-BnJ5.ttf";
 
 // SETUPS
-bool drawHitbox = true;
+bool drawDebug = true;
 bool waitToDebug = true;
 bool showDebugNames = true;
 
@@ -145,31 +145,3 @@ int getSceneID(Scene *scene)
 
 #pragma endregion
 
-bool saveObj(Object *obj, std::string filename)
-{
-    log(LOG_INFO) << "Saving " << obj->getName() << " to binary file " << filename.c_str() << "\n";
-    std::ofstream out(filename, std::ios::binary);
-    if (!out)
-    {
-        log(LOG_WARN) << "Failed save for" << obj->getName() << ", " << filename.c_str() << " failed to open\n";
-        return false;
-    }
-    obj->saveBin(out);
-    out.close();
-    return true;
-}
-
-Object *loadObj(std::string filename, Scene *scene)
-{
-    log(LOG_INFO) << "Loading Object from " << filename.c_str() << "\n";
-    Object *obj = new Object(scene);
-    std::ifstream in(filename, std::ios::binary);
-    if (!in)
-    {
-        log(LOG_WARN) << "Failed to load object from" << filename.c_str() << " (failed to open)\n";
-        return nullptr;
-    }
-    obj->loadBin(in);
-    in.close();
-    return obj;
-}

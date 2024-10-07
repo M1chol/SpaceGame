@@ -139,7 +139,7 @@ void RigidBodyComponent::applyForce(Vect newForce)
 }
 bool RigidBodyComponent::render()
 {
-	if (drawHitbox && hasCollision)
+	if (drawDebug && hasCollision)
 	{
 		iVect parentPos = parent->getPos().toIVect();
 		SDL_Rect hitBoxVisual{parentPos.x - hitBox.x, parentPos.y - hitBox.y, hitBox.w, hitBox.h};

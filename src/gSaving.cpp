@@ -2,6 +2,70 @@
 
 Component *loadAndAttach(std::ifstream &in, Object *obj);
 
+#pragma region Layouts
+
+void Layout::saveBin(std::ofstream &out)
+{
+    // ID
+    out.write((char *)&ID, sizeof(ID));
+    // Object
+    Object::saveBin(out);
+}
+void Layout::loadBin(std::ifstream &in)
+{
+    // ID
+    in.read((char *)&ID, sizeof(ID));
+    // Object
+    Object::loadBin(in);
+}
+
+void Grid::saveBin(std::ofstream &out)
+{
+    // Layout
+    Layout::saveBin(out);
+    // Size
+    out.write((char *)&size, sizeof(size));
+    // Cell size
+    out.write((char *)&cellSize, sizeof(cellSize));
+    // Linked Objects
+    int nrOfObjects = linkedObjects.size();
+    out.write((char *)&nrOfObjects, sizeof(nrOfObjects));
+    for (int i = 0; i < nrOfObjects; i++)
+    {
+        Object *obj = linkedObjects[i];
+        int objectId = linkedObjectsId[i];
+        out.write((char *)&objectId, sizeof(objectId));
+        obj->saveBin(out);
+    }
+}
+
+void Grid::loadBin(std::ifstream &in)
+{
+    // Layout
+    Layout::loadBin(in);
+    // Size
+    in.read((char *)&size, sizeof(size));
+    // Cell size
+    in.read((char *)&cellSize, sizeof(cellSize));
+    // Calculate center
+    calculateGridCenter();
+    // Linked Objects
+    int nrOfObjects;
+    in.read((char *)&nrOfObjects, sizeof(nrOfObjects));
+    for (int i = 0; i < nrOfObjects; i++)
+    {
+        int objectId;
+        in.read((char *)&objectId, sizeof(objectId));
+        linkedObjectsId.push_back(objectId);
+        Object *obj = new Object(getScene());
+        obj->loadBin(in);
+        linkedObjects.push_back(obj);
+    }
+    log(LOG_INFO) << "Loaded grid with " << nrOfObjects << " Objects\n";
+}
+#pragma endregion
+#pragma region Object
+
 void Object::saveBin(std::ofstream &out)
 {
     // Pos
@@ -19,14 +83,14 @@ void Object::saveBin(std::ofstream &out)
     {
         component->saveBin(out);
     }
-    log(LOG_INFO) << "Saved " << name << " with " << nrOfComponents << " Components\n";
+    log(LOG_OK) << "Saved " << name << " with " << nrOfComponents << " Components\n";
 }
 void Object::loadBin(std::ifstream &in)
 {
     // Pos
     in.read((char *)&pos, sizeof(pos));
     // Scene by scene id
-    int sceneID = getSceneID(linkedScene);
+    int sceneID;
     in.read((char *)&sceneID, sizeof(sceneID));
     linkedScene = sceneList[sceneID];
     // Name
@@ -42,8 +106,11 @@ void Object::loadBin(std::ifstream &in)
     {
         loadAndAttach(in, this);
     }
-    log(LOG_INFO) << "Loaded " << name << " (" << this << ") with " << nrOfComponents << " Components\n";
+    log(LOG_OK) << "Loaded " << name << " (" << this << ") with " << nrOfComponents << " Components\n";
 }
+
+#pragma endregion
+#pragma region Component
 
 void Component::saveBin(std::ofstream &out) {}
 void Component::loadBin(std::ifstream &in) {}
@@ -236,4 +303,63 @@ void LayoutHelperComponent::loadBin(std::ifstream &in)
     in.read((char *)&layoutID, sizeof(layoutID));
     // Element ID
     in.read((char *)&id, sizeof(id));
+}
+#pragma endregion
+#pragma region Savers/Loaders
+
+bool saveBin(Object *obj, std::string filename)
+{
+    log(LOG_INFO) << "Saving " << obj->getName() << " to binary file " << filename.c_str() << "\n";
+    std::ofstream out(filename, std::ios::binary);
+    if (!out)
+    {
+        log(LOG_WARN) << "Failed save for" << obj->getName() << ", " << filename.c_str() << " failed to open\n";
+        return false;
+    }
+    LoadFlag flag = OBJECT;
+    if (dynamic_cast<Grid *>(obj))
+    {
+        flag = GRID;
+    }
+    else if (dynamic_cast<Object *>(obj))
+    {
+        flag = OBJECT;
+    }
+    else
+    {
+        log(LOG_WARN) << "saveBin failed to detect type of " << obj->getName() << ", defaulting to Object\n";
+    }
+    out.write((char *)&flag, sizeof(flag));
+    obj->saveBin(out);
+    out.close();
+    return true;
+}
+
+Object *loadBin(std::string filename, Scene *scene)
+{
+    log(LOG_INFO) << "Loading Object from " << filename.c_str() << "\n";
+    std::ifstream in(filename, std::ios::binary);
+    LoadFlag flag;
+    Object *obj = nullptr;
+    if (!in)
+    {
+        log(LOG_WARN) << "Failed to load object from" << filename.c_str() << " (failed to open)\n";
+        return nullptr;
+    }
+    in.read((char *)&flag, sizeof(flag));
+    switch (flag)
+    {
+    case OBJECT:
+        obj = new Object(scene);
+        break;
+    case GRID:
+        obj = new Grid(scene);
+        break;
+    default:
+        log(LOG_WARN) << "Failed to load file" << filename.c_str() << ", not save file or file corupted\n";
+        return nullptr;
+    }
+    obj->loadBin(in);
+    in.close();
+    return obj;
 }

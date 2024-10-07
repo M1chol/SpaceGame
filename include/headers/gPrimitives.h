@@ -76,7 +76,7 @@ public:
     /* Loading to binary for Object type */
     virtual void loadBin(std::ifstream &in);
     // Handles scheduling of objects for deconstruction
-    void destroy();
+    virtual void destroy();
     /* add Component to vector componentList of Object @param comp Component to be linked */
     bool addComponent(Component *comp);
     /* add Tag to existing `Object` @param newTag tag to be added*/

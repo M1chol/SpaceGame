@@ -4,7 +4,16 @@ Layout::Layout(Scene *scene) : Object(scene)
 {
     ID = LayoutGetID();
 }
-Layout::~Layout() {};
+
+void Layout::destroy()
+{
+    for (Object *obj : linkedObjects)
+    {
+        obj->destroy();
+    }
+    Object::destroy();
+}
+
 bool Layout::addObj() {};
 bool Layout::removeObj(int id, bool manual = true) {};
 
@@ -12,38 +21,47 @@ Grid::Grid(Scene *scene, iVect setSize, double setCellSize) : Layout(scene)
 {
     ID = LayoutGetID();
     size = setSize;
-    setName("Grid Object");
+    std::string newName = "Grid " + std::to_string(ID);
+    setName(newName);
     cellSize = setCellSize;
+    calculateGridCenter();
     renderer = scene->getRenderer();
+    log(LOG_INFO) << "Created " << getName() << "\n";
+}
+
+Vect Grid::calculateGridCenter()
+{
     gridCenter = {size.x * cellSize / 2, size.y * (double)cellSize / 2};
-    log(LOG_INFO) << "Created Grid\n";
 }
 
 void Grid::render()
 {
-    Object::render();
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    Vect offsetPos = pos - gridCenter;
-    double drawWidth = (int)(offsetPos.x + size.x * cellSize);
-    double drawHeight = (int)(offsetPos.y + size.y * cellSize);
-    for (int i = 0; i < size.y + 1; i++)
+    if (drawDebug)
     {
-        SDL_RenderDrawLine(renderer, (int)offsetPos.x, (int)offsetPos.y + cellSize * i, drawWidth, (int)offsetPos.y + cellSize * i);
-    }
-    for (int i = 0; i < size.x + 1; i++)
-    {
-        SDL_RenderDrawLine(renderer, (int)offsetPos.x + cellSize * i, (int)offsetPos.y, (int)offsetPos.x + cellSize * i, drawHeight);
+        Object::render();
+        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+        Vect offsetPos = pos - gridCenter;
+        double drawWidth = (int)(offsetPos.x + size.x * cellSize);
+        double drawHeight = (int)(offsetPos.y + size.y * cellSize);
+        for (int i = 0; i < size.y + 1; i++)
+        {
+            SDL_RenderDrawLine(renderer, (int)offsetPos.x, (int)offsetPos.y + cellSize * i, drawWidth, (int)offsetPos.y + cellSize * i);
+        }
+        for (int i = 0; i < size.x + 1; i++)
+        {
+            SDL_RenderDrawLine(renderer, (int)offsetPos.x + cellSize * i, (int)offsetPos.y, (int)offsetPos.x + cellSize * i, drawHeight);
+        }
     }
 }
 
 int Grid::iVectToId(iVect loc)
 {
-    return size.x * loc.x + loc.y;
+    return size.x * loc.y + loc.x;
 }
-iVect Grid::IdToIVect(int id)
+iVect Grid::idToIVect(int id)
 {
     std::div_t result = std::div(id, size.x);
-    return {result.quot, result.rem};
+    return {result.rem, result.quot};
 }
 
 bool Grid::addObj(iVect loc, Object *obj)
@@ -71,13 +89,19 @@ bool Grid::addObj(iVect loc, Object *obj)
     linkedObjects.push_back(obj);
     linkedObjectsId.push_back(iVectToId(loc));
     obj->addComponent(new LayoutHelperComponent(this, iVectToId(loc)));
+    obj->move(calculateSpaceCoordinates(loc), true);
     log(LOG_INFO) << "Object " << obj->getName() << " added to Grid " << this << "\n";
     return true;
 }
 
+bool Grid::addObj(int id, Object *obj)
+{
+    addObj(idToIVect(id), obj);
+}
+
 bool Grid::removeObj(int id, bool manual = true)
 {
-    iVect loc = IdToIVect(id);
+    iVect loc = idToIVect(id);
     if (loc.x > size.y || id < 0)
     {
         log(LOG_WARN) << "Grid::removeObj error index out of bounds for grid " << this << "\n";
@@ -107,7 +131,7 @@ void Grid::update()
     Object::update();
     for (int i = 0; i < linkedObjects.size(); i++)
     {
-        linkedObjects[i]->move(calculateSpaceCoordinates(IdToIVect(linkedObjectsId[i])), true);
+        linkedObjects[i]->move(calculateSpaceCoordinates(idToIVect(linkedObjectsId[i])), true);
     }
 }
 

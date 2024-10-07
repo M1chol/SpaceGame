@@ -75,6 +75,10 @@ iVect &iVect::operator*=(int scalar)
 
 Object::Object(Scene *scene)
 {
+    if (scene == nullptr)
+    {
+        log(LOG_WARN) << "Creating detached Object, supplied nullptr Scene\n";
+    }
     // Set default position
     linkedScene = scene;
     linkedScene->addObject(this);
@@ -107,7 +111,6 @@ Object::~Object()
 }
 void Object::destroy()
 {
-
     isActive = false;
     this->linkedScene->toBeRemoved.push_back(this);
 }
