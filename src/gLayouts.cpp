@@ -16,9 +16,6 @@ Grid::Grid(Scene *scene, iVect setSize, double setCellSize) : Layout(scene)
     cellSize = setCellSize;
     renderer = scene->getRenderer();
     gridCenter = {size.x * cellSize / 2, size.y * (double)cellSize / 2};
-    linkedObjects = std::vector<std::vector<Object *>>(
-        size.x,
-        std::vector<Object *>(size.y, nullptr));
     log(LOG_INFO) << "Created Grid\n";
 }
 
@@ -39,6 +36,16 @@ void Grid::render()
     }
 }
 
+int Grid::iVectToId(iVect loc)
+{
+    return size.x * loc.x + loc.y;
+}
+iVect Grid::IdToIVect(int id)
+{
+    std::div_t result = std::div(id, size.x);
+    return {result.quot, result.rem};
+}
+
 bool Grid::addObj(iVect loc, Object *obj)
 {
 
@@ -47,55 +54,61 @@ bool Grid::addObj(iVect loc, Object *obj)
         log(LOG_WARN) << "Grid::addObj error index out of bounds for grid " << this << "\n";
         return false;
     }
-    if (linkedObjects[loc.x][loc.y] != nullptr)
+    for (int objId : linkedObjectsId)
     {
-        log(LOG_WARN) << "Grid::addObj err, space is already occupied\n";
-        return false;
+        if (objId == iVectToId(loc))
+        {
+            log(LOG_WARN) << "Grid::addObj error, space already occupied\n";
+            return false;
+        }
     }
     if (obj->getComponent<LayoutHelperComponent>() != nullptr)
     {
-        log(LOG_WARN) << "Grid::addObj err, obj is already part of Layout\n";
+        log(LOG_WARN) << "Grid::addObj err, obj is already part of another Layout\n";
         return false;
     }
     obj->posLocked = true;
-    linkedObjects[loc.x][loc.y] = obj;
-    obj->addComponent(new LayoutHelperComponent(this, size.x * loc.x + loc.y));
+    linkedObjects.push_back(obj);
+    linkedObjectsId.push_back(iVectToId(loc));
+    obj->addComponent(new LayoutHelperComponent(this, iVectToId(loc)));
     log(LOG_INFO) << "Object " << obj->getName() << " added to Grid " << this << "\n";
     return true;
 }
 
 bool Grid::removeObj(int id, bool manual = true)
 {
-    std::div_t result = std::div(id, size.x);
-    if (result.rem > size.y)
+    iVect loc = IdToIVect(id);
+    if (loc.x > size.y || id < 0)
     {
         log(LOG_WARN) << "Grid::removeObj error index out of bounds for grid " << this << "\n";
         return false;
     }
-    Object *obj = linkedObjects[result.rem][result.quot];
-    if (manual)
+    for (int i = 0; i < linkedObjects.size(); i++)
     {
-        obj->removeComponent(obj->getComponent<LayoutHelperComponent>());
+        if (id == linkedObjectsId[i])
+        {
+            Object *obj = linkedObjects[i];
+            if (manual)
+            {
+                obj->removeComponent(obj->getComponent<LayoutHelperComponent>());
+            }
+            linkedObjects.erase(linkedObjects.begin() + i);
+            linkedObjectsId.erase(linkedObjectsId.begin() + i);
+            log(LOG_INFO) << "Object of id: " << id << " removed from grid " << this << "\n";
+            return true;
+        }
     }
-    log(LOG_INFO) << "Object of id: " << id << " removed from grid " << this << "\n";
-    linkedObjects[result.rem][result.quot] = nullptr;
-    return true;
+    log(LOG_INFO) << "Grid::removeObj (" << this << ") failed, item not found\n";
+    return false;
 }
 
 void Grid::update()
 {
     Object::update();
-    for (int i = 0; i < size.y; i++)
+    for (int i = 0; i < linkedObjects.size(); i++)
     {
-        for (int j = 0; j < size.x; j++)
-        {
-            if (linkedObjects[j][i] != nullptr)
-            {
-                linkedObjects[j][i]->move(calculateSpaceCoordinates({j, i}), true);
-            }
-        }
+        linkedObjects[i]->move(calculateSpaceCoordinates(IdToIVect(linkedObjectsId[i])), true);
     }
-    // log(LOG_INFO) << linkedObjects[0][0] << "\n";
 }
 
 Vect Grid::calculateSpaceCoordinates(iVect loc)

@@ -12,6 +12,8 @@ public:
     virtual bool addObj();
     virtual bool removeObj(int id, bool manual);
     int ID;
+    void saveBin(std::ofstream &out) override;
+    void loadBin(std::ifstream &in) override;
 };
 
 class Grid : public Layout
@@ -22,13 +24,18 @@ public:
     bool removeObj(int id, bool manual) override;
     void render() override;
     void update() override;
+    void saveBin(std::ofstream &out);
+    void loadBin(std::ifstream &in);
 
 private:
     iVect size;
     Vect calculateSpaceCoordinates(iVect loc);
+    int iVectToId(iVect location);
+    iVect IdToIVect(int id);
     Vect gridCenter;
     double cellSize;
-    std::vector<std::vector<Object *>> linkedObjects;
+    std::vector<Object *> linkedObjects;
+    std::vector<int> linkedObjectsId;
     bool draw;
     SDL_Renderer *renderer;
 };
