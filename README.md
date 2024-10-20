@@ -41,3 +41,10 @@ git clone https://github.com/M1chol/SpaceGame
 cd SpaceGame
 make
 ```
+---
+## Images
+**Not** in-game footage just dev visualizations  
+  
+![iamge](https://github.com/M1chol/SpaceGame/blob/master/doc/img/viz1.png)
+![image](https://github.com/M1chol/SpaceGame/blob/master/doc/img/viz2.png)
+![image](https://github.com/M1chol/SpaceGame/blob/master/doc/img/viz3.png)
