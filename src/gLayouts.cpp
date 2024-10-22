@@ -14,8 +14,8 @@ void Layout::destroy()
     Object::destroy();
 }
 
-bool Layout::addObj() {};
-bool Layout::removeObj(int id, bool manual = true) {};
+bool Layout::addObj() {return true;};
+bool Layout::removeObj(int id, bool manual = true) {return true;};
 
 Grid::Grid(Scene *scene, iVect setSize, double setCellSize) : Layout(scene)
 {
@@ -32,6 +32,7 @@ Grid::Grid(Scene *scene, iVect setSize, double setCellSize) : Layout(scene)
 Vect Grid::calculateGridCenter()
 {
     gridCenter = {size.x * cellSize / 2, size.y * (double)cellSize / 2};
+    return gridCenter;
 }
 
 void Grid::render()
@@ -96,7 +97,7 @@ bool Grid::addObj(iVect loc, Object *obj)
 
 bool Grid::addObj(int id, Object *obj)
 {
-    addObj(idToIVect(id), obj);
+    return addObj(idToIVect(id), obj);
 }
 
 bool Grid::removeObj(int id, bool manual = true)

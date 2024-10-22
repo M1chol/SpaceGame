@@ -392,7 +392,9 @@ bool TextComponent::update()
 	if (parent->getName() != path)
 	{
 		load(parent->getName());
+		return true;
 	}
+	return false;
 }
 
 #pragma endregion

@@ -278,8 +278,12 @@ std::string Scene::getName()
 }
 bool Scene::addObject(Object *obj)
 {
+    if (obj == nullptr){
+        return false;
+    }
     objectList.push_back(obj);
     nrOfObjects++;
+    return true;
 }
 int Scene::Update()
 {
