@@ -12,7 +12,7 @@ int main(int argc, char *args[])
 
 	// CREATE PLAYER
 	Scene *mainScene = sceneList[0];
-	// PlayerObject *player = new PlayerObject(mainScene);
+	PlayerObject *player = new PlayerObject(mainScene);
 
 	// CREATE TARGETS
 	targetObject *target1 = new targetObject(mainScene, 1);
@@ -26,8 +26,8 @@ int main(int argc, char *args[])
 	testGrid->addObj({2, 0}, target3);
 
 	saveBin(testGrid, "res/test.grid");
-	testGrid->destroy();
-	Grid *loaded = dynamic_cast<Grid *>(loadBin("res/test.grid", mainScene));
+	// testGrid->destroy();
+	// Grid *loaded = dynamic_cast<Grid *>(loadBin("res/test.grid", mainScene));
 
 	bool quit = false;
 	SDL_Event e;

@@ -17,7 +17,7 @@ std::string globalFont = "res/Pixellettersfull-BnJ5.ttf";
 // SETUPS
 bool drawDebug = true;
 bool waitToDebug = true;
-bool showDebugNames = true;
+bool showDebugNames = false;
 
 bool EngineInit()
 {
