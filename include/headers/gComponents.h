@@ -34,7 +34,7 @@ public:
     /*
     Renders the texture assigned to object to screen centered at parent object
     */
-    bool render();
+    bool render() override;
     /* This function runs every time Object is linked to new Scene*/
     void whenLinked() override;
     /* Returns dimentions of texture*/

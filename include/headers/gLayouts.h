@@ -14,8 +14,10 @@ public:
     int ID;
     void saveBin(std::ofstream &out) override;
     void loadBin(std::ifstream &in) override;
+    iVect getSize();
 
 protected:
+    iVect size;
     std::vector<Object *> linkedObjects;
 };
 
@@ -28,11 +30,11 @@ public:
     bool removeObj(int id, bool manual) override;
     void render() override;
     void update() override;
-    void saveBin(std::ofstream &out);
-    void loadBin(std::ifstream &in);
+    void saveBin(std::ofstream &out) override;
+    void loadBin(std::ifstream &in) override;
+    int getCellSize();
 
 private:
-    iVect size;
     Vect calculateSpaceCoordinates(iVect loc);
     Vect calculateGridCenter();
     int iVectToId(iVect location);

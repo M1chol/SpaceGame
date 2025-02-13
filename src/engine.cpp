@@ -145,3 +145,8 @@ int getSceneID(Scene *scene)
 
 #pragma endregion
 
+void centerRect(SDL_Rect *box)
+{
+    box->x = box->w / 2;
+    box->y = box->h / 2;
+}

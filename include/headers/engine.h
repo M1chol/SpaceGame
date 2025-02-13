@@ -97,4 +97,6 @@ int LayoutGetID();
 bool saveBin(Object *obj, std::string filename);
 Object *loadBin(std::string filename, Scene *scene);
 
+void centerRect(SDL_Rect *box);
+
 #endif

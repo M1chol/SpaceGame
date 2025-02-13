@@ -19,13 +19,13 @@ int main(int argc, char *args[])
 	targetObject *target2 = new targetObject(mainScene, 2);
 	targetObject *target3 = new targetObject(mainScene, 3);
 
-	Grid *testGrid = new Grid(mainScene, {4, 3}, 70);
-	testGrid->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT / 2});
-	testGrid->addObj({0, 0}, target1);
-	testGrid->addObj({3, 2}, target2);
-	testGrid->addObj({2, 0}, target3);
+	// Grid *testGrid = new Grid(mainScene, {4, 3}, 70);
+	// testGrid->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT / 2});
+	// testGrid->addObj({0, 0}, target1);
+	// testGrid->addObj({3, 2}, target2);
+	// testGrid->addObj({2, 0}, target3);
 
-	saveBin(testGrid, "res/test.grid");
+	// saveBin(testGrid, "res/test.grid");
 	// testGrid->destroy();
 	// Grid *loaded = dynamic_cast<Grid *>(loadBin("res/test.grid", mainScene));
 

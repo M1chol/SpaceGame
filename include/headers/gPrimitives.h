@@ -88,10 +88,6 @@ public:
     template <typename CompType>
     CompType *getComponent()
     {
-        if (this == nullptr)
-        {
-            return nullptr;
-        }
         for (Component *comp : componentList)
         {
             if (CompType *specificComp = dynamic_cast<CompType *>(comp))

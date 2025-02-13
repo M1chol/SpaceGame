@@ -24,8 +24,9 @@ Target os:
 To build from source follow lower instructions   
 
 #### Windows
-- [MinGW](https://sourceforge.net/projects/mingw/) 
-- mingw32-make  (optional)
+1. git
+2. [MinGW](https://sourceforge.net/projects/mingw/) 
+3. mingw32-make  (optional)
     
 ```
 git clone https://github.com/M1chol/SpaceGame

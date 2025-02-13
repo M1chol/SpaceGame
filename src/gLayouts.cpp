@@ -14,8 +14,10 @@ void Layout::destroy()
     Object::destroy();
 }
 
-bool Layout::addObj() {return true;};
-bool Layout::removeObj(int id, bool manual = true) {return true;};
+bool Layout::addObj() { return false; }
+bool Layout::removeObj(int id, bool manual = true) { return false; }
+
+iVect Layout::getSize() { return size; }
 
 Grid::Grid(Scene *scene, iVect setSize, double setCellSize) : Layout(scene)
 {
@@ -64,6 +66,8 @@ iVect Grid::idToIVect(int id)
     std::div_t result = std::div(id, size.x);
     return {result.rem, result.quot};
 }
+
+int Grid::getCellSize() { return cellSize; }
 
 bool Grid::addObj(iVect loc, Object *obj)
 {
@@ -146,6 +150,7 @@ Family::Family(Scene *scene) : Layout(scene)
 {
     ID = LayoutGetID();
     familySize = 0;
+    size = {0, 0};
 }
 
 bool Family::addObj(Object *obj, Vect objPos)
