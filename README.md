@@ -8,8 +8,9 @@
 ## About
 This is my source-avaiable c++ game made with SDL library. As of today the game does not hava a proper name. Feel free to fork / modify / mod the game.
 
-documentation avaiable in [/doc](https://github.com/M1chol/SpaceGame/tree/master/doc)   
-all license files available in [/doc/legal](https://github.com/M1chol/SpaceGame/tree/master/legal)   
+- documentation avaiable in [/doc](https://github.com/M1chol/SpaceGame/tree/master/doc)   
+- license aviable in [LICENSE.txt](https://github.com/M1chol/SpaceGame/blob/master/LICENSE.txt)
+- other license files available in [/doc/legal](https://github.com/M1chol/SpaceGame/tree/master/doc/legal)
    
 Target os:
   1. Windows
