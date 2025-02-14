@@ -4,29 +4,30 @@
 #define center {0.0, -10}
 #define bulletSpeed {0.0, 350.0};
 
-PlayerObject::PlayerObject(Scene *scene) : Object(scene), playerGrid(scene, {4, 3}, 100, "PlayerGrid")
+PlayerObject::PlayerObject(Scene *scene) : Object(scene)
 {
 
     addTag(TAG_PLAYER);
     // TODO: Create Layering system for rendering queue
     setName("PlayerObject");
     addTag(TAG_PLAYER);
+    playerGrid = new Grid(scene, {4, 3}, 100, "PlayerGrid", this);
     PlayerRB = new RigidBodyComponent(1, this);
     bulletSpawner = new SpawnerComponent<genericBullet>(center, 0.2, 2);
     forceToApply = {0.0, 0.0};
     playerSpeed = 3000.0;
     move({(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2});
     PlayerRB->setEnergyLoss(0.03);
-    iVect gridSize = playerGrid.getSize() * playerGrid.getCellSize();
+    iVect gridSize = playerGrid->getSize() * playerGrid->getCellSize();
     SDL_Rect box = {0, 0, gridSize.x, gridSize.y};
     centerRect(&box);
     PlayerRB->setCollision(&box);
-    playerGrid.addObj(5, new defaultBlock(scene));
-    playerGrid.addObj(6, new heatCore(scene));
-    playerGrid.addObj(2, new cockpit2Block(scene));
-    playerGrid.addObj(1, new angleBlock(scene));
-    playerGrid.addObj(9, new engineBlock(scene));
-    playerGrid.addObj(10, new engineBlock(scene));
+    playerGrid->addObj(5, new defaultBlock(scene));
+    playerGrid->addObj(6, new heatCore(scene));
+    playerGrid->addObj(2, new cockpit2Block(scene));
+    playerGrid->addObj(1, new angleBlock(scene));
+    playerGrid->addObj(9, new engineBlock(scene));
+    playerGrid->addObj(10, new engineBlock(scene));
 
     log(LOG_INFO)
         << "Created player object (" << this << ")" << std::endl;
@@ -63,5 +64,5 @@ void PlayerObject::update()
     }
     PlayerRB->applyForce(forceToApply.normalized() * playerSpeed);
     forceToApply = {0.0, 0.0};
-    playerGrid.move(pos);
+    playerGrid->move(pos);
 }

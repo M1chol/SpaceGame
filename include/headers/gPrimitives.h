@@ -61,7 +61,7 @@ class Object
 {
 
 public:
-    Object(Scene *scene);
+    Object(Scene *scene, Object *parent = nullptr);
 
     virtual ~Object();
 
@@ -81,11 +81,14 @@ public:
     virtual void destroy();
     /* add Component to vector componentList of Object @param comp Component to be linked */
     bool addComponent(Component *comp);
+    /* add Child to childList @param child pointer to child*/
+    void addChild(Object *child);
     /* add Tag to existing `Object` @param newTag tag to be added*/
     void addTag(TAG newTag);
     /* remove Component from vector componentList of Object @param comp Component to be removed
     @return `true` if successfull and `false` if component was not found */
     bool removeComponent(Component *comp);
+    bool removeChild(Object *child);
     /* Get pointer to component of a specified type */
     template <typename CompType>
     CompType *getComponent()
@@ -105,6 +108,7 @@ public:
     Scene *getScene();
     void setName(std::string newName);
     std::string getName();
+    std::vector<Object *> *getChildrenList() { return &childrenList; };
     /*Move `Object` to `Scene` coordinets @param newPos position to be moved to @param Forced use only when `Object` should ignore `posLocked` state*/
     bool move(Vect newPos, bool Forced = false);
     /*Returns `Scene` coordinates of an Object*/
@@ -116,12 +120,14 @@ public:
 
 protected:
     Vect pos;
+    std::string name;
 
 private:
     Scene *linkedScene;
     std::vector<Component *> componentList;
-    std::string name;
+    std::vector<Object *> childrenList;
     int nrOfComponents;
+    Object *parent;
 };
 
 class Scene

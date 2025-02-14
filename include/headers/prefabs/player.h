@@ -16,7 +16,7 @@ private:
     Vect forceToApply;
     RigidBodyComponent *PlayerRB;
     SpawnerComponent<genericBullet> *bulletSpawner;
-    Grid playerGrid;
+    Grid *playerGrid;
 };
 
 #endif

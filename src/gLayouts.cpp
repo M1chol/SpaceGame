@@ -1,24 +1,24 @@
 #include "engine.h"
 
-Layout::Layout(Scene *scene, std::string name = "Unnamed") : Object(scene)
+Layout::Layout(Scene *scene, std::string name = "Unnamed", Object *parent) : Object(scene, parent)
 {
     ID = LayoutGetID();
-    this->name = name;
+    setName(name);
 }
 
 Layout::~Layout()
 {
-    for (auto &obj : linkedObjects)
+    for (int i = 0; i < linkedObjects.size(); i++)
     {
-        obj->destroy();
+        delete linkedObjects[i];
     }
 }
 
 void Layout::destroy()
 {
-    for (Object *obj : linkedObjects)
+    for (int i = 0; i < linkedObjects.size(); i++)
     {
-        obj->destroy();
+        linkedObjects[i]->destroy();
     }
     Object::destroy();
 }
@@ -28,7 +28,7 @@ bool Layout::removeObj(int id, bool manual = true) { return false; }
 
 iVect Layout::getSize() { return size; }
 
-Grid::Grid(Scene *scene, iVect setSize, double setCellSize, std::string name) : Layout(scene, name)
+Grid::Grid(Scene *scene, iVect setSize, double setCellSize, std::string name, Object *parent) : Layout(scene, name, parent)
 {
     ID = LayoutGetID();
     size = setSize;
@@ -103,6 +103,7 @@ bool Grid::addObj(iVect loc, Object *obj)
     obj->addComponent(new LayoutHelperComponent(this, iVectToId(loc)));
     obj->move(calculateSpaceCoordinates(loc), true);
     log(LOG_INFO) << "Object " << obj->getName() << " added to Grid " << this << "\n";
+    log(LOG_INFO) << "Grid number of elements: " << linkedObjects.size() << "\n";
     return true;
 }
 

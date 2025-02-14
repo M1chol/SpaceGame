@@ -73,7 +73,7 @@ iVect &iVect::operator*=(int scalar)
 
 #pragma region Object
 
-Object::Object(Scene *scene)
+Object::Object(Scene *scene, Object *parent)
 {
     linkedScene = scene;
     if (!linkedScene)
@@ -89,6 +89,10 @@ Object::Object(Scene *scene)
     nrOfComponents = 0;
     isActive = true;
     posLocked = false;
+    if (parent != nullptr)
+    {
+        parent->addChild(this);
+    }
 }
 Object::~Object()
 {
@@ -102,6 +106,12 @@ Object::~Object()
     }
     componentList.clear();
     componentList.shrink_to_fit();
+    std::cout << "Removing children " << childrenList.size();
+    for (int i = 0; i < childrenList.size(); i++)
+    {
+        std::cout << " " << childrenList[i]->getName() << "\n";
+        delete childrenList[i];
+    }
     if (!linkedScene->removeObject(this))
     {
         log(LOG_WARN) << "Could not remove " << name << " Object from linked scene\n";
@@ -141,6 +151,21 @@ bool Object::addComponent(Component *comp)
     comp->whenLinked();
     nrOfComponents++;
     return true;
+}
+void Object::addChild(Object *child)
+{
+    childrenList.push_back(child);
+}
+
+bool Object::removeChild(Object *child)
+{
+    auto el = std::find(childrenList.begin(), childrenList.end(), child);
+    if (el != childrenList.end())
+    {
+        childrenList.erase(el);
+        return true;
+    }
+    return false;
 }
 void Object::addTag(TAG newTag)
 {
@@ -409,7 +434,9 @@ bool Scene::handleCollisions()
 }
 void Scene::removeSheduled()
 {
-    for (auto *obj : toBeRemoved)
+    // nrOfObjects -= toBeRemoved.size();
+
+    for (auto &obj : toBeRemoved)
     {
         delete obj;
     }
@@ -418,6 +445,12 @@ void Scene::removeSheduled()
 
 int Scene::getNrOfObjects()
 {
+    std::cout << "[";
+    for (auto &el : objectList)
+    {
+        std::cout << el->getName() << ", ";
+    }
+    std::cout << "\b\b]\n";
     return objectList.size();
 }
 
