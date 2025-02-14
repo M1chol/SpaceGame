@@ -2,8 +2,8 @@
 This project is Built on Simple DirectMedia Layer (Sam Lantinga slouken@libsdl.org)   
    
 ## Thanks to
-Mr. Foo' for providing great way to begin developing with SDL (https://lazyfoo.net/tutorials/SDL)   
-Bastian Schiffthaler for creating logging utility on which i based mine (https://github.com/bschiffthaler/BSlogger)   
+- Mr. Foo' for providing great way to begin developing with SDL (https://lazyfoo.net/tutorials/SDL)   
+- Bastian Schiffthaler for creating logging utility on which i based mine (https://github.com/bschiffthaler/BSlogger)   
    
 ## Installing
 Go to [readme.md](https://github.com/M1chol/SpaceGame/blob/master/README.md) for instructions   
