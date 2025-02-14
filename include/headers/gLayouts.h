@@ -7,24 +7,29 @@
 class Layout : public Object
 {
 public:
-    Layout(Scene *scene);
+    Layout(Scene *scene, std::string name);
+    ~Layout();
     void destroy() override;
     virtual bool addObj();
     virtual bool removeObj(int id, bool manual);
-    int ID;
     void saveBin(std::ofstream &out) override;
     void loadBin(std::ifstream &in) override;
     iVect getSize();
+    int getID() { return ID; };
+    std::string getName() { return name; };
+    void setName(std::string newName) { name = newName; };
 
 protected:
     iVect size;
     std::vector<Object *> linkedObjects;
+    std::string name;
+    int ID;
 };
 
 class Grid : public Layout
 {
 public:
-    Grid(Scene *scene, iVect size = {0, 0}, double setCellSize = 1);
+    Grid(Scene *scene, iVect size = {0, 0}, double setCellSize = 1, std ::string name = "Unnamed Grid ");
     bool addObj(iVect loc, Object *obj);
     bool addObj(int id, Object *obj);
     bool removeObj(int id, bool manual) override;
@@ -48,7 +53,7 @@ private:
 class Family : public Layout
 {
 public:
-    Family(Scene *scene);
+    Family(Scene *scene, std::string name = "Unnamed Family ");
     void update() override;
     bool addObj(Object *obj, Vect objPos);
     bool removeObj(int id, bool manual) override;

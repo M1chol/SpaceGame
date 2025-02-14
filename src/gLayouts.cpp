@@ -1,8 +1,17 @@
 #include "engine.h"
 
-Layout::Layout(Scene *scene) : Object(scene)
+Layout::Layout(Scene *scene, std::string name = "Unnamed") : Object(scene)
 {
     ID = LayoutGetID();
+    this->name = name;
+}
+
+Layout::~Layout()
+{
+    for (auto &obj : linkedObjects)
+    {
+        obj->destroy();
+    }
 }
 
 void Layout::destroy()
@@ -19,12 +28,10 @@ bool Layout::removeObj(int id, bool manual = true) { return false; }
 
 iVect Layout::getSize() { return size; }
 
-Grid::Grid(Scene *scene, iVect setSize, double setCellSize) : Layout(scene)
+Grid::Grid(Scene *scene, iVect setSize, double setCellSize, std::string name) : Layout(scene, name)
 {
     ID = LayoutGetID();
     size = setSize;
-    std::string newName = "Grid " + std::to_string(ID);
-    setName(newName);
     cellSize = setCellSize;
     calculateGridCenter();
     renderer = scene->getRenderer();
@@ -81,13 +88,13 @@ bool Grid::addObj(iVect loc, Object *obj)
     {
         if (objId == iVectToId(loc))
         {
-            log(LOG_WARN) << "Grid::addObj error, space already occupied\n";
+            log(LOG_WARN) << name << "addObj error, space already occupied\n";
             return false;
         }
     }
     if (obj->getComponent<LayoutHelperComponent>() != nullptr)
     {
-        log(LOG_WARN) << "Grid::addObj err, obj is already part of another Layout\n";
+        log(LOG_WARN) << name << "addObj err, obj is already part of another Layout\n";
         return false;
     }
     obj->posLocked = true;
@@ -109,7 +116,7 @@ bool Grid::removeObj(int id, bool manual = true)
     iVect loc = idToIVect(id);
     if (loc.x > size.y || id < 0)
     {
-        log(LOG_WARN) << "Grid::removeObj error index out of bounds for grid " << this << "\n";
+        log(LOG_WARN) << name << " removeObj error index out of bounds for grid " << this << "\n";
         return false;
     }
     for (int i = 0; i < linkedObjects.size(); i++)
@@ -127,7 +134,7 @@ bool Grid::removeObj(int id, bool manual = true)
             return true;
         }
     }
-    log(LOG_INFO) << "Grid::removeObj (" << this << ") failed, item not found\n";
+    log(LOG_INFO) << name << " removeObj (" << this << ") failed, item not found\n";
     return false;
 }
 
@@ -146,7 +153,7 @@ Vect Grid::calculateSpaceCoordinates(iVect loc)
     return pos + result - gridCenter;
 }
 
-Family::Family(Scene *scene) : Layout(scene)
+Family::Family(Scene *scene, std::string name) : Layout(scene, name)
 {
     ID = LayoutGetID();
     familySize = 0;

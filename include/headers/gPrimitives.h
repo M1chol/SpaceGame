@@ -38,7 +38,7 @@ class Scene;
 class Component
 {
 public:
-    virtual ~Component();
+    virtual ~Component() = 0;
     /* Sets parent variable of Component class @param parent parent object*/
     void setParent(Object *parent);
     /* Executes when Component is linked to Object*/
@@ -50,9 +50,11 @@ public:
     virtual void saveBin(std::ofstream &out);
     virtual void loadBin(std::ifstream &in);
     Object *getParent();
+    std::string getName();
 
 protected:
     Object *parent;
+    std::string name;
 };
 
 class Object
@@ -84,7 +86,7 @@ public:
     /* remove Component from vector componentList of Object @param comp Component to be removed
     @return `true` if successfull and `false` if component was not found */
     bool removeComponent(Component *comp);
-    /* Get pointer to component at specified index @param componentID id of component @return pointer to component */
+    /* Get pointer to component of a specified type */
     template <typename CompType>
     CompType *getComponent()
     {

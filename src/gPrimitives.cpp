@@ -75,13 +75,15 @@ iVect &iVect::operator*=(int scalar)
 
 Object::Object(Scene *scene)
 {
-    if (scene == nullptr)
+    linkedScene = scene;
+    if (!linkedScene)
     {
         log(LOG_WARN) << "Creating detached Object, supplied nullptr Scene\n";
     }
-    // Set default position
-    linkedScene = scene;
-    linkedScene->addObject(this);
+    else
+    {
+        linkedScene->addObject(this);
+    }
     pos = {0, 0};
     name = "unnamed";
     nrOfComponents = 0;
@@ -95,18 +97,15 @@ Object::~Object()
     for (int i = nrOfComponents - 1; i >= 0; i--)
     {
         Component *component = componentList[i];
-        log(LOG_INFO) << "destoyed component (" << component << ") in " << this->name << "\n";
+        log(LOG_INFO) << " | destoyed " << component->getName() << " (" << component << ")\n";
         delete component;
-        component = nullptr;
     }
-    nrOfComponents = 0;
     componentList.clear();
     componentList.shrink_to_fit();
     if (!linkedScene->removeObject(this))
     {
         log(LOG_WARN) << "Could not remove " << name << " Object from linked scene\n";
     }
-    linkedScene = nullptr;
     log(LOG_INFO) << "Removed object " << name << " (" << this << ")\n";
 }
 void Object::destroy()
@@ -133,7 +132,7 @@ bool Object::addComponent(Component *comp)
     {
         if (comp == cp)
         {
-            log(LOG_WARN) << "Object::addComponent failed " << cp << " alrady added to " << getName() << "\n";
+            log(LOG_WARN) << "Object::addComponent of type " << comp->getName() << " failed " << cp << " already added to " << getName() << "\n";
             return false;
         }
     }
@@ -236,8 +235,8 @@ void Component::setParent(Object *new_parent)
 {
     parent = new_parent;
 }
-bool Component::render() { return true; };
-bool Component::update() { return true; };
+bool Component::render() { return true; }
+bool Component::update() { return true; }
 Component::~Component()
 {
     // this->destroy();
@@ -246,6 +245,14 @@ void Component::whenLinked() {};
 Object *Component::getParent()
 {
     return parent;
+}
+std::string Component::getName()
+{
+    if (name != "")
+    {
+        return name;
+    }
+    return "UNNAMED";
 }
 
 #pragma endregion
@@ -256,7 +263,7 @@ Scene::Scene(SDL_Renderer *newRenderer)
 {
     sceneList.push_back(this);
     nrOfObjects = 0;
-    name = "unnamed";
+    name = "UNNAMED";
     sceneRenderer = newRenderer;
 }
 Scene::~Scene()
@@ -278,7 +285,8 @@ std::string Scene::getName()
 }
 bool Scene::addObject(Object *obj)
 {
-    if (obj == nullptr){
+    if (obj == nullptr)
+    {
         return false;
     }
     objectList.push_back(obj);

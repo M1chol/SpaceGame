@@ -5,6 +5,7 @@
 SpriteComponent::SpriteComponent(std::string newPath, Object *parent)
 {
 	// TODO: Add renderbox feature
+	name = "SpriteComponent";
 	path = newPath;
 	texture = NULL;
 	renderBox = NULL;
@@ -112,6 +113,7 @@ void SpriteComponent::setScale(float newScale)
 
 RigidBodyComponent::RigidBodyComponent(double newMass, Object *parent)
 {
+	name = "RigidBodyComponent";
 	mass = newMass;
 	velocity = {0.0, 0.0};
 	force = {0.0, 0.0};
@@ -242,6 +244,7 @@ template class SpawnerComponent<genericBullet>;
 template <typename bulletType>
 SpawnerComponent<bulletType>::SpawnerComponent(Vect newPos, double setCooldown, double setBulletLifeSpan)
 {
+	name = "SpawnerComponent";
 	cooldown = setCooldown;
 	shootOffset = newPos;
 	poolsize = 0;
@@ -251,7 +254,6 @@ SpawnerComponent<bulletType>::SpawnerComponent(Vect newPos, double setCooldown, 
 template <typename bulletType>
 void SpawnerComponent<bulletType>::whenLinked()
 {
-
 	log(LOG_INFO) << "Spawner component (" << this << ") linked to " << parent->getName() << "\n";
 }
 template <typename bulletType>
@@ -306,6 +308,7 @@ bool SpawnerComponent<bulletType>::update()
 
 TextComponent::TextComponent(std::string setMessage, Vect setPos, std::string setfontPath, Object *setParent)
 {
+	name = "TextComponent";
 	font = nullptr;
 	pos = setPos;
 	path = setMessage;
@@ -403,11 +406,12 @@ bool TextComponent::update()
 
 LayoutHelperComponent::LayoutHelperComponent(Layout *setLayout, int setId)
 {
+	name = "LayoutHelperComponent";
 	layout = setLayout;
 	id = setId;
 	if (layout != nullptr)
 	{
-		layoutID = layout->ID;
+		layoutID = layout->getID();
 	}
 }
 LayoutHelperComponent::~LayoutHelperComponent()

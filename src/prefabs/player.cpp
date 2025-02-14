@@ -1,9 +1,10 @@
 #include "engine.h"
 #include "player.h"
+#include "rocketModules.h"
 #define center {0.0, -10}
 #define bulletSpeed {0.0, 350.0};
 
-PlayerObject::PlayerObject(Scene *scene) : Object(scene), playerGrid(scene, {4, 3}, 60)
+PlayerObject::PlayerObject(Scene *scene) : Object(scene), playerGrid(scene, {4, 3}, 100, "PlayerGrid")
 {
 
     addTag(TAG_PLAYER);
@@ -20,8 +21,15 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene), playerGrid(scene, {4, 
     SDL_Rect box = {0, 0, gridSize.x, gridSize.y};
     centerRect(&box);
     PlayerRB->setCollision(&box);
+    playerGrid.addObj(5, new defaultBlock(scene));
+    playerGrid.addObj(6, new heatCore(scene));
+    playerGrid.addObj(2, new cockpit2Block(scene));
+    playerGrid.addObj(1, new angleBlock(scene));
+    playerGrid.addObj(9, new engineBlock(scene));
+    playerGrid.addObj(10, new engineBlock(scene));
 
-    log(LOG_INFO) << "Created player object (" << this << ")" << std::endl;
+    log(LOG_INFO)
+        << "Created player object (" << this << ")" << std::endl;
 }
 
 void PlayerObject::update()
