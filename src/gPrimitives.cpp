@@ -96,7 +96,6 @@ Object::Object(Scene *scene, Object *parent)
 }
 Object::~Object()
 {
-
     log(LOG_INFO) << "Destroying " << this->name << "\n";
     for (int i = nrOfComponents - 1; i >= 0; i--)
     {
@@ -106,10 +105,8 @@ Object::~Object()
     }
     componentList.clear();
     componentList.shrink_to_fit();
-    std::cout << "Removing children " << childrenList.size();
     for (int i = 0; i < childrenList.size(); i++)
     {
-        std::cout << " " << childrenList[i]->getName() << "\n";
         delete childrenList[i];
     }
     if (!linkedScene->removeObject(this))
@@ -287,18 +284,15 @@ std::string Component::getName()
 Scene::Scene(SDL_Renderer *newRenderer)
 {
     sceneList.push_back(this);
-    nrOfObjects = 0;
     name = "UNNAMED";
     sceneRenderer = newRenderer;
 }
 Scene::~Scene()
 {
-
-    for (int i = nrOfObjects - 1; i > 0; i--)
+    for (int i = 0; i < objectList.size(); i++)
     {
         objectList[i]->destroy();
     }
-    objectList.clear();
 }
 void Scene::setName(std::string newName)
 {
@@ -315,7 +309,6 @@ bool Scene::addObject(Object *obj)
         return false;
     }
     objectList.push_back(obj);
-    nrOfObjects++;
     return true;
 }
 int Scene::Update()
@@ -324,7 +317,7 @@ int Scene::Update()
     SDL_RenderClear(sceneRenderer);
     int updatedObjects = 0;
     // True Update
-    for (int i = 0; i < nrOfObjects; i++)
+    for (int i = 0; i < objectList.size(); i++)
     {
         Object *obj = objectList[i];
         if (obj->isActive)
@@ -337,7 +330,7 @@ int Scene::Update()
     handleCollisions();
     //  Late Update
     //  HACK: create list of objects for late update to optimize
-    for (int i = 0; i < nrOfObjects; i++)
+    for (int i = 0; i < objectList.size(); i++)
     {
         Object *obj = objectList[i];
         if (obj->isActive)
@@ -361,7 +354,6 @@ bool Scene::removeObject(Object *obj)
     {
         log(LOG_INFO) << "Removed " << obj->getName() << " from " << this->getName() << "\n";
         objectList.erase(el);
-        nrOfObjects--;
         return true;
     }
     return false;
@@ -395,6 +387,7 @@ std::vector<Object *> Scene::getObjectByTag(TAG tag)
 }
 bool Scene::handleCollisions()
 {
+    int nrOfObjects = objectList.size();
     for (int currObj = 0; currObj < nrOfObjects; currObj++)
     {
         RigidBodyComponent *rb1 = objectList[currObj]->getComponent<RigidBodyComponent>();
@@ -445,12 +438,6 @@ void Scene::removeSheduled()
 
 int Scene::getNrOfObjects()
 {
-    std::cout << "[";
-    for (auto &el : objectList)
-    {
-        std::cout << el->getName() << ", ";
-    }
-    std::cout << "\b\b]\n";
     return objectList.size();
 }
 

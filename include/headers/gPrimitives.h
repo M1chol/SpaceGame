@@ -159,7 +159,6 @@ public:
 private:
     SDL_Renderer *sceneRenderer;
     std::vector<Object *> objectList;
-    int nrOfObjects;
     std::string name;
 };
 
