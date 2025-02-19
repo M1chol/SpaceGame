@@ -103,7 +103,6 @@ bool Grid::addObj(iVect loc, Object *obj)
     obj->addComponent(new LayoutHelperComponent(this, iVectToId(loc)));
     obj->move(calculateSpaceCoordinates(loc), true);
     log(LOG_INFO) << "Object " << obj->getName() << " added to Grid " << this << "\n";
-    log(LOG_INFO) << "Grid number of elements: " << linkedObjects.size() << "\n";
     return true;
 }
 

@@ -25,7 +25,7 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     playerGrid->addObj(5, new defaultBlock(scene));
     playerGrid->addObj(6, new heatCore(scene));
     playerGrid->addObj(2, new cockpit2Block(scene));
-    playerGrid->addObj(1, new angleBlock(scene));
+    playerGrid->addObj(1, new gun1Block(scene));
     playerGrid->addObj(9, new engineBlock(scene));
     playerGrid->addObj(10, new engineBlock(scene));
 

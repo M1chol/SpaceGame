@@ -24,7 +24,25 @@ gun1Block::gun1Block(Scene *scene) : Object(scene)
 {
     setName("Gun 1");
     // TODO: Add system for spritesheets for now using different sprite
-    SpriteComponent *t = new SpriteComponent("res/img/gun_base.png", this);
+    base = new SpriteComponent("res/img/gun_base.png", this);
+    gun = new SpriteComponent("res/img/gun_s.png", this);
+    gun->setSheetIndex(1);
+    timer = 0.0;
+    index = 0;
+}
+void gun1Block::update()
+{
+    timer += deltaTime;
+    if (timer > 4)
+    {
+        timer = 0;
+        if (++index > 4)
+        {
+            index = 0;
+        }
+        gun->setSheetIndex(index);
+    }
+    Object::update();
 }
 
 cockpit2Block::cockpit2Block(Scene *scene) : Object(scene)

@@ -223,11 +223,6 @@ void Object::render()
 {
     for (Component *component : componentList)
     {
-        if (component == nullptr)
-        {
-            removeComponent(component);
-            break;
-        }
         if (!component->render())
         {
             removeComponent(component);

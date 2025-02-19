@@ -21,6 +21,13 @@ class gun1Block : public Object
 {
 public:
     gun1Block(Scene *scene);
+    void update() override;
+
+private:
+    SpriteComponent *base;
+    SpriteComponent *gun;
+    int index;
+    double timer;
 };
 class cockpit2Block : public Object
 {

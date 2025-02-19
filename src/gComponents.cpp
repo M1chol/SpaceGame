@@ -7,12 +7,15 @@ SpriteComponent::SpriteComponent(std::string newPath, Object *parent)
 	// TODO: Add renderbox feature
 	name = "SpriteComponent";
 	path = newPath;
-	texture = NULL;
-	renderBox = NULL;
-	dim = new iVect;
+	texture = nullptr;
+	renderBox = nullptr;
 	gRenderer = nullptr;
+	offset = nullptr;
+	dim = new iVect;
 	renderBox = new SDL_Rect;
 	scale = 1;
+	sheetIndex = -1;
+	sheetSize = 100;
 	if (parent != nullptr)
 	{
 		parent->addComponent(this);
@@ -22,6 +25,7 @@ SpriteComponent::~SpriteComponent()
 {
 	delete dim;
 	delete renderBox;
+	delete offset;
 	texture = nullptr;
 	gRenderer = nullptr;
 }
@@ -65,40 +69,66 @@ iVect *SpriteComponent::getDim()
 {
 	return dim;
 }
-bool SpriteComponent::render(iVect offset, float newScale)
+bool SpriteComponent::render(int index, iVect *newOffset, float newScale)
 {
-	if (newScale > 0)
-	{
-		scale = newScale;
-	}
-
 	if (gRenderer == nullptr)
 	{
 		log(LOG_WARN) << "gRenderer is nullptr for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
 		return false;
 	}
-	*renderBox = {(int)parent->getPos().x + offset.x, (int)parent->getPos().y + offset.y, (int)((float)dim->x * scale), (int)((float)dim->y * scale)};
-	if (SDL_RenderCopy(gRenderer, texture, NULL, renderBox))
+	sheetIndex = index;
+	if (newOffset != nullptr)
+	{
+		offset = newOffset;
+	}
+	if (newScale > 0)
+	{
+		scale = newScale;
+	}
+	iVect imgSize = *dim;
+	if (index > -1)
+	{
+		imgSize = {sheetSize, sheetSize};
+	}
+	if (offset == nullptr && newOffset == nullptr)
+	{
+		offset = new iVect{-(int)((float)imgSize.x * scale / 2),
+						   -(int)((float)imgSize.y * scale / 2)};
+	}
+	*renderBox = {(int)parent->getPos().x + offset->x,
+				  (int)parent->getPos().y + offset->y,
+				  (int)((float)imgSize.x * scale),
+				  (int)((float)imgSize.y * scale)};
+
+	SDL_Rect sheet;
+	if (index > -1)
+	{
+		int spriteSheetCol = (sheetIndex % (dim->x / sheetSize)); // Column of the sprite
+		int spriteSheetRow = (sheetIndex / (dim->x / sheetSize)); // Row of the sprite
+
+		sheet = {spriteSheetCol * sheetSize,
+				 spriteSheetRow * sheetSize,
+				 sheetSize,
+				 sheetSize};
+	}
+
+	if (SDL_RenderCopy(gRenderer, texture, (index > -1 ? &sheet : NULL), renderBox))
 	{
 		log(LOG_WARN) << "Texture failed to render for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
 		return false;
 	}
 	return true;
 }
-bool SpriteComponent::render(float newScale)
+bool SpriteComponent::render(int index, float newScale)
 {
-	if (newScale > 0)
-	{
-		scale = newScale;
-	}
-	iVect center = {-(int)((float)dim->x * scale / 2), -(int)((float)dim->y * scale / 2)};
-	bool status = render(center, scale);
-	return status;
+	return render(index, nullptr, scale);
 }
+
 bool SpriteComponent::render()
 {
-	return render(0);
+	return render(sheetIndex, scale);
 }
+
 void SpriteComponent::setScale(float newScale)
 {
 	if (newScale > 0)

@@ -25,21 +25,20 @@ public:
     @param scale set the size of image, 1 = 100%
     @return true if success else false
     */
-    bool render(iVect offset, float scale = 0.0);
+    bool render(int index, iVect *offset, float scale);
     /*
     Renders the texture assigned to object to screen centered at parent object
     @param scale set the size of image, 1 = 100%
     */
-    bool render(float scale = 0.0);
-    /*
-    Renders the texture assigned to object to screen centered at parent object
-    */
+    bool render(int index, float scale);
     bool render() override;
+    /*
     /* This function runs every time Object is linked to new Scene*/
     void whenLinked() override;
     /* Returns dimentions of texture*/
     iVect *getDim();
     void setScale(float newScale);
+    void setSheetIndex(int index) { sheetIndex = index; }
 
     void saveBin(std::ofstream &out) override;
     void loadBin(std::ifstream &in) override;
@@ -53,6 +52,9 @@ protected:
 
 private:
     SDL_Rect *renderBox;
+    int sheetSize;
+    int sheetIndex;
+    iVect *offset;
 };
 
 class RigidBodyComponent : public Component
