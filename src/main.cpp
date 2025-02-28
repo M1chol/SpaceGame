@@ -39,7 +39,7 @@ int main(int argc, char *args[])
 		currentTime = SDL_GetTicks();
 		deltaTime = (double)(currentTime - previousTime) / 1000;
 
-		EngineUpdateKeyboard();
+		EngineUpdateEvents();
 
 		mainScene->Update();
 

@@ -64,5 +64,4 @@ void PlayerObject::update()
     }
     PlayerRB->applyForce(forceToApply.normalized() * playerSpeed);
     forceToApply = {0.0, 0.0};
-    playerGrid->move(pos);
 }

@@ -72,13 +72,14 @@ extern bool showDebugNames;
 extern int nrOfScenes;
 extern std::string globalFont;
 extern int nrOfLayouts;
+extern iVect mousePos;
 
 /*Initialize SDL wrapper "Engine" @return true if successfull*/
 bool EngineInit();
 // Close all Engine systems and SDL
 void EngineClose();
 // Updates arrays of active keys, it needs to be called each frame
-void EngineUpdateKeyboard();
+void EngineUpdateEvents();
 /* Used to cap frames per second of application @param targetFrames FPS limit */
 void EngineCapFrames(int);
 /* Check if key is beeing held @param key key to check @return true if key is beeing pressed */

@@ -242,6 +242,10 @@ void Object::update()
         }
         component->update();
     }
+    for (auto &child : childrenList)
+    {
+        child->pos = pos;
+    }
 }
 void Object::lateUpdate() {}
 #pragma endregion

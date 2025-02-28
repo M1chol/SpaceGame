@@ -101,6 +101,7 @@ private:
     Vect force;
     // Vect momentum;
     bool isTrigger;
+    bool isClickable;
     SDL_Renderer *renderer;
 };
 

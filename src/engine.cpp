@@ -10,8 +10,10 @@ double deltaTime;
 double drawTime;
 int nrOfScenes = 0;
 int nrOfLayouts = 0;
-Uint8 currentKeyState[SDL_NUM_SCANCODES];
+iVect mousePos;
+const Uint8 *currentKeyState;
 Uint8 previousKeyState[SDL_NUM_SCANCODES];
+Uint32 mouseState;
 std::string globalFont = "res/Pixellettersfull-BnJ5.ttf";
 
 // SETUPS
@@ -57,6 +59,9 @@ bool EngineInit()
     }
     addScene("MAIN");
     log(LOG_INFO) << "Initilization succesfull created MAIN Scene\n";
+
+    currentKeyState = SDL_GetKeyboardState(NULL);
+
     return true;
 }
 
@@ -97,12 +102,11 @@ int LayoutGetID()
 
 #pragma region KEYBOARD
 
-void EngineUpdateKeyboard()
+void EngineUpdateEvents()
 {
     SDL_PumpEvents();
-    const Uint8 *state = SDL_GetKeyboardState(NULL);
+    mouseState = SDL_GetMouseState(&mousePos.x, &mousePos.y);
     memcpy(previousKeyState, currentKeyState, SDL_NUM_SCANCODES);
-    memcpy(currentKeyState, state, SDL_NUM_SCANCODES);
 }
 
 bool isKeyDown(SDL_Scancode key)

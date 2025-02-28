@@ -150,6 +150,7 @@ RigidBodyComponent::RigidBodyComponent(double newMass, Object *parent)
 	energyLoss = 1.0;
 	hasCollision = false;
 	isTrigger = false;
+	isClickable = false;
 	if (parent != nullptr)
 	{
 		parent->addComponent(this);
