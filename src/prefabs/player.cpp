@@ -10,7 +10,6 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     addTag(TAG_PLAYER);
     // TODO: Create Layering system for rendering queue
     setName("PlayerObject");
-    addTag(TAG_PLAYER);
     playerGrid = new Grid(scene, {4, 3}, 100, "PlayerGrid", this);
     PlayerRB = new RigidBodyComponent(1, this);
     forceToApply = {0.0, 0.0};

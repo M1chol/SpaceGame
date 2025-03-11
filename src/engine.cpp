@@ -3,8 +3,8 @@
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
 
-const int SCREEN_WIDTH = 960;
-const int SCREEN_HEIGHT = 540;
+const int SCREEN_WIDTH = 1440;
+const int SCREEN_HEIGHT = 810;
 std::vector<Scene *> sceneList;
 double deltaTime;
 double drawTime;

@@ -9,6 +9,7 @@ class genericBullet : public Object
 public:
     genericBullet(Scene *scene, Vect newPos);
     ~genericBullet() override = default;
+    void reset(double angle, int speed, Vect position);
     void update() override;
     void lateUpdate() override;
     double aliveFor;

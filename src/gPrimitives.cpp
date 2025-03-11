@@ -89,6 +89,7 @@ Object::Object(Scene *scene, Object *parent)
     nrOfComponents = 0;
     isActive = true;
     posLocked = false;
+    rotation = 0;
     if (parent != nullptr)
     {
         parent->addChild(this);
@@ -392,7 +393,7 @@ bool Scene::handleCollisions()
         RigidBodyComponent *rb1 = objectList[currObj]->getComponent<RigidBodyComponent>();
         if (rb1 == nullptr || !rb1->hasCollision)
         {
-            return false;
+            continue;
         }
         iVect maxA = objectList[currObj]->getPos().toIVect() + rb1->getHitBox(0);
         iVect minA = objectList[currObj]->getPos().toIVect() + rb1->getHitBox(1);

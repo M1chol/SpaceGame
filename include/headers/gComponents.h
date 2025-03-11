@@ -84,6 +84,7 @@ public:
     SDL_Rect *getHitBox();
     /* Return calculated iVect from SDL_Rect @param index 0 for top-left 1 for bottom-right*/
     iVect getHitBox(int index);
+    // TODO: move hasCollision to private, why is it here?
     /* If true collisions will be checked for this object*/
     bool hasCollision;
     /* Checks if `Object` is colliding with other `Object`. Value can be checked using `Object` pointer OR `TAG` @param objComp pointer to objects RB @param tag search by tag @returns pointer to found object, nullptr if collision is not accouring*/
@@ -115,7 +116,7 @@ public:
     SpawnerComponent(Object *parent, Vect setShootOffset = {0, 0}, double setCooldown = 1.0, double setBulletLifeSpan = 1.0);
     ~SpawnerComponent();
     // Handles shooting
-    bool shoot();
+    bool shoot(double angle = 0);
     // Set new cooldown of Spawner @param newCooldown new cooldown
     void setCooldown(double newCooldown);
     void saveBin(std::ofstream &out) override;

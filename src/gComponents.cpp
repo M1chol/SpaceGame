@@ -112,7 +112,7 @@ bool SpriteComponent::render(int index, iVect *newOffset, float newScale)
 				 sheetSize};
 	}
 
-	if (SDL_RenderCopyEx(gRenderer, texture, (index > -1 ? &sheet : NULL), renderBox, rotation, NULL, SDL_FLIP_NONE))
+	if (SDL_RenderCopyEx(gRenderer, texture, (index > -1 ? &sheet : NULL), renderBox, rotation + parent->getRotation(), NULL, SDL_FLIP_NONE))
 	{
 		log(LOG_WARN) << "Texture failed to render for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
 		return false;
@@ -305,26 +305,25 @@ void SpawnerComponent<bulletType>::setCooldown(double newCooldown)
 	cooldown = newCooldown;
 }
 template <typename bulletType>
-bool SpawnerComponent<bulletType>::shoot()
+bool SpawnerComponent<bulletType>::shoot(double angle)
 {
 	if (cooldownTimer < cooldown)
 	{
 		return false;
-		std::cout << "bullet cooldown\n";
 	}
 	if (poolsize < 1 || pool[0]->isActive)
 	{
 		// Create new bullet
 		genericBullet *projectile = new bulletType(parent->getScene(), parent->getPos() + shootOffset);
-		projectile->isActive = true;
+		projectile->reset(angle, 1000, parent->getPos() + shootOffset);
 		pool.push_back(projectile);
 		poolsize++;
 	}
 	else
 	{
 		// Reuse latest bullet
-		pool[0]->move(parent->getPos());
-		pool[0]->isActive = true;
+		// TODO: can be optimized to not resize vector each frame use lookup table instead
+		pool[0]->reset(angle, 1000, parent->getPos() + shootOffset);
 		genericBullet *temp = pool[0];
 		pool.erase(pool.begin());
 		pool.push_back(temp);

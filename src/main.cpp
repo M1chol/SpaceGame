@@ -18,6 +18,9 @@ int main(int argc, char *args[])
 	targetObject *target1 = new targetObject(mainScene, 1);
 	targetObject *target2 = new targetObject(mainScene, 2);
 	targetObject *target3 = new targetObject(mainScene, 3);
+	targetObject *target4 = new targetObject(mainScene, 4);
+	targetObject *target5 = new targetObject(mainScene, 5);
+	targetObject *target6 = new targetObject(mainScene, 6);
 
 	// Grid *testGrid = new Grid(mainScene, {4, 3}, 70);
 	// testGrid->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT / 2});
