@@ -15,7 +15,6 @@ private:
     double playerSpeed;
     Vect forceToApply;
     RigidBodyComponent *PlayerRB;
-    SpawnerComponent<genericBullet> *bulletSpawner;
     Grid *playerGrid;
 };
 

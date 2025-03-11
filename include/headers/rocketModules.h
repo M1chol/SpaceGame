@@ -26,8 +26,7 @@ public:
 private:
     SpriteComponent *base;
     SpriteComponent *gun;
-    int index;
-    double timer;
+    SpawnerComponent<genericBullet> *shooter;
 };
 class cockpit2Block : public Object
 {

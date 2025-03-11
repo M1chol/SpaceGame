@@ -13,7 +13,6 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     addTag(TAG_PLAYER);
     playerGrid = new Grid(scene, {4, 3}, 100, "PlayerGrid", this);
     PlayerRB = new RigidBodyComponent(1, this);
-    bulletSpawner = new SpawnerComponent<genericBullet>(center, 0.2, 2);
     forceToApply = {0.0, 0.0};
     playerSpeed = 3000.0;
     move({(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2});
@@ -55,12 +54,7 @@ void PlayerObject::update()
     if (isKeyDown(SDL_SCANCODE_Q))
     {
         destroy();
-
         log(LOG_INFO) << "Oh no! player destroyed!\n";
-    }
-    if (isKeyDown(SDL_SCANCODE_SPACE))
-    {
-        bulletSpawner->shoot();
     }
     PlayerRB->applyForce(forceToApply.normalized() * playerSpeed);
     forceToApply = {0.0, 0.0};

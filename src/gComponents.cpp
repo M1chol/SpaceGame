@@ -4,7 +4,6 @@
 
 SpriteComponent::SpriteComponent(std::string newPath, Object *parent)
 {
-	// TODO: Add renderbox feature
 	name = "SpriteComponent";
 	path = newPath;
 	texture = nullptr;
@@ -16,6 +15,7 @@ SpriteComponent::SpriteComponent(std::string newPath, Object *parent)
 	scale = 1;
 	sheetIndex = -1;
 	sheetSize = 100;
+	rotation = 0;
 	if (parent != nullptr)
 	{
 		parent->addComponent(this);
@@ -112,7 +112,7 @@ bool SpriteComponent::render(int index, iVect *newOffset, float newScale)
 				 sheetSize};
 	}
 
-	if (SDL_RenderCopy(gRenderer, texture, (index > -1 ? &sheet : NULL), renderBox))
+	if (SDL_RenderCopyEx(gRenderer, texture, (index > -1 ? &sheet : NULL), renderBox, rotation, NULL, SDL_FLIP_NONE))
 	{
 		log(LOG_WARN) << "Texture failed to render for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
 		return false;
@@ -273,14 +273,26 @@ template class SpawnerComponent<genericBullet>;
 
 // TODO: Remake SpawnerComponent to use Object * instead of template
 template <typename bulletType>
-SpawnerComponent<bulletType>::SpawnerComponent(Vect newPos, double setCooldown, double setBulletLifeSpan)
+SpawnerComponent<bulletType>::SpawnerComponent(Object *parent, Vect newPos, double setCooldown, double setBulletLifeSpan)
 {
 	name = "SpawnerComponent";
 	cooldown = setCooldown;
 	shootOffset = newPos;
 	poolsize = 0;
-	cooldownTimer = 0.0;
+	cooldownTimer = cooldown;
 	bulletLifeSpan = setBulletLifeSpan;
+	if (parent != nullptr)
+	{
+		parent->addComponent(this);
+	}
+}
+template <typename bulletType>
+SpawnerComponent<bulletType>::~SpawnerComponent()
+{
+	for (bulletType *bullet : pool)
+	{
+		delete bullet;
+	}
 }
 template <typename bulletType>
 void SpawnerComponent<bulletType>::whenLinked()
@@ -298,6 +310,7 @@ bool SpawnerComponent<bulletType>::shoot()
 	if (cooldownTimer < cooldown)
 	{
 		return false;
+		std::cout << "bullet cooldown\n";
 	}
 	if (poolsize < 1 || pool[0]->isActive)
 	{

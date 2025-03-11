@@ -114,6 +114,11 @@ bool isKeyDown(SDL_Scancode key)
     return currentKeyState[key];
 }
 
+bool isKeyDown(MouseButton button)
+{
+    return mouseState && SDL_BUTTON(button);
+}
+
 bool isKeyReleased(SDL_Scancode key)
 {
     return previousKeyState[key] && !currentKeyState[key];

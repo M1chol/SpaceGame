@@ -135,8 +135,8 @@ Component *loadAndAttach(std::ifstream &in, Object *obj)
         switch (bType)
         {
         case SPAWNER_BULLET_GENERIC:
-            comp = new SpawnerComponent<genericBullet>();
-            break;
+            // comp = new SpawnerComponent<genericBullet>();
+            // break;
         default:
             log(LOG_WARN) << "Loading SpawnerComponent failed, unknown SpawnerBulletType\n";
             return nullptr;

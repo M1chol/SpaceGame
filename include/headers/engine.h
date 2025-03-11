@@ -8,6 +8,14 @@ enum TAG
     TAG_ENEMY
 };
 
+enum MouseButton
+{
+    MOUSE_NONE,
+    MOUSE_LEFT,
+    MOUSE_MIDDLE,
+    MOUSE_RIGHT
+};
+
 enum ComponentType
 {
     COMP_TYPE_SPRITE,
@@ -84,6 +92,8 @@ void EngineUpdateEvents();
 void EngineCapFrames(int);
 /* Check if key is beeing held @param key key to check @return true if key is beeing pressed */
 bool isKeyDown(SDL_Scancode);
+/* Check if key is beeing held @param key key to check @return true if key is beeing pressed */
+bool isKeyDown(MouseButton);
 /* Check if key has been released @param key key to check @return true if key has been released */
 bool isKeyReleased(SDL_Scancode);
 /* Check if key just has been pressed @param key key to check @return true if key just has been pressed*/

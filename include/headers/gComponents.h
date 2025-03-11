@@ -39,6 +39,7 @@ public:
     iVect *getDim();
     void setScale(float newScale);
     void setSheetIndex(int index) { sheetIndex = index; }
+    void rotate(double newRotation) { rotation = newRotation; }
 
     void saveBin(std::ofstream &out) override;
     void loadBin(std::ifstream &in) override;
@@ -55,6 +56,7 @@ private:
     int sheetSize;
     int sheetIndex;
     iVect *offset;
+    double rotation;
 };
 
 class RigidBodyComponent : public Component
@@ -110,7 +112,8 @@ class SpawnerComponent : public Component
 {
 public:
     // Create SpawnerComponent @param setShootOffset sets shoot offset @param setCooldown sets shoot cooldown @param setBulletLifeSpan sets Bullet time to deconstruction
-    SpawnerComponent(Vect setShootOffset = {0, 0}, double setCooldown = 1.0, double setBulletLifeSpan = 1.0);
+    SpawnerComponent(Object *parent, Vect setShootOffset = {0, 0}, double setCooldown = 1.0, double setBulletLifeSpan = 1.0);
+    ~SpawnerComponent();
     // Handles shooting
     bool shoot();
     // Set new cooldown of Spawner @param newCooldown new cooldown
