@@ -281,11 +281,10 @@ std::string Component::getName()
 
 #pragma region Scene
 
-Scene::Scene(SDL_Renderer *newRenderer)
+Scene::Scene(std::string name)
 {
-    sceneList.push_back(this);
-    name = "UNNAMED";
-    sceneRenderer = newRenderer;
+    name = name;
+    drawPriority = 0;
 }
 Scene::~Scene()
 {
@@ -311,10 +310,11 @@ bool Scene::addObject(Object *obj)
     objectList.push_back(obj);
     return true;
 }
-int Scene::Update()
+int Scene::Update(bool skipPresent, bool skipClear)
 {
-    SDL_SetRenderDrawColor(sceneRenderer, 0x00, 0x00, 0x00, 0x00);
-    SDL_RenderClear(sceneRenderer);
+    SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
+    if (!skipClear)
+        SDL_RenderClear(gRenderer);
     int updatedObjects = 0;
     // True Update
     for (int i = 0; i < objectList.size(); i++)
@@ -339,12 +339,13 @@ int Scene::Update()
         }
     }
     removeSheduled();
-    SDL_RenderPresent(sceneRenderer);
+    if (!skipPresent)
+        SDL_RenderPresent(gRenderer);
     return updatedObjects;
 }
 SDL_Renderer *Scene::getRenderer()
 {
-    return sceneRenderer;
+    return gRenderer;
 }
 bool Scene::removeObject(Object *obj)
 {

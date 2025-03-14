@@ -72,6 +72,7 @@ enum LoadFlag
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
 extern std::vector<Scene *> sceneList;
+extern SDL_Renderer *gRenderer;
 extern double deltaTime;
 extern double drawTime;
 extern bool drawDebug;
@@ -102,6 +103,8 @@ bool isKeyPushed(SDL_Scancode);
 Scene *addScene(std::string name);
 /* Returns the id of Scene*/
 int getSceneID(Scene *scene);
+// Draw all scenes based on drawPriority property
+void EngineUpdateScenes();
 
 int LayoutGetID();
 

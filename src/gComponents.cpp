@@ -393,7 +393,7 @@ bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string
 		log(LOG_WARN) << "Text component failed to load font\n";
 		return false;
 	}
-	SDL_Surface *textSurface = TTF_RenderText_Solid(font, path.c_str(), newColor);
+	SDL_Surface *textSurface = TTF_RenderUTF8_Blended(font, path.c_str(), newColor);
 	if (textSurface == NULL)
 	{
 		log(LOG_WARN) << "Text surface failed to render in TextComponent (" << this << ") " << TTF_GetError() << "\n";
@@ -435,7 +435,7 @@ void TextComponent::setFont(std::string setFontPath, int fontSize)
 
 bool TextComponent::update()
 {
-	if (parent->getName() != path)
+	if (path == "")
 	{
 		load(parent->getName());
 		return true;

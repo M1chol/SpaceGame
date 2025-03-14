@@ -10,27 +10,27 @@ int main(int argc, char *args[])
 	uint32_t currentTime;
 	EngineInit();
 
+	// Setup Scenes
+	Scene *uiScene = addScene("UI");
+	Scene *mainScene = addScene("MAIN");
+	uiScene->setDrawPriority(1);
+
+	// Main menu
+	Object *mainMenu = new Object(uiScene);
+	mainMenu->move({(double)SCREEN_WIDTH / 4, (double)SCREEN_HEIGHT / 4});
+	TextComponent *text = new TextComponent("Scrap Wars", {0, 0}, "res/OpenSans-Italic.ttf", mainMenu);
+	text->setScale(2.0);
+
 	// CREATE PLAYER
-	Scene *mainScene = sceneList[0];
 	PlayerObject *player = new PlayerObject(mainScene);
 
 	// CREATE TARGETS
-	targetObject *target1 = new targetObject(mainScene, 1);
-	targetObject *target2 = new targetObject(mainScene, 2);
-	targetObject *target3 = new targetObject(mainScene, 3);
-	targetObject *target4 = new targetObject(mainScene, 4);
-	targetObject *target5 = new targetObject(mainScene, 5);
-	targetObject *target6 = new targetObject(mainScene, 6);
-
-	// Grid *testGrid = new Grid(mainScene, {4, 3}, 70);
-	// testGrid->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT / 2});
-	// testGrid->addObj({0, 0}, target1);
-	// testGrid->addObj({3, 2}, target2);
-	// testGrid->addObj({2, 0}, target3);
-
-	// saveBin(testGrid, "res/test.grid");
-	// testGrid->destroy();
-	// Grid *loaded = dynamic_cast<Grid *>(loadBin("res/test.grid", mainScene));
+	// targetObject *target1 = new targetObject(mainScene, 1);
+	// targetObject *target2 = new targetObject(mainScene, 2);
+	// targetObject *target3 = new targetObject(mainScene, 3);
+	// targetObject *target4 = new targetObject(mainScene, 4);
+	// targetObject *target5 = new targetObject(mainScene, 5);
+	// targetObject *target6 = new targetObject(mainScene, 6);
 
 	bool quit = false;
 	SDL_Event e;
@@ -44,7 +44,7 @@ int main(int argc, char *args[])
 
 		EngineUpdateEvents();
 
-		mainScene->Update();
+		EngineUpdateScenes();
 
 		drawTime = (double)(SDL_GetTicks() - currentTime) / 1000.0;
 

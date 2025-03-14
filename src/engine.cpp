@@ -15,6 +15,7 @@ const Uint8 *currentKeyState;
 Uint8 previousKeyState[SDL_NUM_SCANCODES];
 Uint32 mouseState;
 std::string globalFont = "res/Pixellettersfull-BnJ5.ttf";
+bool scenesSorted;
 
 // SETUPS
 bool drawDebug = true;
@@ -52,15 +53,15 @@ bool EngineInit()
         log(LOG_ERR) << "SDL_Image failed to initialize " << IMG_GetError() << "\n";
         return false;
     }
+    // Try to init SDL_ttf
     if (TTF_Init() == -1)
     {
         log(LOG_ERR) << "SDL_ttf failed to initialize" << TTF_GetError() << "\n";
         return false;
     }
-    addScene("MAIN");
-    log(LOG_INFO) << "Initilization succesfull created MAIN Scene\n";
 
     currentKeyState = SDL_GetKeyboardState(NULL);
+    scenesSorted = false;
 
     return true;
 }
@@ -133,8 +134,9 @@ bool isKeyPushed(SDL_Scancode key)
 
 Scene *addScene(std::string name)
 {
-    Scene *newScene = new Scene(gRenderer);
+    Scene *newScene = new Scene();
     newScene->setName(name);
+    scenesSorted = false;
     sceneList.push_back(newScene);
     nrOfScenes++;
     return newScene;
@@ -150,6 +152,32 @@ int getSceneID(Scene *scene)
         }
     }
     return -1;
+}
+
+void EngineUpdateScenes()
+{
+    if (nrOfScenes < 1)
+    {
+        return;
+    }
+    if (nrOfScenes == 1)
+    {
+        sceneList[0]->Update();
+        return;
+    }
+
+    if (!scenesSorted)
+    {
+        std::sort(sceneList.begin(), sceneList.end(), [](Scene *a, Scene *b)
+                  { return a->getDrawPriority() < b->getDrawPriority(); });
+    }
+
+    sceneList[0]->Update(true);
+    for (int i = 1; i < nrOfScenes - 1; i++)
+    {
+        sceneList[i]->Update(true, true);
+    }
+    sceneList[nrOfScenes - 1]->Update(false, true);
 }
 
 #pragma endregion

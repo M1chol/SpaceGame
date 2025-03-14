@@ -137,7 +137,8 @@ class Scene
 {
 public:
     /* Crete new `Scene` with linked `SDL_Renderer` */
-    Scene(SDL_Renderer *rend);
+    Scene(std::string name = "UNNAMED");
+    /* Destroy `Scene` and all linked `Objects` */
     ~Scene();
     /* add object to objectList */
     bool addObject(Object *obj);
@@ -145,7 +146,7 @@ public:
     bool removeObject(Object *obj);
     // void destroy();
     //  Updates all active game `Objects`
-    int Update();
+    int Update(bool skipPresent = false, bool skopClear = false);
     // Change name of scene
     void setName(std::string);
     std::string getName();
@@ -158,11 +159,13 @@ public:
     // Remove items scheduled for destruction
     void removeSheduled();
     int getNrOfObjects();
+    void setDrawPriority(int newPriority) { drawPriority = newPriority; };
+    int getDrawPriority() { return drawPriority; };
 
 private:
-    SDL_Renderer *sceneRenderer;
     std::vector<Object *> objectList;
     std::string name;
+    int drawPriority;
 };
 
 #endif
