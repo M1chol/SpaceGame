@@ -464,8 +464,22 @@ LayoutHelperComponent::~LayoutHelperComponent()
 
 void LayoutHelperComponent::whenLinked()
 {
-
 	log(LOG_INFO) << "LayoutHelper component (" << this << ") linked to " << parent->getName() << "\n";
+}
+
+void CustomUpdateComponent::whenLinked()
+{
+	log(LOG_INFO) << "CustomUpdate component (" << this << ") linked to " << parent->getName() << "\n";
+}
+
+CustomUpdateComponent::CustomUpdateComponent(Object *parent)
+{
+	name = "CustomUpdateComponent";
+	if (parent != nullptr)
+	{
+		parent->addComponent(this);
+	}
+	updateFunc = nullptr;
 }
 
 #pragma endregion

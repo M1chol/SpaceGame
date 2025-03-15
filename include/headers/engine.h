@@ -48,6 +48,7 @@ enum LoadFlag
 #include <ctime>
 #include <iomanip>
 #include <vector>
+#include <functional>
 
 // Logger utility
 #include <logger.h>
@@ -64,6 +65,7 @@ enum LoadFlag
 #include <gPrimitives.h>
 #include <gComponents.h>
 #include <gLayouts.h>
+#include <gUi.h>
 
 // Prefab files
 #include <genericBullet.h>
@@ -79,9 +81,11 @@ extern bool drawDebug;
 extern bool waitToDebug;
 extern bool showDebugNames;
 extern int nrOfScenes;
-extern std::string globalFont;
 extern int nrOfLayouts;
 extern iVect mousePos;
+
+extern std::string fontSans;
+extern std::string globalFont;
 
 /*Initialize SDL wrapper "Engine" @return true if successfull*/
 bool EngineInit();

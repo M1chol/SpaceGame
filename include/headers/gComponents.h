@@ -170,4 +170,31 @@ private:
     int id;
 };
 
+class CustomUpdateComponent : public Component
+{
+public:
+    using UpdateFunc = std::function<bool(CustomUpdateComponent *)>;
+
+    CustomUpdateComponent(Object *parent = nullptr);
+    ;
+
+    void whenLinked() override;
+
+    bool update() override
+    {
+        if (updateFunc)
+            return updateFunc(this);
+        return true;
+    }
+
+    void setUpdateFunction(UpdateFunc func)
+    {
+        updateFunc = std::move(func);
+    }
+
+private:
+    UpdateFunc updateFunc;
+    std::string name;
+};
+
 #endif

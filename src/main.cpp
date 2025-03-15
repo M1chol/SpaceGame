@@ -11,18 +11,14 @@ int main(int argc, char *args[])
 	EngineInit();
 
 	// Setup Scenes
-	Scene *uiScene = addScene("UI");
-	Scene *mainScene = addScene("MAIN");
-	uiScene->setDrawPriority(1);
 
-	// Main menu
-	Object *mainMenu = new Object(uiScene);
-	mainMenu->move({(double)SCREEN_WIDTH / 4, (double)SCREEN_HEIGHT / 4});
-	TextComponent *text = new TextComponent("Scrap Wars", {0, 0}, "res/OpenSans-Italic.ttf", mainMenu);
-	text->setScale(2.0);
+	Scene *mainScene = addScene("MAIN");
 
 	// CREATE PLAYER
-	PlayerObject *player = new PlayerObject(mainScene);
+	// PlayerObject *player = new PlayerObject(mainScene);
+
+	// CREATE MENU
+	MainMenu *menu = new MainMenu();
 
 	// CREATE TARGETS
 	// targetObject *target1 = new targetObject(mainScene, 1);
