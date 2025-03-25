@@ -1,54 +1,38 @@
 #include "engine.h"
 
-#pragma region uiRoundedRect
+#pragma region uiSphere
 
-uiRoundedRect::uiRoundedRect(Scene *scene, int newRes, float radius) : Object(scene) 
+uiSphere::uiSphere(Scene *scene, int newRes, float newRad) : Object(scene) 
 {
-    this->radius = radius;
-    if(newRes % 4 != 0){
-        log(LOG_WARN) << name << " - resolution is not a multiple of 4\n";
-        newRes = newRes - newRes % 4;
-        if(newRes < 4){
-            newRes = 4;
-        }
-    }
-    this->resolution = newRes;
+    radius = newRad;
+    resolution = newRes;
+    rotation = M_PI / resolution;
     color = {255, 255, 255, 255};
     borderColor = {0, 0, 0, 255};
     vertices = new SDL_Vertex[this->resolution];
     nrOfIndexes = resolution + (resolution - 3) * 2;
     indexes = generateIndexes();
-    for(int i = 0; i < nrOfIndexes; i++){
-        std::cout << indexes[i] << " ";
-    }
     log(LOG_INFO) << "uiRoundedRect created\n";
 }
 
-void uiRoundedRect::render(){
+void uiSphere::render(){
     Object::render();
     for(int i=0; i < resolution; i++){
-        SDL_Vertex point = getPosition(i);
+        SDL_Vertex point = getSpherePosition(i);
         point.position.x += pos.x;
         point.position.y += pos.y;
         vertices[i] = point;
     }
     SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
-    if(SDL_RenderGeometry(gRenderer, NULL, vertices, resolution, indexes, nrOfIndexes) < 0){
-        std::cout << "Error rendering geometry: " << SDL_GetError() << std::endl;
-    }
-
-    for(int i=0; i < resolution; i++){
-        SDL_RenderDrawPoint(gRenderer, vertices[i].position.x, vertices[i].position.y);
-    }
-
+    SDL_RenderGeometry(gRenderer, NULL, vertices, resolution, indexes, nrOfIndexes);
 }
 
-SDL_Vertex uiRoundedRect::getPosition(int index){
-    float angle = 2 * M_PI / resolution * index;
+SDL_Vertex uiSphere::getSpherePosition(int index){
+    float angle = 2 * M_PI / resolution * index + rotation;
     return {sin(angle) * radius, cos(angle) * radius, color};
 }
 
-int *uiRoundedRect::generateIndexes(){
+int *uiSphere::generateIndexes(){
     int *indexes = new int[nrOfIndexes];
     int j = 0;
     indexes[j++] = 0;
@@ -64,6 +48,38 @@ int *uiRoundedRect::generateIndexes(){
     return indexes;
 }
 
+
+#pragma endregion
+
+#pragma region uiRoundedRect
+
+uiRoundedRect::uiRoundedRect(Scene *scene, int newRes, float radius, float width, float height) : uiSphere(scene, newRes, radius)
+{
+    resolution = newRes;
+    this->width = width;
+    this->height = height;
+    log(LOG_INFO) << "uiRoundedRect created\n";
+}
+
+void uiRoundedRect::render(){
+    Object::render();
+
+    Vect centers[4] = {
+        {width - radius, height - radius},
+        {width - radius, radius},
+        {radius, radius},
+        {radius, height - radius}
+    };
+
+    for(int i=0; i < resolution; i++){
+        SDL_Vertex point = getSpherePosition(i);
+        point.position.x += pos.x + centers[i * 4 / resolution].x;
+        point.position.y += pos.y + centers[i * 4 / resolution].y;
+        vertices[i] = point;
+    }
+    SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
+    SDL_RenderGeometry(gRenderer, NULL, vertices, resolution, indexes, nrOfIndexes);
+}
 
 #pragma endregion
 
@@ -99,7 +115,28 @@ MainMenu::MainMenu()
 
     text->setScale(2.0);
 
-    uiRoundedRect *button = new uiRoundedRect(uiScene, 24, 100);
+    // uiSphere *sphere = new uiSphere(uiScene, 12, 100);
+    // sphere->setName("sphere");
+    // sphere->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT * 2/ 3});
+
+    uiRoundedRect *button = new uiRoundedRect(uiScene, 12, 40, 500, 300);
     button->setName("button");
     button->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT / 2});
+    // CustomUpdateComponent *updateButton = new CustomUpdateComponent(button);
+    // updateButton->setUpdateFunction([](CustomUpdateComponent *comp) -> bool
+    // {
+    //     static float width = 0;
+    //     static bool increasing = false;
+    //     if(increasing){
+    //         width += .1;
+    //         if(width > 50)
+    //             increasing = false;
+    //     }else{
+    //         width -= .1;
+    //         if(width < -50)
+    //             increasing = true;
+    //     }
+    //     static_cast<uiRoundedRect *>(comp->getParent())->setRoration(width);   ;
+    //     return true;
+    // });
 };

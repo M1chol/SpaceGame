@@ -1,23 +1,39 @@
 #include "engine.h"
 
-class uiRoundedRect : public Object
+class uiSphere : public Object
 {
 public:
-    uiRoundedRect(Scene *scene, int resolution, float radius);
+    uiSphere(Scene *scene, int resolution, float radius);
     void render() override;
-    void setText(std::string newValue) {textValue = newValue;};
     void setResolution(int newResolution) {resolution = newResolution;};
-private:
-    std::string textValue;
-    SDL_Vertex getPosition(int index);
-    int *generateIndexes();
+    void setRadius(float newRadius) {radius = newRadius;};
+    void setColor(SDL_Color newColor) {color = newColor;};
+    void setRoration(float newRotation) {rotation = newRotation;};
+protected:
     int resolution;
-    SDL_Vertex *vertices;
+    SDL_Vertex getSpherePosition(int index);
+    int *indexes;
+    int *generateIndexes();
+    int nrOfIndexes;
     float radius;
+    float rotation;
+    SDL_Vertex *vertices;
+
+private:
     SDL_Color color;
     SDL_Color borderColor;
-    int *indexes;
-    int nrOfIndexes;
+};
+
+class uiRoundedRect : public uiSphere
+{
+public:
+    uiRoundedRect(Scene *scene, int resolution, float radius, float width, float height);
+    void render() override;
+    void setWidth(float newWidth) {width = newWidth;};
+    void setHeight(float newHeight) {height = newHeight;};
+private:
+    float width;
+    float height;
 };
 
 class MainMenu : public Scene
