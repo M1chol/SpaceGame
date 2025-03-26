@@ -2,7 +2,7 @@
 
 #pragma region uiSphere
 
-uiSphere::uiSphere(Scene *scene, int newRes, float newRad) : Object(scene)
+uiSphere::uiSphere(Object *parent, int newRes, float newRad) : Object(parent)
 {
     radius = newRad;
     resolution = newRes;
@@ -58,7 +58,7 @@ int *uiSphere::generateIndexes()
 
 #pragma region uiRoundedRect
 
-uiRoundedRect::uiRoundedRect(Scene *scene, int newRes, float radius, float width, float height) : uiSphere(scene, newRes, radius)
+uiRoundedRect::uiRoundedRect(Object *parent, int newRes, float radius, float width, float height) : uiSphere(parent, newRes, radius)
 {
     resolution = newRes;
     this->width = width;
@@ -89,23 +89,28 @@ void uiRoundedRect::render()
 
 #pragma endregion
 
-uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float height, float borderSize) : Object(scene)
+uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float height, float borderSize, std::string text) : Object(scene)
 {
     color = {37, 150, 190, 255};
     border_shift = 0.7;
     if (borderSize > 0)
     {
-        border = new uiRoundedRect(scene, newRes, radius, width + borderSize, height + borderSize);
+        border = new uiRoundedRect(this, newRes, radius, width + borderSize, height + borderSize);
         border->setOffset({-borderSize / 2, -borderSize / 2});
         border->setColor({static_cast<Uint8>(color.r * border_shift),
                           static_cast<Uint8>(color.g * border_shift),
                           static_cast<Uint8>(color.b * border_shift), 255});
+        addChild(border);
     }
-    body = new uiRoundedRect(scene, newRes, radius, width, height);
+    body = new uiRoundedRect(this, newRes, radius, width, height);
     body->setColor(color);
-
-    log(LOG_INFO)
-        << "uiButton created\n";
+    if(text != ""){
+        TextComponent *textComp = new TextComponent(text, {0, 0}, fontSans, this);
+        textComp->setColor({255, 255, 255, 255});
+        textComp->setScale(20);
+    }
+    addChild(body);
+    log(LOG_INFO) << "uiButton created\n";
 }
 
 void uiButton::update()
@@ -148,13 +153,13 @@ MainMenu::MainMenu()
         comp->getParent()->rotate(angle);
         return true; });
 
-    text->setScale(2.0);
+    text->setScale(30);
 
     // uiSphere *sphere = new uiSphere(uiScene, 12, 100);
     // sphere->setName("sphere");
     // sphere->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT * 2/ 3});
 
-    uiButton *button = new uiButton(uiScene, 24, 40, 500, 300, 12);
-    button->setName("button");
+    uiButton *button = new uiButton(uiScene, 24, 40, 500, 300, 12, "Start");
+    button->setName("button");  
     button->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT / 2});
 };

@@ -3,7 +3,7 @@
 class uiSphere : public Object
 {
 public:
-    uiSphere(Scene *scene, int resolution, float radius);
+    uiSphere(Object *parent, int resolution, float radius);
     ~uiSphere() override
     {
         delete[] vertices;
@@ -35,7 +35,7 @@ private:
 class uiRoundedRect : public uiSphere
 {
 public:
-    uiRoundedRect(Scene *scene, int resolution, float radius, float width, float height);
+    uiRoundedRect(Object *parent, int resolution, float radius, float width, float height);
     void render() override;
     void setWidth(float newWidth) { width = newWidth; };
     void setHeight(float newHeight) { height = newHeight; };
@@ -48,14 +48,17 @@ private:
 class uiButton : public Object
 {
 public:
-    uiButton(Scene *scene, int resolution, float radius, float width, float height, float borderSize = 0);
+    /*Creates rounded button @param scene scene pointer @param resolution for rounded corner @param radius for rounded corners @param width @param height @param borderSize if 0 no border @param text if empty no text*/
+    uiButton(Scene *scene, int resolution, float radius, float width, float height, float borderSize = 0, std::string text="");
     void update() override;
+    void setText(std::string newText) { buttonText = newText; };
 
 private:
     uiRoundedRect *body;
     uiRoundedRect *border;
     SDL_Color color;
     float border_shift;
+    std::string buttonText;
 };
 
 class MainMenu : public Scene

@@ -61,8 +61,10 @@ class Object
 {
 
 public:
+    /* Creates object linked to a scene @param scene Object will be updated and rendered by this scene @param parent sets the parent*/
     Object(Scene *scene, Object *parent = nullptr);
-
+    /* Creates Object that is updated and rendered by its parent @param parent*/
+    Object(Object *parent);
     virtual ~Object();
 
     // virtual void destroy();

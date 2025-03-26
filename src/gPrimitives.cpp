@@ -95,6 +95,18 @@ Object::Object(Scene *scene, Object *parent)
         parent->addChild(this);
     }
 }
+
+Object::Object(Object *parent){
+    linkedScene = parent->getScene();
+    pos = {0, 0};
+    name = "unnamed";
+    nrOfComponents = 0;
+    isActive = true;
+    posLocked = false;
+    rotation = 0;
+    this->parent = parent;
+}
+
 Object::~Object()
 {
     log(LOG_INFO) << "Destroying " << this->name << "\n";
@@ -222,6 +234,11 @@ bool Object::removeComponent(Component *comp)
 }
 void Object::render()
 {
+    for (auto &child : childrenList)
+    {
+        child->render();
+    }
+
     for (Component *component : componentList)
     {
         if (!component->render())
@@ -234,6 +251,11 @@ void Object::render()
 }
 void Object::update()
 {
+    for (auto &child : childrenList)
+    {
+        child->update();
+    }
+
     for (auto &component : componentList)
     {
         if (component == nullptr)

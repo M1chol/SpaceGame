@@ -139,18 +139,23 @@ class TextComponent : public SpriteComponent
 {
 public:
     TextComponent(std::string setMessage = "", Vect setPos = {0, 0}, std::string fontPath = "", Object *parent = nullptr);
-    bool load(std::string newMessage = "", SDL_Color color = {255, 255, 255}, std::string fontPath = "");
+    void setColor(SDL_Color newColor);
+    // Shadows the setScale function from SpriteComponent calls setScale
+    void setScale(float newScale) {setSize((int)newScale);};
+    void setSize(int newSize);
     void setFont(std::string fontPath, int fontSize = 20);
-    void whenLinked() override;
-    bool update() override;
     void saveBin(std::ofstream &out) override;
     void loadBin(std::ifstream &in) override;
 
 private:
+    bool load(std::string newMessage = "", SDL_Color color = {255, 255, 255}, std::string fontPath = "", int fontSize = 20);    
+    void whenLinked() override;
+    bool update() override;
     Vect pos;
     TTF_Font *font;
     std::string fontPath;
     SDL_Color color = {255, 255, 255};
+    int fontSize;
 };
 
 class Layout;

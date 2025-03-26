@@ -376,7 +376,7 @@ TextComponent::TextComponent(std::string setMessage, Vect setPos, std::string se
 	}
 }
 
-bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string setFontPath)
+bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string setFontPath, int fontSize)
 {
 	color = newColor;
 	if (newMessage != "")
@@ -386,7 +386,7 @@ bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string
 	if (setFontPath != "")
 	{
 		fontPath = setFontPath;
-		setFont(setFontPath);
+		setFont(setFontPath, fontSize);
 	}
 	if (font == NULL)
 	{
@@ -410,9 +410,25 @@ bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string
 	return true;
 }
 
+void TextComponent::setColor(SDL_Color newColor)
+{
+	color = newColor;
+	load(path, color, fontPath, fontSize);
+}
+
+void TextComponent::setSize(int newSize)
+{
+	fontSize = newSize;
+	load(path, color, fontPath, fontSize);
+}
+
 void TextComponent::whenLinked()
 {
-
+	if (path == "")
+	{
+		path = parent->getName();
+		load(path);
+	}
 	gRenderer = parent->getScene()->getRenderer();
 	if (!load(path, color))
 	{
@@ -435,12 +451,7 @@ void TextComponent::setFont(std::string setFontPath, int fontSize)
 
 bool TextComponent::update()
 {
-	if (path == "")
-	{
-		load(parent->getName());
-		return true;
-	}
-	return false;
+
 }
 
 #pragma endregion
