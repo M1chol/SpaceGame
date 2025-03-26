@@ -2,10 +2,11 @@
 
 #pragma region uiSphere
 
-uiSphere::uiSphere(Scene *scene, int newRes, float newRad) : Object(scene) 
+uiSphere::uiSphere(Scene *scene, int newRes, float newRad) : Object(scene)
 {
     radius = newRad;
     resolution = newRes;
+    offset = {0, 0};
     rotation = M_PI / resolution;
     color = {255, 255, 255, 255};
     borderColor = {0, 0, 0, 255};
@@ -15,39 +16,43 @@ uiSphere::uiSphere(Scene *scene, int newRes, float newRad) : Object(scene)
     log(LOG_INFO) << "uiRoundedRect created\n";
 }
 
-void uiSphere::render(){
+void uiSphere::render()
+{
     Object::render();
-    for(int i=0; i < resolution; i++){
+    for (int i = 0; i < resolution; i++)
+    {
         SDL_Vertex point = getSpherePosition(i);
-        point.position.x += pos.x;
-        point.position.y += pos.y;
+        point.position.x += (pos.x + offset.x);
+        point.position.y += (pos.y + offset.y);
         vertices[i] = point;
     }
-    SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
+    // SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
     SDL_RenderGeometry(gRenderer, NULL, vertices, resolution, indexes, nrOfIndexes);
 }
 
-SDL_Vertex uiSphere::getSpherePosition(int index){
+SDL_Vertex uiSphere::getSpherePosition(int index)
+{
     float angle = 2 * M_PI / resolution * index + rotation;
     return {sin(angle) * radius, cos(angle) * radius, color};
 }
 
-int *uiSphere::generateIndexes(){
+int *uiSphere::generateIndexes()
+{
     int *indexes = new int[nrOfIndexes];
     int j = 0;
     indexes[j++] = 0;
     indexes[j++] = 1;
     indexes[j++] = 2;
 
-    for(int i=2; i < resolution - 1; i++){
+    for (int i = 2; i < resolution - 1; i++)
+    {
         indexes[j++] = 0;
         indexes[j++] = i;
-        indexes[j++] = i+1;
+        indexes[j++] = i + 1;
     }
 
     return indexes;
 }
-
 
 #pragma endregion
 
@@ -61,27 +66,57 @@ uiRoundedRect::uiRoundedRect(Scene *scene, int newRes, float radius, float width
     log(LOG_INFO) << "uiRoundedRect created\n";
 }
 
-void uiRoundedRect::render(){
+void uiRoundedRect::render()
+{
     Object::render();
 
     Vect centers[4] = {
-        {width - radius, height - radius},
-        {width - radius, radius},
-        {radius, radius},
-        {radius, height - radius}
-    };
+        {width - radius + offset.x, height - radius + offset.y}, // Bottom Right
+        {width - radius + offset.x, radius + offset.y},
+        {radius + offset.x, radius + offset.y},
+        {radius + offset.x, height - radius + offset.y}};
 
-    for(int i=0; i < resolution; i++){
+    for (int i = 0; i < resolution; i++)
+    {
         SDL_Vertex point = getSpherePosition(i);
         point.position.x += pos.x + centers[i * 4 / resolution].x;
         point.position.y += pos.y + centers[i * 4 / resolution].y;
         vertices[i] = point;
     }
-    SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
+    // SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
     SDL_RenderGeometry(gRenderer, NULL, vertices, resolution, indexes, nrOfIndexes);
 }
 
 #pragma endregion
+
+uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float height, float borderSize) : Object(scene)
+{
+    color = {37, 150, 190, 255};
+    border_shift = 0.7;
+    if (borderSize > 0)
+    {
+        border = new uiRoundedRect(scene, newRes, radius, width + borderSize, height + borderSize);
+        border->setOffset({-borderSize / 2, -borderSize / 2});
+        border->setColor({static_cast<Uint8>(color.r * border_shift),
+                          static_cast<Uint8>(color.g * border_shift),
+                          static_cast<Uint8>(color.b * border_shift), 255});
+    }
+    body = new uiRoundedRect(scene, newRes, radius, width, height);
+    body->setColor(color);
+
+    log(LOG_INFO)
+        << "uiButton created\n";
+}
+
+void uiButton::update()
+{
+    Object::update();
+    if (border)
+    {
+        border->move(pos);
+    }
+    body->move(pos);
+}
 
 MainMenu::MainMenu()
 {
@@ -119,24 +154,7 @@ MainMenu::MainMenu()
     // sphere->setName("sphere");
     // sphere->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT * 2/ 3});
 
-    uiRoundedRect *button = new uiRoundedRect(uiScene, 12, 40, 500, 300);
+    uiButton *button = new uiButton(uiScene, 24, 40, 500, 300, 12);
     button->setName("button");
     button->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT / 2});
-    // CustomUpdateComponent *updateButton = new CustomUpdateComponent(button);
-    // updateButton->setUpdateFunction([](CustomUpdateComponent *comp) -> bool
-    // {
-    //     static float width = 0;
-    //     static bool increasing = false;
-    //     if(increasing){
-    //         width += .1;
-    //         if(width > 50)
-    //             increasing = false;
-    //     }else{
-    //         width -= .1;
-    //         if(width < -50)
-    //             increasing = true;
-    //     }
-    //     static_cast<uiRoundedRect *>(comp->getParent())->setRoration(width);   ;
-    //     return true;
-    // });
 };
