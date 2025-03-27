@@ -2,6 +2,7 @@
 #include "engine.h"
 #include "player.h"
 #include "targetObject.h"
+#include "mainMenu.h"
 
 int main(int argc, char *args[])
 {

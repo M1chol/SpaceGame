@@ -138,7 +138,7 @@ private:
 class TextComponent : public SpriteComponent
 {
 public:
-    TextComponent(std::string setMessage = "", Vect setPos = {0, 0}, std::string fontPath = "", Object *parent = nullptr);
+    TextComponent(std::string setMessage = "", Vect setPos = {0, 0}, std::string fontPath = "", int fontSize = 20, Object *parent = nullptr);
     void setColor(SDL_Color newColor);
     // Shadows the setScale function from SpriteComponent calls setScale
     void setScale(float newScale) {setSize((int)newScale);};

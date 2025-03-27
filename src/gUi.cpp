@@ -8,7 +8,6 @@ uiSphere::uiSphere(Object *parent, int newRes, float newRad) : Object(parent)
     resolution = newRes;
     offset = {0, 0};
     color = {255, 255, 255, 255};
-    borderColor = {0, 0, 0, 255};
     vertices = new SDL_Vertex[this->resolution];
     nrOfIndexes = resolution + (resolution - 3) * 2;
     indexes = generateIndexes();
@@ -92,32 +91,29 @@ void uiRoundedRect::render()
 
 #pragma endregion
 
+#pragma region uiButton
+
 uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float height, float borderSize, std::string text) : Object(scene)
 {
-    color = {37, 150, 190, 255};
-    border_shift = 1.3;
-    borderColor = {static_cast<Uint8>(color.r * border_shift),
-                   static_cast<Uint8>(color.g * border_shift),
-                   static_cast<Uint8>(color.b * border_shift), 255};
-    
     if (borderSize > 0)
     {
         border = new uiRoundedRect(this, newRes, radius, width + borderSize, height + borderSize);
         border->setOffset({-borderSize / 2, -borderSize / 2});
-        border->setColor(borderColor);
         addChild(border);
     }
     body = new uiRoundedRect(this, newRes, radius, width, height);
-    body->setColor(color);
     if (text != "")
     {
-        TextComponent *textComp = new TextComponent(text, {0, 0}, fontSans, this);
+        TextComponent *textComp = new TextComponent(text, {0, 0}, fontSans, 20, this);
         textComp->setColor({255, 255, 255, 255});
         textComp->setScale(20);
     }
     addChild(body);
+    setColor({37, 150, 190, 255}, 1.3);
     log(LOG_INFO) << "uiButton created\n";
 }
+
+
 
 void uiButton::update()
 {
@@ -133,9 +129,7 @@ void uiButton::update()
     hover = mousePos.x > pos.x && mousePos.x < pos.x + size.x && mousePos.y > pos.y && mousePos.y < pos.y + size.y;
     
     if(hover && !prevHover){
-        body->setColor({static_cast<Uint8>(color.r + 20),
-            static_cast<Uint8>(color.g + 20),
-            static_cast<Uint8>(color.b + 20), 255});
+        body->setColor(hoverColor);
         if (border)
         {
             border->setColor({255, 255, 255, 255});
@@ -150,43 +144,20 @@ void uiButton::update()
     prevHover = hover;
 }
 
-MainMenu::MainMenu()
-{
-    Scene *uiScene = addScene("UI");
-    uiScene->setDrawPriority(1);
-    Object *title = new Object(uiScene);
-    title->setName("title");
-    title->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT / 4});
-    TextComponent *text = new TextComponent("Scrap Wars", {0, 0}, fontSans, title);
-    CustomUpdateComponent *update = new CustomUpdateComponent(title);
-    update->setUpdateFunction([](CustomUpdateComponent *comp) -> bool
-                              {
-        static double angle = 0;
-        static bool increasing = true;
+void uiButton::setColor(SDL_Color newColor, float borderShift){
+    color = newColor;
+    borderColorShift = borderShift;
+    body->setColor(newColor);
+    Uint8 R = color.r * borderColorShift > 255 ? 255 : color.r *borderColorShift;
+    Uint8 G = color.g * borderColorShift > 255 ? 255 : color.r *borderColorShift;
+    Uint8 B = color.b * borderColorShift > 255 ? 255 : color.r *borderColorShift;
+    
+    hoverColor = borderColor;
 
-        if (increasing)
-        {
-            angle += .1;
-            if (angle >= 10)
-            increasing = false;
-        }
-        else
-        {
-            angle -= .1;
-            if (angle <= -10)
-            increasing = true;
-        }
+    if(border){
+        borderColor = {R, G, B, 255};
+        border->setColor(borderColor);
+    }
+}
 
-        comp->getParent()->rotate(angle);
-        return true; });
-
-    text->setScale(30);
-
-    // uiSphere *sphere = new uiSphere(uiScene, 12, 100);
-    // sphere->setName("sphere");
-    // sphere->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT * 2/ 3});
-
-    uiButton *button = new uiButton(uiScene, 24, 40, 500, 300, 12, "Start");
-    button->setName("button");
-    button->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT / 2});
-};
+#pragma endregion

@@ -27,7 +27,6 @@ protected:
 
 private:
     SDL_Color color;
-    SDL_Color borderColor;
 };
 
 class uiRoundedRect : public uiSphere
@@ -52,23 +51,20 @@ public:
     uiButton(Scene *scene, int resolution, float radius, float width, float height, float borderSize = 0, std::string text = "");
     void update() override;
     void setText(std::string newText) { buttonText = newText; };
+    void setColor(SDL_Color setColor, float borderShift);
+    Vect getSize() { return body->getSize(); };
 
 private:
     uiRoundedRect *body;
     uiRoundedRect *border;
+    std::string buttonText;
+    
+    SDL_Color hoverColor;
     SDL_Color color;
     SDL_Color borderColor;
-    float border_shift;
-    std::string buttonText;
+    float borderColorShift;
+
     bool hover;
     bool prevHover;
 };
 
-class MainMenu : public Scene
-{
-public:
-    MainMenu();
-
-private:
-    Object *title;
-};

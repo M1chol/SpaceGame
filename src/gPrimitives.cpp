@@ -220,7 +220,7 @@ void Object::setName(std::string newName)
     name = newName;
     if (showDebugNames)
     {
-        new TextComponent(name, pos, "res/Pixellettersfull-BnJ5.ttf", this);
+        new TextComponent(name, pos, "res/Pixellettersfull-BnJ5.ttf", 20, this);
     }
 }
 std::string Object::getName()

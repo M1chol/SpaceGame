@@ -349,7 +349,7 @@ bool SpawnerComponent<bulletType>::update()
 
 #pragma region TextComponent
 
-TextComponent::TextComponent(std::string setMessage, Vect setPos, std::string setfontPath, Object *setParent)
+TextComponent::TextComponent(std::string setMessage, Vect setPos, std::string setfontPath, int setFontSize, Object *setParent)
 {
 	name = "TextComponent";
 	font = nullptr;
@@ -359,6 +359,7 @@ TextComponent::TextComponent(std::string setMessage, Vect setPos, std::string se
 	gRenderer = nullptr;
 	parent = nullptr;
 	scale = 1;
+	fontSize = setFontSize;
 	fontPath = "";
 	if (setfontPath != "")
 	{
@@ -430,7 +431,7 @@ void TextComponent::whenLinked()
 		load(path);
 	}
 	gRenderer = parent->getScene()->getRenderer();
-	if (!load(path, color))
+	if (!load(path, color, fontPath, fontSize))
 	{
 		getParent()->removeComponent(this);
 		log(LOG_WARN) << "Removing faulty component (" << this << ")\n";
