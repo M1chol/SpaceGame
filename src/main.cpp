@@ -15,7 +15,7 @@ int main(int argc, char *args[])
 	Scene *mainScene = addScene("MAIN");
 
 	// CREATE PLAYER
-	PlayerObject *player = new PlayerObject(mainScene);
+	// PlayerObject *player = new PlayerObject(mainScene);
 
 	// CREATE MENU
 	MainMenu *menu = new MainMenu();

@@ -7,7 +7,6 @@ uiSphere::uiSphere(Object *parent, int newRes, float newRad) : Object(parent)
     radius = newRad;
     resolution = newRes;
     offset = {0, 0};
-    rotation = M_PI / resolution;
     color = {255, 255, 255, 255};
     borderColor = {0, 0, 0, 255};
     vertices = new SDL_Vertex[this->resolution];
@@ -32,7 +31,7 @@ void uiSphere::render()
 
 SDL_Vertex uiSphere::getSpherePosition(int index)
 {
-    float angle = 2 * M_PI / resolution * index + rotation;
+    float angle = (2 * M_PI * index + M_PI) / resolution - rotation / 180 * M_PI;
     return {sin(angle) * radius, cos(angle) * radius, color};
 }
 
@@ -63,6 +62,7 @@ uiRoundedRect::uiRoundedRect(Object *parent, int newRes, float radius, float wid
     resolution = newRes;
     this->width = width;
     this->height = height;
+    center = {width / 2, height / 2};
     log(LOG_INFO) << "uiRoundedRect created\n";
 }
 
@@ -75,6 +75,9 @@ void uiRoundedRect::render()
         {width - radius + offset.x, radius + offset.y},
         {radius + offset.x, radius + offset.y},
         {radius + offset.x, height - radius + offset.y}};
+
+    for(Vect &vec : centers)
+        vec = vec.rotate(rotation, center);
 
     for (int i = 0; i < resolution; i++)
     {
@@ -121,6 +124,12 @@ void uiButton::update()
         border->move(pos);
     }
     body->move(pos);
+
+    if(isKeyDown(SDL_SCANCODE_SPACE)){
+        static float rot = 0;
+        rot += .1;
+        body->rotate(rot);
+    }
 }
 
 MainMenu::MainMenu()

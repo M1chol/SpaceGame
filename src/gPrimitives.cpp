@@ -42,6 +42,23 @@ Vect Vect::normalized()
         return {x / mag, y / mag};
     }
 }
+
+Vect Vect::rotate(double angle, Vect center) {
+    // Convert angle to radians if it's in degrees
+    double radians = angle * M_PI / 180.0;
+    
+    // Translate point back to origin
+    double x = this->x - center.x;
+    double y = this->y - center.y;
+    
+    // Rotate point
+    double rotatedX = x * cos(radians) - y * sin(radians);
+    double rotatedY = x * sin(radians) + y * cos(radians);
+    
+    // Translate point back
+    return {rotatedX + center.x, rotatedY + center.y};
+  }
+
 iVect Vect::toIVect()
 {
     return iVect{(int)x, (int)y};

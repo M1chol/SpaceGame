@@ -18,6 +18,7 @@ struct Vect
     Vect &operator*=(double scalar);
     double magnitude();
     Vect normalized();
+    Vect rotate(double angle, Vect center);
     iVect toIVect();
 };
 /* Primitive struct that holds to ints x and y*/

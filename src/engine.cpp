@@ -116,6 +116,8 @@ bool isKeyDown(SDL_Scancode key)
     return currentKeyState[key];
 }
 
+
+// TODO: fix the left and right mouse buttons registering the same
 bool isKeyDown(MouseButton button)
 {
     return mouseState && SDL_BUTTON(button);
@@ -125,6 +127,8 @@ bool isKeyReleased(SDL_Scancode key)
 {
     return previousKeyState[key] && !currentKeyState[key];
 }
+
+// TODO: check if it even works
 bool isKeyPushed(SDL_Scancode key)
 {
     return currentKeyState[key] && !previousKeyState[key];

@@ -13,7 +13,6 @@ public:
     void setResolution(int newResolution) { resolution = newResolution; };
     void setRadius(float newRadius) { radius = newRadius; };
     void setColor(SDL_Color newColor) { color = newColor; };
-    void setRoration(float newRotation) { rotation = newRotation; };
     void setOffset(Vect newOffset) { offset = newOffset; };
 
 protected:
@@ -23,7 +22,6 @@ protected:
     int *generateIndexes();
     int nrOfIndexes;
     float radius;
-    float rotation;
     SDL_Vertex *vertices;
     Vect offset;
 
@@ -43,6 +41,7 @@ public:
 private:
     float width;
     float height;
+    Vect center;
 };
 
 class uiButton : public Object
