@@ -95,10 +95,11 @@ void uiRoundedRect::render()
 uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float height, float borderSize, std::string text) : Object(scene)
 {
     color = {37, 150, 190, 255};
-    border_shift = 0.7;
+    border_shift = 1.3;
     borderColor = {static_cast<Uint8>(color.r * border_shift),
                    static_cast<Uint8>(color.g * border_shift),
                    static_cast<Uint8>(color.b * border_shift), 255};
+    
     if (borderSize > 0)
     {
         border = new uiRoundedRect(this, newRes, radius, width + borderSize, height + borderSize);
@@ -120,6 +121,7 @@ uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float he
 
 void uiButton::update()
 {
+    // TODO: not needed if ui is not moving after creation
     Object::update();
     if (border)
     {
@@ -128,26 +130,24 @@ void uiButton::update()
     body->move(pos);
 
     Vect size = body->getSize();
-    if (mousePos.x > pos.x && mousePos.x < pos.x + size.x && mousePos.y > pos.y && mousePos.y < pos.y + size.y)
-    {
+    hover = mousePos.x > pos.x && mousePos.x < pos.x + size.x && mousePos.y > pos.y && mousePos.y < pos.y + size.y;
+    
+    if(hover && !prevHover){
         body->setColor({static_cast<Uint8>(color.r + 20),
-                        static_cast<Uint8>(color.g + 20),
-                        static_cast<Uint8>(color.b + 20), 255});
+            static_cast<Uint8>(color.g + 20),
+            static_cast<Uint8>(color.b + 20), 255});
         if (border)
         {
-            border->setColor({static_cast<Uint8>(color.r + 50),
-                              static_cast<Uint8>(color.g + 50),
-                              static_cast<Uint8>(color.b + 50), 255});
+            border->setColor({255, 255, 255, 255});
         }
-    }
-    else
-    {
+    }else if(!hover && prevHover){
         body->setColor(color);
         if (border)
         {
-            border->setColor(color);
+            border->setColor(borderColor);
         }
     }
+    prevHover = hover;
 }
 
 MainMenu::MainMenu()

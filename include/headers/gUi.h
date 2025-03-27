@@ -60,6 +60,8 @@ private:
     SDL_Color borderColor;
     float border_shift;
     std::string buttonText;
+    bool hover;
+    bool prevHover;
 };
 
 class MainMenu : public Scene
