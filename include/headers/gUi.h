@@ -37,6 +37,7 @@ public:
     void render() override;
     void setWidth(float newWidth) { width = newWidth; };
     void setHeight(float newHeight) { height = newHeight; };
+    Vect getSize() { return {width, height}; };
 
 private:
     float width;
@@ -48,7 +49,7 @@ class uiButton : public Object
 {
 public:
     /*Creates rounded button @param scene scene pointer @param resolution for rounded corner @param radius for rounded corners @param width @param height @param borderSize if 0 no border @param text if empty no text*/
-    uiButton(Scene *scene, int resolution, float radius, float width, float height, float borderSize = 0, std::string text="");
+    uiButton(Scene *scene, int resolution, float radius, float width, float height, float borderSize = 0, std::string text = "");
     void update() override;
     void setText(std::string newText) { buttonText = newText; };
 
@@ -56,6 +57,7 @@ private:
     uiRoundedRect *body;
     uiRoundedRect *border;
     SDL_Color color;
+    SDL_Color borderColor;
     float border_shift;
     std::string buttonText;
 };

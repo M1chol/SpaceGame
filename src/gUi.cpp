@@ -76,7 +76,7 @@ void uiRoundedRect::render()
         {radius + offset.x, radius + offset.y},
         {radius + offset.x, height - radius + offset.y}};
 
-    for(Vect &vec : centers)
+    for (Vect &vec : centers)
         vec = vec.rotate(rotation, center);
 
     for (int i = 0; i < resolution; i++)
@@ -96,18 +96,20 @@ uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float he
 {
     color = {37, 150, 190, 255};
     border_shift = 0.7;
+    borderColor = {static_cast<Uint8>(color.r * border_shift),
+                   static_cast<Uint8>(color.g * border_shift),
+                   static_cast<Uint8>(color.b * border_shift), 255};
     if (borderSize > 0)
     {
         border = new uiRoundedRect(this, newRes, radius, width + borderSize, height + borderSize);
         border->setOffset({-borderSize / 2, -borderSize / 2});
-        border->setColor({static_cast<Uint8>(color.r * border_shift),
-                          static_cast<Uint8>(color.g * border_shift),
-                          static_cast<Uint8>(color.b * border_shift), 255});
+        border->setColor(borderColor);
         addChild(border);
     }
     body = new uiRoundedRect(this, newRes, radius, width, height);
     body->setColor(color);
-    if(text != ""){
+    if (text != "")
+    {
         TextComponent *textComp = new TextComponent(text, {0, 0}, fontSans, this);
         textComp->setColor({255, 255, 255, 255});
         textComp->setScale(20);
@@ -125,10 +127,26 @@ void uiButton::update()
     }
     body->move(pos);
 
-    if(isKeyDown(SDL_SCANCODE_SPACE)){
-        static float rot = 0;
-        rot += .1;
-        body->rotate(rot);
+    Vect size = body->getSize();
+    if (mousePos.x > pos.x && mousePos.x < pos.x + size.x && mousePos.y > pos.y && mousePos.y < pos.y + size.y)
+    {
+        body->setColor({static_cast<Uint8>(color.r + 20),
+                        static_cast<Uint8>(color.g + 20),
+                        static_cast<Uint8>(color.b + 20), 255});
+        if (border)
+        {
+            border->setColor({static_cast<Uint8>(color.r + 50),
+                              static_cast<Uint8>(color.g + 50),
+                              static_cast<Uint8>(color.b + 50), 255});
+        }
+    }
+    else
+    {
+        body->setColor(color);
+        if (border)
+        {
+            border->setColor(color);
+        }
     }
 }
 
@@ -169,6 +187,6 @@ MainMenu::MainMenu()
     // sphere->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT * 2/ 3});
 
     uiButton *button = new uiButton(uiScene, 24, 40, 500, 300, 12, "Start");
-    button->setName("button");  
+    button->setName("button");
     button->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT / 2});
 };

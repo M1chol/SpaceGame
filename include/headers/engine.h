@@ -82,6 +82,7 @@ extern bool waitToDebug;
 extern bool showDebugNames;
 extern int nrOfScenes;
 extern int nrOfLayouts;
+// Current position of a mouse
 extern iVect mousePos;
 
 extern std::string fontSans;
