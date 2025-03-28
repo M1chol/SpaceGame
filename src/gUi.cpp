@@ -11,7 +11,6 @@ uiSphere::uiSphere(Object *parent, int newRes, float newRad) : Object(parent)
     vertices = new SDL_Vertex[this->resolution];
     nrOfIndexes = resolution + (resolution - 3) * 2;
     indexes = generateIndexes();
-    log(LOG_INFO) << "uiRoundedRect created\n";
 }
 
 void uiSphere::render()
@@ -100,6 +99,7 @@ uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float he
         border = new uiRoundedRect(this, newRes, radius, width + borderSize, height + borderSize);
         border->setOffset({-borderSize / 2, -borderSize / 2});
         addChild(border);
+        border->move(pos);
     }
     body = new uiRoundedRect(this, newRes, radius, width, height);
     if (text != "")
@@ -109,7 +109,9 @@ uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float he
         textComp->setScale(20);
     }
     addChild(body);
-    setColor({37, 150, 190, 255}, 1.3);
+    setColor({37, 150, 190, 255}, borderColorShift);
+    
+    body->move(pos);
     log(LOG_INFO) << "uiButton created\n";
 }
 
@@ -118,12 +120,12 @@ uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float he
 void uiButton::update()
 {
     // TODO: not needed if ui is not moving after creation
-    Object::update();
-    if (border)
-    {
-        border->move(pos);
-    }
-    body->move(pos);
+    // Object::update();
+    // if (border)
+    // {
+    //     border->move(pos);
+    // }
+    // body->move(pos);
 
     Vect size = body->getSize();
     hover = mousePos.x > pos.x && mousePos.x < pos.x + size.x && mousePos.y > pos.y && mousePos.y < pos.y + size.y;
@@ -151,13 +153,11 @@ void uiButton::setColor(SDL_Color newColor, float borderShift){
     Uint8 R = color.r * borderColorShift > 255 ? 255 : color.r *borderColorShift;
     Uint8 G = color.g * borderColorShift > 255 ? 255 : color.r *borderColorShift;
     Uint8 B = color.b * borderColorShift > 255 ? 255 : color.r *borderColorShift;
-    
-    hoverColor = borderColor;
-
+    borderColor = {R, G, B, 255};
     if(border){
-        borderColor = {R, G, B, 255};
         border->setColor(borderColor);
     }
+    hoverColor = borderColor;
 }
 
 #pragma endregion

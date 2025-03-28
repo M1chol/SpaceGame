@@ -12,20 +12,21 @@ MainMenu::MainMenu()
     title->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT / 8});
     
     TextComponent *text = new TextComponent("SALVAGE SECTOR", {0, 0}, fontSans, 60, title);
-    static SDL_Color mainColor = {249, 167, 42, 255};
+    static SDL_Color mainColor = {180, 78, 21, 255};
+    
     text->setColor(mainColor);
     
     uiButton *startButton = new uiButton(uiScene, 12, 5, 320, 80, 5, "START");
-    startButton->move({(double)SCREEN_WIDTH / 2 - startButton->getSize().x / 2, (double)SCREEN_HEIGHT / 4 + 35});
-    startButton->setColor(mainColor, 1.05);
+    startButton->move({(double)SCREEN_WIDTH / 2 - startButton->getSize().x / 2, (double)SCREEN_HEIGHT / 4 + 55});
+    startButton->setColor(mainColor, 1.1);
 
     uiButton *settingsButton = new uiButton(uiScene, 12, 5, 320, 80, 5, "SETTINGS");
-    settingsButton->move({(double)SCREEN_WIDTH / 2 - settingsButton->getSize().x / 2, (double)SCREEN_HEIGHT / 4 + 135});
-    settingsButton->setColor(mainColor, 1.05);
+    settingsButton->move({(double)SCREEN_WIDTH / 2 - settingsButton->getSize().x / 2, (double)SCREEN_HEIGHT / 4 + 175});
+    settingsButton->setColor(mainColor, 1.1);
 
     uiButton *quitButton = new uiButton(uiScene, 12, 5, 320, 80, 5, "QUIT");
-    quitButton->move({(double)SCREEN_WIDTH / 2 - quitButton->getSize().x / 2, (double)SCREEN_HEIGHT / 4 + 235});
-    quitButton->setColor(mainColor, 1.05);
+    quitButton->move({(double)SCREEN_WIDTH / 2 - quitButton->getSize().x / 2, (double)SCREEN_HEIGHT / 4 + 295});
+    quitButton->setColor({255, 30, 30, 255}, 1.1);
     
     CustomUpdateComponent *update = new CustomUpdateComponent(title);
     update->setUpdateFunction([](CustomUpdateComponent *comp) -> bool{ 
@@ -60,5 +61,14 @@ MainMenu::MainMenu()
     
         // END OF VIBE CODING
     });
+
+    uiSphere *star = new uiSphere(background, 20, 20);
+
+    // Create stars
+    for(int i=0; i< 100; i++){
+        uiSphere *star = new uiSphere(background, 5, rand() % 20 + 1);
+        star->move({(double)(rand() % SCREEN_WIDTH), (double)(rand() % SCREEN_HEIGHT)});
+        // std::cout << "star " << i << " " << star->getPos().x << " " << star->getPos().y << "\n";
+    }
 
 }

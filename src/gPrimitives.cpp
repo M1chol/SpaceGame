@@ -121,7 +121,7 @@ Object::Object(Object *parent){
     isActive = true;
     posLocked = false;
     rotation = 0;
-    this->parent = parent;
+    parent->addChild(this);
 }
 
 Object::~Object()

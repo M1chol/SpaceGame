@@ -20,7 +20,7 @@ int main(int argc, char *args[])
 
 	// CREATE MENU
 	MainMenu *menu = new MainMenu();
-
+	
 	// CREATE TARGETS
 	// targetObject *target1 = new targetObject(mainScene, 1);
 	// targetObject *target2 = new targetObject(mainScene, 2);

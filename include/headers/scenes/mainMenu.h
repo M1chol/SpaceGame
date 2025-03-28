@@ -9,6 +9,7 @@ public:
     MainMenu();
 private:
     Object *title;
+    std::vector<Object *> starList;
 };
 
 #endif
