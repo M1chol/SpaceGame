@@ -25,7 +25,7 @@ public:
     @param scale set the size of image, 1 = 100%
     @return true if success else false
     */
-    bool render(int index, iVect *offset, float scale);
+    bool render(int index, iVect offset, float scale);
     /*
     Renders the texture assigned to object to screen centered at parent object
     @param scale set the size of image, 1 = 100%
@@ -36,26 +36,33 @@ public:
     /* This function runs every time Object is linked to new Scene*/
     void whenLinked() override;
     /* Returns dimentions of texture*/
-    iVect *getDim();
+    iVect getDim();
     void setScale(float newScale);
     void setSheetIndex(int index) { sheetIndex = index; }
+    void setOffset(iVect newOffset) { offset = newOffset; };
+    void setCentered() { offset = center; };
     void rotate(double newRotation) { rotation = newRotation; }
+
+    iVect getCenter() { return center; };
 
     void saveBin(std::ofstream &out) override;
     void loadBin(std::ifstream &in) override;
 
+    iVect offset;
+
 protected:
     SDL_Renderer *gRenderer;
     SDL_Texture *texture;
-    iVect *dim;
+    iVect dim;
+    iVect center;
     std::string path;
     float scale;
+    
 
 private:
     SDL_Rect *renderBox;
     int sheetSize;
     int sheetIndex;
-    iVect *offset;
     double rotation;
 };
 
@@ -138,23 +145,22 @@ private:
 class TextComponent : public SpriteComponent
 {
 public:
-    TextComponent(std::string setMessage = "", Vect setPos = {0, 0}, std::string fontPath = "", int fontSize = 20, Object *parent = nullptr);
+    TextComponent(std::string setMessage = "", iVect newOffset = {0, 0}, std::string fontPath = "", int fontSize = 20, Object *parent = nullptr);
     void setColor(SDL_Color newColor);
     // Shadows the setScale function from SpriteComponent calls setScale
-    void setScale(float newScale) {setSize((int)newScale);};
+    void setScale(float newScale) { setSize((int)newScale); };
     void setSize(int newSize);
     void setFont(std::string fontPath, int fontSize = 20);
     void saveBin(std::ofstream &out) override;
     void loadBin(std::ifstream &in) override;
 
 private:
-    bool load(std::string newMessage = "", SDL_Color color = {255, 255, 255}, std::string fontPath = "", int fontSize = 20);    
+    bool load(std::string newMessage = "", SDL_Color color = {255, 255, 255, 255}, std::string fontPath = "", int fontSize = 20);
     void whenLinked() override;
     bool update() override;
-    Vect pos;
     TTF_Font *font;
     std::string fontPath;
-    SDL_Color color = {255, 255, 255};
+    SDL_Color color;
     int fontSize;
 };
 

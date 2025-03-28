@@ -1,6 +1,6 @@
 #include "engine.h"
 
-Layout::Layout(Scene *scene, std::string name = "Unnamed", Object *parent) : Object(scene, parent)
+Layout::Layout(Scene *scene, std::string name = "Unnamed", Object *parent) : Object(scene)
 {
     ID = LayoutGetID();
     setName(name);

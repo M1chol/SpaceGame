@@ -43,21 +43,22 @@ Vect Vect::normalized()
     }
 }
 
-Vect Vect::rotate(double angle, Vect center) {
+Vect Vect::rotate(double angle, Vect center)
+{
     // Convert angle to radians if it's in degrees
     double radians = angle * M_PI / 180.0;
-    
+
     // Translate point back to origin
     double x = this->x - center.x;
     double y = this->y - center.y;
-    
+
     // Rotate point
     double rotatedX = x * cos(radians) - y * sin(radians);
     double rotatedY = x * sin(radians) + y * cos(radians);
-    
+
     // Translate point back
     return {rotatedX + center.x, rotatedY + center.y};
-  }
+}
 
 iVect Vect::toIVect()
 {
@@ -90,7 +91,7 @@ iVect &iVect::operator*=(int scalar)
 
 #pragma region Object
 
-Object::Object(Scene *scene, Object *parent)
+Object::Object(Scene *scene)
 {
     linkedScene = scene;
     if (!linkedScene)
@@ -107,13 +108,10 @@ Object::Object(Scene *scene, Object *parent)
     isActive = true;
     posLocked = false;
     rotation = 0;
-    if (parent != nullptr)
-    {
-        parent->addChild(this);
-    }
 }
 
-Object::Object(Object *parent){
+Object::Object(Object *parent)
+{
     linkedScene = parent->getScene();
     pos = {0, 0};
     name = "unnamed";
@@ -156,6 +154,11 @@ Vect Object::getPos()
 }
 bool Object::move(Vect newPos, bool Forced)
 {
+    for (Object *child : childrenList)
+    {
+        child->move(newPos, Forced);
+    }
+
     if (!Forced && posLocked)
     {
         return false;
@@ -220,7 +223,7 @@ void Object::setName(std::string newName)
     name = newName;
     if (showDebugNames)
     {
-        new TextComponent(name, pos, "res/Pixellettersfull-BnJ5.ttf", 20, this);
+        new TextComponent(name, pos.toIVect(), "res/Pixellettersfull-BnJ5.ttf", 20, this);
     }
 }
 std::string Object::getName()
@@ -281,10 +284,6 @@ void Object::update()
             break;
         }
         component->update();
-    }
-    for (auto &child : childrenList)
-    {
-        child->pos = pos;
     }
 }
 void Object::lateUpdate() {}

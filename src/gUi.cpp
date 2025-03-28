@@ -94,28 +94,27 @@ void uiRoundedRect::render()
 
 uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float height, float borderSize, std::string text) : Object(scene)
 {
+    fontColor = {255, 255, 255, 255};
+    fontSize = 30;
     if (borderSize > 0)
     {
         border = new uiRoundedRect(this, newRes, radius, width + borderSize, height + borderSize);
         border->setOffset({-borderSize / 2, -borderSize / 2});
-        addChild(border);
         border->move(pos);
     }
     body = new uiRoundedRect(this, newRes, radius, width, height);
     if (text != "")
     {
-        TextComponent *textComp = new TextComponent(text, {0, 0}, fontSans, 20, this);
+        Vect center = {width / 2, height / 2};
+        TextComponent *textComp = new TextComponent(text, {20, 20}, fontSans, fontSize, this);
         textComp->setColor({255, 255, 255, 255});
-        textComp->setScale(20);
+        textComp->setOffset(textComp->getCenter() + center.toIVect());
+        std::cout << textComp->offset.x << " " << textComp->offset.y << "\n";
     }
-    addChild(body);
     setColor({37, 150, 190, 255}, borderColorShift);
-    
     body->move(pos);
     log(LOG_INFO) << "uiButton created\n";
 }
-
-
 
 void uiButton::update()
 {
@@ -129,14 +128,17 @@ void uiButton::update()
 
     Vect size = body->getSize();
     hover = mousePos.x > pos.x && mousePos.x < pos.x + size.x && mousePos.y > pos.y && mousePos.y < pos.y + size.y;
-    
-    if(hover && !prevHover){
+
+    if (hover && !prevHover)
+    {
         body->setColor(hoverColor);
         if (border)
         {
             border->setColor({255, 255, 255, 255});
         }
-    }else if(!hover && prevHover){
+    }
+    else if (!hover && prevHover)
+    {
         body->setColor(color);
         if (border)
         {
@@ -146,15 +148,17 @@ void uiButton::update()
     prevHover = hover;
 }
 
-void uiButton::setColor(SDL_Color newColor, float borderShift){
+void uiButton::setColor(SDL_Color newColor, float borderShift)
+{
     color = newColor;
     borderColorShift = borderShift;
     body->setColor(newColor);
-    Uint8 R = color.r * borderColorShift > 255 ? 255 : color.r *borderColorShift;
-    Uint8 G = color.g * borderColorShift > 255 ? 255 : color.r *borderColorShift;
-    Uint8 B = color.b * borderColorShift > 255 ? 255 : color.r *borderColorShift;
+    Uint8 R = color.r * borderColorShift > 255 ? 255 : color.r * borderColorShift;
+    Uint8 G = color.g * borderColorShift > 255 ? 255 : color.r * borderColorShift;
+    Uint8 B = color.b * borderColorShift > 255 ? 255 : color.r * borderColorShift;
     borderColor = {R, G, B, 255};
-    if(border){
+    if (border)
+    {
         border->setColor(borderColor);
     }
     hoverColor = borderColor;

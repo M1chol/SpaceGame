@@ -9,8 +9,9 @@ SpriteComponent::SpriteComponent(std::string newPath, Object *parent)
 	texture = nullptr;
 	renderBox = nullptr;
 	gRenderer = nullptr;
-	offset = nullptr;
-	dim = new iVect;
+	offset = {0, 0};
+	center = {0, 0};
+	dim = {0, 0};
 	renderBox = new SDL_Rect;
 	scale = 1;
 	sheetIndex = -1;
@@ -23,11 +24,8 @@ SpriteComponent::SpriteComponent(std::string newPath, Object *parent)
 }
 SpriteComponent::~SpriteComponent()
 {
-	delete dim;
+	SDL_DestroyTexture(texture);
 	delete renderBox;
-	delete offset;
-	texture = nullptr;
-	gRenderer = nullptr;
 }
 void SpriteComponent::whenLinked()
 {
@@ -60,16 +58,19 @@ bool SpriteComponent::load(std::string setPath)
 		log(LOG_WARN) << "Failed converting media to texture " << IMG_GetError() << "\n";
 		return false;
 	}
-	*dim = {loaded->w, loaded->h};
+	dim = {loaded->w, loaded->h};
+	center = {-(int)((float)dim.x * scale / 2),
+			  -(int)((float)dim.y * scale / 2)};
+
 	SDL_FreeSurface(loaded);
 	texture = new_texture;
 	return true;
 }
-iVect *SpriteComponent::getDim()
+iVect SpriteComponent::getDim()
 {
 	return dim;
 }
-bool SpriteComponent::render(int index, iVect *newOffset, float newScale)
+bool SpriteComponent::render(int index, iVect newOffset, float newScale)
 {
 	if (gRenderer == nullptr)
 	{
@@ -77,34 +78,28 @@ bool SpriteComponent::render(int index, iVect *newOffset, float newScale)
 		return false;
 	}
 	sheetIndex = index;
-	if (newOffset != nullptr)
-	{
-		offset = newOffset;
-	}
+
+	offset = newOffset;
 	if (newScale > 0)
 	{
 		scale = newScale;
 	}
-	iVect imgSize = *dim;
+	iVect imgSize = dim;
 	if (index > -1)
 	{
 		imgSize = {sheetSize, sheetSize};
 	}
-	if (offset == nullptr && newOffset == nullptr)
-	{
-		offset = new iVect{-(int)((float)imgSize.x * scale / 2),
-						   -(int)((float)imgSize.y * scale / 2)};
-	}
-	*renderBox = {(int)parent->getPos().x + offset->x,
-				  (int)parent->getPos().y + offset->y,
+
+	*renderBox = {(int)parent->getPos().x + offset.x,
+				  (int)parent->getPos().y + offset.y,
 				  (int)((float)imgSize.x * scale),
 				  (int)((float)imgSize.y * scale)};
 
 	SDL_Rect sheet;
 	if (index > -1)
 	{
-		int spriteSheetCol = (sheetIndex % (dim->x / sheetSize)); // Column of the sprite
-		int spriteSheetRow = (sheetIndex / (dim->x / sheetSize)); // Row of the sprite
+		int spriteSheetCol = (sheetIndex % (dim.x / sheetSize)); // Column of the sprite
+		int spriteSheetRow = (sheetIndex / (dim.x / sheetSize)); // Row of the sprite
 
 		sheet = {spriteSheetCol * sheetSize,
 				 spriteSheetRow * sheetSize,
@@ -121,7 +116,7 @@ bool SpriteComponent::render(int index, iVect *newOffset, float newScale)
 }
 bool SpriteComponent::render(int index, float newScale)
 {
-	return render(index, nullptr, scale);
+	return render(index, offset, newScale);
 }
 
 bool SpriteComponent::render()
@@ -349,11 +344,12 @@ bool SpawnerComponent<bulletType>::update()
 
 #pragma region TextComponent
 
-TextComponent::TextComponent(std::string setMessage, Vect setPos, std::string setfontPath, int setFontSize, Object *setParent)
+TextComponent::TextComponent(std::string setMessage, iVect newOffset, std::string setfontPath, int setFontSize, Object *setParent)
 {
 	name = "TextComponent";
 	font = nullptr;
-	pos = setPos;
+	color = {255, 255, 255, 255};
+	offset = newOffset;
 	path = setMessage;
 	texture = NULL;
 	gRenderer = nullptr;
@@ -406,7 +402,10 @@ bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string
 		log(LOG_WARN) << "Text surface failed to create texture in TextComponent (" << this << ") " << TTF_GetError() << "\n";
 		return false;
 	}
-	*dim = {textSurface->w, textSurface->h};
+	dim = {textSurface->w, textSurface->h};
+	center = {-(int)((float)dim.x * scale / 2),
+			  -(int)((float)dim.y * scale / 2)};
+
 	SDL_FreeSurface(textSurface);
 	return true;
 }
@@ -452,7 +451,6 @@ void TextComponent::setFont(std::string setFontPath, int fontSize)
 
 bool TextComponent::update()
 {
-
 }
 
 #pragma endregion

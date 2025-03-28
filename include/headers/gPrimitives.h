@@ -63,7 +63,7 @@ class Object
 
 public:
     /* Creates object linked to a scene @param scene Object will be updated and rendered by this scene @param parent sets the parent*/
-    Object(Scene *scene, Object *parent = nullptr);
+    Object(Scene *scene);
     /* Creates Object that is updated and rendered by its parent @param parent*/
     Object(Object *parent);
     virtual ~Object();
@@ -84,8 +84,6 @@ public:
     virtual void destroy();
     /* add Component to vector componentList of Object @param comp Component to be linked */
     bool addComponent(Component *comp);
-    /* add Child to childList @param child pointer to child*/
-    void addChild(Object *child);
     /* add Tag to existing `Object` @param newTag tag to be added*/
     void addTag(TAG newTag);
     /* remove Component from vector componentList of Object @param comp Component to be removed
@@ -127,6 +125,8 @@ protected:
     Vect pos;
     double rotation;
     std::string name;
+    /* add Child to childList @param child pointer to child*/
+    void addChild(Object *child);
 
 private:
     Scene *linkedScene;

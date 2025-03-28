@@ -58,7 +58,7 @@ private:
     uiRoundedRect *body;
     uiRoundedRect *border;
     std::string buttonText;
-    
+
     SDL_Color hoverColor;
     SDL_Color color;
     SDL_Color borderColor;
@@ -66,5 +66,6 @@ private:
 
     bool hover;
     bool prevHover;
+    int fontSize;
+    SDL_Color fontColor;
 };
-
