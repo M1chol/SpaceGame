@@ -38,7 +38,7 @@ public:
     /* Returns dimentions of texture*/
     iVect getDim();
     void setScale(float newScale);
-    void setSheetIndex(int index) { sheetIndex = index; }
+    void setSheetIndex(int index);
     void setOffset(iVect newOffset) { offset = newOffset; };
     void setCentered() { offset = center; };
     void rotate(double newRotation) { rotation = newRotation; }
@@ -57,7 +57,7 @@ protected:
     iVect center;
     std::string path;
     float scale;
-    
+    void calculateCenter();
 
 private:
     SDL_Rect *renderBox;

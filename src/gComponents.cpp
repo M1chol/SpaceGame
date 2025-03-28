@@ -59,8 +59,7 @@ bool SpriteComponent::load(std::string setPath)
 		return false;
 	}
 	dim = {loaded->w, loaded->h};
-	center = {-(int)((float)dim.x * scale / 2),
-			  -(int)((float)dim.y * scale / 2)};
+	calculateCenter();
 
 	SDL_FreeSurface(loaded);
 	texture = new_texture;
@@ -130,6 +129,24 @@ void SpriteComponent::setScale(float newScale)
 	{
 		scale = newScale;
 	}
+	calculateCenter();
+}
+
+void SpriteComponent::calculateCenter()
+{
+	center = {-(int)((float)dim.x * scale / 2),
+			  -(int)((float)dim.y * scale / 2)};
+}
+
+void SpriteComponent::setSheetIndex(int index)
+{
+	int spriteSheetCol = (sheetIndex % (dim.x / sheetSize));
+	int spriteSheetRow = (sheetIndex / (dim.x / sheetSize));
+
+	sheetIndex = index;
+	center.x = sheetSize / 2 + sheetSize * spriteSheetCol;
+	center.y = -sheetSize / 2 - sheetSize * spriteSheetRow;
+	center *= scale;
 }
 
 #pragma endregion
@@ -403,8 +420,7 @@ bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string
 		return false;
 	}
 	dim = {textSurface->w, textSurface->h};
-	center = {-(int)((float)dim.x * scale / 2),
-			  -(int)((float)dim.y * scale / 2)};
+	calculateCenter();
 
 	SDL_FreeSurface(textSurface);
 	return true;

@@ -10,7 +10,7 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     addTag(TAG_PLAYER);
     // TODO: Create Layering system for rendering queue
     setName("PlayerObject");
-    playerGrid = new Grid(scene, {4, 3}, 100, "PlayerGrid", this);
+    playerGrid = new Grid(this, {4, 3}, 100, "PlayerGrid");
     PlayerRB = new RigidBodyComponent(1, this);
     forceToApply = {0.0, 0.0};
     playerSpeed = 3000.0;
@@ -33,6 +33,8 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
 
 void PlayerObject::update()
 {
+    playerGrid->move(pos);
+
     Object::update();
     if (isKeyDown(SDL_SCANCODE_W))
     {

@@ -16,18 +16,18 @@ int main(int argc, char *args[])
 	Scene *mainScene = addScene("MAIN");
 
 	// CREATE PLAYER
-	// PlayerObject *player = new PlayerObject(mainScene);
+	PlayerObject *player = new PlayerObject(mainScene);
 
 	// CREATE MENU
 	MainMenu *menu = new MainMenu();
 
 	// CREATE TARGETS
-	// targetObject *target1 = new targetObject(mainScene, 1);
-	// targetObject *target2 = new targetObject(mainScene, 2);
-	// targetObject *target3 = new targetObject(mainScene, 3);
-	// targetObject *target4 = new targetObject(mainScene, 4);
-	// targetObject *target5 = new targetObject(mainScene, 5);
-	// targetObject *target6 = new targetObject(mainScene, 6);
+	targetObject *target1 = new targetObject(mainScene, 1);
+	targetObject *target2 = new targetObject(mainScene, 2);
+	targetObject *target3 = new targetObject(mainScene, 3);
+	targetObject *target4 = new targetObject(mainScene, 4);
+	targetObject *target5 = new targetObject(mainScene, 5);
+	targetObject *target6 = new targetObject(mainScene, 6);
 
 	bool quit = false;
 	SDL_Event e;

@@ -7,6 +7,7 @@ genericBullet::genericBullet(Scene *scene, Vect newPos) : Object(scene)
     rb = new RigidBodyComponent(0, this);
     sp = new SpriteComponent("res/bullet.png", this);
     sp->setScale(0.2);
+    sp->setCentered();
     move(newPos);
     SDL_Rect box = {10, 10, 20, 20};
     rb->setCollision(&box);

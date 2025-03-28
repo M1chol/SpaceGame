@@ -7,8 +7,8 @@
 class Layout : public Object
 {
 public:
-    Layout(Scene *scene, std::string name, Object *parent = nullptr);
-    ~Layout() override;
+    Layout(Object *parent, std::string name);
+    ~Layout();
     void destroy() override;
     virtual bool addObj();
     virtual bool removeObj(int id, bool manual);
@@ -26,7 +26,7 @@ protected:
 class Grid : public Layout
 {
 public:
-    Grid(Scene *scene, iVect size = {0, 0}, double setCellSize = 1, std ::string name = "Unnamed Grid ", Object *parent = nullptr);
+    Grid(Object *parent, iVect size = {0, 0}, double setCellSize = 1, std ::string name = "Unnamed Grid ");
     bool addObj(iVect loc, Object *obj);
     bool addObj(int id, Object *obj);
     bool removeObj(int id, bool manual) override;
@@ -44,13 +44,12 @@ private:
     Vect gridCenter;
     double cellSize;
     std::vector<int> linkedObjectsId;
-    SDL_Renderer *renderer;
 };
 
 class Family : public Layout
 {
 public:
-    Family(Scene *scene, std::string name = "Unnamed Family ");
+    Family(Object *parent, std::string name = "Unnamed Family ");
     void update() override;
     bool addObj(Object *obj, Vect objPos);
     bool removeObj(int id, bool manual) override;

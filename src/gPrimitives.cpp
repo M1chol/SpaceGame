@@ -87,6 +87,13 @@ iVect &iVect::operator*=(int scalar)
     return *this;
 }
 
+iVect &iVect::operator/=(int scalar)
+{
+    x /= scalar;
+    y /= scalar;
+    return *this;
+}
+
 #pragma endregion
 
 #pragma region Object

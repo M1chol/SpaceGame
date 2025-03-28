@@ -31,6 +31,7 @@ struct iVect
     iVect operator*(int scalar);
     iVect &operator+=(const iVect &other);
     iVect &operator*=(int scalar);
+    iVect &operator/=(int scalar);
 };
 
 class Object;

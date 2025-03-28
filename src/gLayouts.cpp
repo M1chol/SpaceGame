@@ -1,6 +1,6 @@
 #include "engine.h"
 
-Layout::Layout(Scene *scene, std::string name = "Unnamed", Object *parent) : Object(scene)
+Layout::Layout(Object *parent, std::string name = "Unnamed") : Object(parent)
 {
     ID = LayoutGetID();
     setName(name);
@@ -10,7 +10,7 @@ Layout::~Layout()
 {
     for (int i = 0; i < linkedObjects.size(); i++)
     {
-        delete linkedObjects[i];
+        linkedObjects[i]->destroy();
     }
 }
 
@@ -18,7 +18,7 @@ void Layout::destroy()
 {
     for (int i = 0; i < linkedObjects.size(); i++)
     {
-        linkedObjects[i]->destroy();
+        delete linkedObjects[i];
     }
     Object::destroy();
 }
@@ -28,13 +28,12 @@ bool Layout::removeObj(int id, bool manual = true) { return false; }
 
 iVect Layout::getSize() { return size; }
 
-Grid::Grid(Scene *scene, iVect setSize, double setCellSize, std::string name, Object *parent) : Layout(scene, name, parent)
+Grid::Grid(Object *parent, iVect setSize, double setCellSize, std::string name) : Layout(parent, name)
 {
     ID = LayoutGetID();
     size = setSize;
     cellSize = setCellSize;
     calculateGridCenter();
-    renderer = scene->getRenderer();
     log(LOG_INFO) << "Created " << getName() << "\n";
 }
 
@@ -49,17 +48,17 @@ void Grid::render()
     if (drawDebug)
     {
         Object::render();
-        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+        SDL_SetRenderDrawColor(gRenderer, 0, 255, 0, 255);
         Vect offsetPos = pos - gridCenter;
         double drawWidth = (int)(offsetPos.x + size.x * cellSize);
         double drawHeight = (int)(offsetPos.y + size.y * cellSize);
         for (int i = 0; i < size.y + 1; i++)
         {
-            SDL_RenderDrawLine(renderer, (int)offsetPos.x, (int)offsetPos.y + cellSize * i, drawWidth, (int)offsetPos.y + cellSize * i);
+            SDL_RenderDrawLine(gRenderer, (int)offsetPos.x, (int)offsetPos.y + cellSize * i, drawWidth, (int)offsetPos.y + cellSize * i);
         }
         for (int i = 0; i < size.x + 1; i++)
         {
-            SDL_RenderDrawLine(renderer, (int)offsetPos.x + cellSize * i, (int)offsetPos.y, (int)offsetPos.x + cellSize * i, drawHeight);
+            SDL_RenderDrawLine(gRenderer, (int)offsetPos.x + cellSize * i, (int)offsetPos.y, (int)offsetPos.x + cellSize * i, drawHeight);
         }
     }
 }
@@ -153,7 +152,7 @@ Vect Grid::calculateSpaceCoordinates(iVect loc)
     return pos + result - gridCenter;
 }
 
-Family::Family(Scene *scene, std::string name) : Layout(scene, name)
+Family::Family(Object *parent, std::string name) : Layout(parent, name)
 {
     ID = LayoutGetID();
     familySize = 0;

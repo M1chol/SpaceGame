@@ -352,9 +352,6 @@ Object *loadBin(std::string filename, Scene *scene)
     case OBJECT:
         obj = new Object(scene);
         break;
-    case GRID:
-        obj = new Grid(scene);
-        break;
     default:
         log(LOG_WARN) << "Failed to load file" << filename.c_str() << ", not save file or file corupted\n";
         return nullptr;
