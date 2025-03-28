@@ -96,6 +96,8 @@ uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float he
 {
     fontColor = {255, 255, 255, 255};
     fontSize = 30;
+    borderColorShift = 1.2;
+
     if (borderSize > 0)
     {
         border = new uiRoundedRect(this, newRes, radius, width + borderSize, height + borderSize);
@@ -154,8 +156,8 @@ void uiButton::setColor(SDL_Color newColor, float borderShift)
     borderColorShift = borderShift;
     body->setColor(newColor);
     Uint8 R = color.r * borderColorShift > 255 ? 255 : color.r * borderColorShift;
-    Uint8 G = color.g * borderColorShift > 255 ? 255 : color.r * borderColorShift;
-    Uint8 B = color.b * borderColorShift > 255 ? 255 : color.r * borderColorShift;
+    Uint8 G = color.g * borderColorShift > 255 ? 255 : color.g * borderColorShift;
+    Uint8 B = color.b * borderColorShift > 255 ? 255 : color.b * borderColorShift;
     borderColor = {R, G, B, 255};
     if (border)
     {

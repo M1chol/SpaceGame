@@ -19,15 +19,15 @@ MainMenu::MainMenu()
 
     uiButton *startButton = new uiButton(uiScene, 12, 5, 320, 80, 5, "START");
     startButton->move({(double)SCREEN_WIDTH / 2 - startButton->getSize().x / 2, (double)SCREEN_HEIGHT / 4 + 55});
-    startButton->setColor(mainColor, 1.1);
+    startButton->setColor(mainColor, 1.4);
 
     uiButton *settingsButton = new uiButton(uiScene, 12, 5, 320, 80, 5, "SETTINGS");
     settingsButton->move({(double)SCREEN_WIDTH / 2 - settingsButton->getSize().x / 2, (double)SCREEN_HEIGHT / 4 + 175});
-    settingsButton->setColor(mainColor, 1.1);
+    settingsButton->setColor(mainColor, 1.4);
 
     uiButton *quitButton = new uiButton(uiScene, 12, 5, 320, 80, 5, "QUIT");
     quitButton->move({(double)SCREEN_WIDTH / 2 - quitButton->getSize().x / 2, (double)SCREEN_HEIGHT / 4 + 295});
-    quitButton->setColor({255, 30, 30, 255}, 1.1);
+    quitButton->setColor({225, 30, 30, 255}, 1.4);
 
     CustomUpdateComponent *update = new CustomUpdateComponent(title);
     update->setUpdateFunction([](CustomUpdateComponent *comp) -> bool
