@@ -16,13 +16,12 @@ Uint8 previousKeyState[SDL_NUM_SCANCODES];
 Uint32 mouseState;
 std::string globalFont = "res/Pixellettersfull-BnJ5.ttf";
 std::string fontSans = "res/OpenSans-Regular.ttf";
-bool scenesSorted;
 
 // SETUPS
 bool drawDebug = true;
 bool waitToDebug = true;
 bool showDebugNames = false;
-
+bool gameLoop = true;
 bool EngineInit()
 {
 
@@ -62,7 +61,6 @@ bool EngineInit()
     }
 
     currentKeyState = SDL_GetKeyboardState(NULL);
-    scenesSorted = false;
 
     return true;
 }
@@ -95,6 +93,11 @@ void EngineClose()
     }
     sceneList.clear();
     log(LOG_INFO) << "Quit successfull, bye bye!\n";
+    SDL_Quit();
+}
+void requestEngineClose()
+{
+    gameLoop = false;
 }
 
 int LayoutGetID()
@@ -135,15 +138,15 @@ bool isKeyPushed(SDL_Scancode key)
 
 #pragma region SCENE SETUP
 
-Scene *addScene(std::string name)
-{
-    Scene *newScene = new Scene();
-    newScene->setName(name);
-    scenesSorted = false;
-    sceneList.push_back(newScene);
-    nrOfScenes++;
-    return newScene;
-}
+// Scene *addScene(std::string name)
+// {
+//     Scene *newScene = new Scene();
+//     newScene->setName(name);
+//     scenesSorted = false;
+//     sceneList.push_back(newScene);
+//     nrOfScenes++;
+//     return newScene;
+// }
 
 int getSceneID(Scene *scene)
 {
@@ -155,6 +158,15 @@ int getSceneID(Scene *scene)
         }
     }
     return -1;
+}
+
+Scene *getSceneByName(std::string name)
+{
+    for (auto &scene : sceneList)
+        if (scene->getName() == name)
+            return scene;
+    log(LOG_WARN) << "Scene " << name << " not found\n";
+    return nullptr;
 }
 
 void EngineUpdateScenes()
@@ -169,7 +181,7 @@ void EngineUpdateScenes()
         return;
     }
 
-    if (!scenesSorted)
+    if (nrOfScenes > sceneList.size())
     {
         std::sort(sceneList.begin(), sceneList.end(), [](Scene *a, Scene *b)
                   { return a->getDrawPriority() < b->getDrawPriority(); });

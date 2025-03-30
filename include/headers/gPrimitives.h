@@ -91,6 +91,7 @@ public:
     @return `true` if successfull and `false` if component was not found */
     bool removeComponent(Component *comp);
     bool removeChild(Object *child);
+    Object *getChildByName(std::string name);
     /* Get pointer to component of a specified type */
     template <typename CompType>
     CompType *getComponent()
@@ -143,7 +144,7 @@ public:
     /* Crete new `Scene` with linked `SDL_Renderer` */
     Scene(std::string name = "UNNAMED");
     /* Destroy `Scene` and all linked `Objects` */
-    ~Scene();
+    virtual ~Scene();
     /* add object to objectList */
     bool addObject(Object *obj);
     /* remove object from objectList*/
@@ -151,14 +152,15 @@ public:
     // void destroy();
     //  Updates all active game `Objects`
     int Update(bool skipPresent = false, bool skopClear = false);
-    // Change name of scene
+    virtual void update() {};
+    // Change name of scen
     void setName(std::string);
     std::string getName();
     // Returns pointer to renderer linked to Scene
     SDL_Renderer *getRenderer();
     bool handleCollisions();
     Object *getObjectByName(std::string name);
-    std::vector<Object *> getObjectByTag(TAG);
+    std::vector<Object *> getObjectsByTag(TAG);
     std::vector<Object *> toBeRemoved;
     // Remove items scheduled for destruction
     void removeSheduled();

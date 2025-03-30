@@ -80,6 +80,7 @@ extern double drawTime;
 extern bool drawDebug;
 extern bool waitToDebug;
 extern bool showDebugNames;
+extern bool gameLoop;
 extern int nrOfScenes;
 extern int nrOfLayouts;
 // Current position of a mouse
@@ -92,6 +93,8 @@ extern std::string globalFont;
 bool EngineInit();
 // Close all Engine systems and SDL
 void EngineClose();
+// Politely request engine to close
+void requestEngineClose();
 // Updates arrays of active keys, it needs to be called each frame
 void EngineUpdateEvents();
 /* Used to cap frames per second of application @param targetFrames FPS limit */
@@ -110,6 +113,8 @@ Scene *addScene(std::string name);
 int getSceneID(Scene *scene);
 // Draw all scenes based on drawPriority property
 void EngineUpdateScenes();
+
+Scene *getSceneByName(std::string name);
 
 int LayoutGetID();
 

@@ -97,6 +97,7 @@ uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float he
     fontColor = {255, 255, 255, 255};
     fontSize = 30;
     borderColorShift = 1.2;
+    prevClicked = false;
 
     if (borderSize > 0)
     {
@@ -111,7 +112,6 @@ uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float he
         TextComponent *textComp = new TextComponent(text, {20, 20}, fontSans, fontSize, this);
         textComp->setColor({255, 255, 255, 255});
         textComp->setOffset(textComp->getCenter() + center.toIVect());
-        std::cout << textComp->offset.x << " " << textComp->offset.y << "\n";
     }
     setColor({37, 150, 190, 255}, borderColorShift);
     body->move(pos);
@@ -147,7 +147,15 @@ void uiButton::update()
             border->setColor(borderColor);
         }
     }
-    prevHover = hover;
+    clicked = hover && isKeyDown(MOUSE_LEFT);
+    prevClicked = clicked && prevClicked;
+    if (buttonClicked())
+    {
+        if (onClick)
+        {
+            onClick();
+        }
+    }
 }
 
 void uiButton::setColor(SDL_Color newColor, float borderShift)
@@ -164,6 +172,16 @@ void uiButton::setColor(SDL_Color newColor, float borderShift)
         border->setColor(borderColor);
     }
     hoverColor = borderColor;
+}
+
+bool uiButton::buttonClicked()
+{
+    if (!prevClicked && clicked)
+    {
+        prevClicked = true;
+        return true;
+    }
+    return false;
 }
 
 #pragma endregion

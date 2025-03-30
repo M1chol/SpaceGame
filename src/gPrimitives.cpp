@@ -294,6 +294,14 @@ void Object::update()
     }
 }
 void Object::lateUpdate() {}
+
+Object *Object::getChildByName(std::string name)
+{
+    for (auto &child : childrenList)
+        if (child->getName() == name)
+            return child;
+}
+
 #pragma endregion
 
 #pragma region Component
@@ -328,8 +336,10 @@ std::string Component::getName()
 
 Scene::Scene(std::string name)
 {
-    name = name;
+    this->name = name;
     drawPriority = 0;
+    sceneList.push_back(this);
+    nrOfScenes++;
 }
 Scene::~Scene()
 {
@@ -383,6 +393,7 @@ int Scene::Update(bool skipPresent, bool skipClear)
             obj->lateUpdate();
         }
     }
+    update();
     removeSheduled();
     if (!skipPresent)
         SDL_RenderPresent(gRenderer);
@@ -415,7 +426,7 @@ Object *Scene::getObjectByName(std::string name)
     }
     return nullptr;
 }
-std::vector<Object *> Scene::getObjectByTag(TAG tag)
+std::vector<Object *> Scene::getObjectsByTag(TAG tag)
 {
     std::vector<Object *> objects;
 

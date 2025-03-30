@@ -53,8 +53,13 @@ public:
     void setText(std::string newText) { buttonText = newText; };
     void setColor(SDL_Color setColor, float borderShift);
     Vect getSize() { return body->getSize(); };
+    /* Runs once when button changes states */
+    bool buttonClicked();
+    void setOnClick(std::function<void()> func) { onClick = func; };
 
 private:
+    std::function<void()> onClick;
+
     uiRoundedRect *body;
     uiRoundedRect *border;
     std::string buttonText;
@@ -66,6 +71,8 @@ private:
 
     bool hover;
     bool prevHover;
+    bool clicked;
+    bool prevClicked;
     int fontSize;
     SDL_Color fontColor;
 };
