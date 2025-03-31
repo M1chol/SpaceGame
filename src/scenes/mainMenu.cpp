@@ -15,7 +15,7 @@ MainMenu::MainMenu(std::string name) : Scene(name)
     title->setName("main-menu-title");
     title->move({(double)SCREEN_WIDTH / 2, (double)SCREEN_HEIGHT / 8});
 
-    TextComponent *text = new TextComponent("SALVAGE SECTOR", {0, 0}, fontSans, 60, title);
+    TextComponent *text = new TextComponent("SALVAGE SECTOR", {0, 0}, fontVideoBold, 60, title);
     text->setCentered();
     mainColor = {180, 78, 21, 255};
 

@@ -109,7 +109,7 @@ uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float he
     if (text != "")
     {
         Vect center = {width / 2, height / 2};
-        TextComponent *textComp = new TextComponent(text, {20, 20}, fontSans, fontSize, this);
+        TextComponent *textComp = new TextComponent(text, {20, 20}, fontVideo, fontSize, this);
         textComp->setColor({255, 255, 255, 255});
         textComp->setOffset(textComp->getCenter() + center.toIVect());
     }

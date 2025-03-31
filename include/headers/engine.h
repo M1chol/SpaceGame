@@ -87,7 +87,8 @@ extern int nrOfLayouts;
 extern iVect mousePos;
 
 extern std::string fontSans;
-extern std::string globalFont;
+extern std::string fontVideo;
+extern std::string fontVideoBold;
 
 /*Initialize SDL wrapper "Engine" @return true if successfull*/
 bool EngineInit();

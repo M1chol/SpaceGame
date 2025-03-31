@@ -14,7 +14,8 @@ iVect mousePos;
 const Uint8 *currentKeyState;
 Uint8 previousKeyState[SDL_NUM_SCANCODES];
 Uint32 mouseState;
-std::string globalFont = "res/Pixellettersfull-BnJ5.ttf";
+std::string fontVideo = "res/HomeVideo.ttf";
+std::string fontVideoBold = "res/HomeVideoBold.ttf";
 std::string fontSans = "res/OpenSans-Regular.ttf";
 
 // SETUPS
