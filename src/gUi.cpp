@@ -156,6 +156,7 @@ void uiButton::update()
             onClick();
         }
     }
+    prevHover = hover;
 }
 
 void uiButton::setColor(SDL_Color newColor, float borderShift)
