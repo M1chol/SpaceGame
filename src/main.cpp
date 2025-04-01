@@ -3,7 +3,6 @@
 #include "player.h"
 #include "targetObject.h"
 #include "mainMenu.h"
-#include <lua.hpp>
 
 void loadGame();
 
@@ -15,10 +14,7 @@ int main(int argc, char *args[])
 	EngineInit();
 
 	// TEST LUA
-	lua_State *L = luaL_newstate();
-	luaL_openlibs(L);
-	const char *code = "print('hello from lua')";
-	luaL_dostring(L, code);
+	lua->run("src/test.lua");
 
 	// Setup Scenes
 	Scene *mainScene = new Scene("MAIN");

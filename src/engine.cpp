@@ -17,6 +17,7 @@ Uint32 mouseState;
 std::string fontVideo = "res/HomeVideo.ttf";
 std::string fontVideoBold = "res/HomeVideoBold.ttf";
 std::string fontSans = "res/OpenSans-Regular.ttf";
+LuaManager *lua;
 
 // SETUPS
 bool drawDebug = true;
@@ -58,6 +59,13 @@ bool EngineInit()
     if (TTF_Init() == -1)
     {
         log(LOG_ERR) << "SDL_ttf failed to initialize" << TTF_GetError() << "\n";
+        return false;
+    }
+    // Try to load lua
+    lua = new LuaManager();
+    if (!lua)
+    {
+        log(LOG_ERR) << "Lua failed to load\n";
         return false;
     }
 
@@ -203,3 +211,34 @@ void centerRect(SDL_Rect *box)
     box->x = box->w / 2;
     box->y = box->h / 2;
 }
+
+#pragma region LuaManger
+
+LuaManager::LuaManager()
+{
+    L = luaL_newstate();
+    luaL_openlibs(L);
+    log(LOG_INFO) << "Lua loaded successfully\n";
+}
+
+LuaManager::~LuaManager()
+{
+    if (L)
+    {
+        lua_close(L);
+        log(LOG_INFO) << "Lua closed\n";
+    }
+}
+
+bool LuaManager::run(const char *filename)
+{
+    int status = luaL_dofile(L, filename);
+    if (status != LUA_OK)
+    {
+        log(LOG_WARN) << lua_tostring(L, -1) << "\n";
+        return false;
+    }
+    return true;
+}
+
+#pragma endregion

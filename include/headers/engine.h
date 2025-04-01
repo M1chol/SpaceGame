@@ -62,6 +62,8 @@ enum LoadFlag
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
+#include <lua.hpp>
+
 #include <gPrimitives.h>
 #include <gComponents.h>
 #include <gLayouts.h>
@@ -89,6 +91,21 @@ extern iVect mousePos;
 extern std::string fontSans;
 extern std::string fontVideo;
 extern std::string fontVideoBold;
+
+class LuaManager
+{
+public:
+    ~LuaManager();
+    LuaManager();
+    bool run(const char *filename);
+
+private:
+    lua_State *L;
+};
+
+extern LuaManager *lua;
+
+// TODO: renake the system to use singleton class
 
 /*Initialize SDL wrapper "Engine" @return true if successfull*/
 bool EngineInit();
