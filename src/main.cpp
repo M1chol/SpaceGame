@@ -3,6 +3,7 @@
 #include "player.h"
 #include "targetObject.h"
 #include "mainMenu.h"
+#include <lua.hpp>
 
 void loadGame();
 
@@ -12,6 +13,12 @@ int main(int argc, char *args[])
 	uint32_t previousTime = SDL_GetTicks();
 	uint32_t currentTime;
 	EngineInit();
+
+	// TEST LUA
+	lua_State *L = luaL_newstate();
+	luaL_openlibs(L);
+	const char *code = "print('hello from lua')";
+	luaL_dostring(L, code);
 
 	// Setup Scenes
 	Scene *mainScene = new Scene("MAIN");
