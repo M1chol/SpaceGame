@@ -52,7 +52,7 @@ enum LoadFlag
 
 // Logger utility
 #include <logger.h>
-#define log(name) Logger(name)
+#define gLog(name) Logger(name)
 #define LOG_INFO "\x1B[34m[ INF ]\033[0m"
 #define LOG_ERR "\x1B[31m[ ERR ]\033[0m"
 #define LOG_WARN "\x1B[33m[ WRN ]\033[0m"
@@ -61,6 +61,9 @@ enum LoadFlag
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+
+#include <json.hpp>
+using json = nlohmann::json;
 
 #include <gPrimitives.h>
 #include <gComponents.h>

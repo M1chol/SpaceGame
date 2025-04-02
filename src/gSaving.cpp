@@ -61,7 +61,7 @@ void Grid::loadBin(std::ifstream &in)
         obj->loadBin(in);
         linkedObjects.push_back(obj);
     }
-    log(LOG_INFO) << "Loaded grid with " << nrOfObjects << " Objects\n";
+    gLog(LOG_INFO) << "Loaded grid with " << nrOfObjects << " Objects\n";
 }
 #pragma endregion
 #pragma region Object
@@ -83,7 +83,7 @@ void Object::saveBin(std::ofstream &out)
     {
         component->saveBin(out);
     }
-    log(LOG_OK) << "Saved " << name << " with " << nrOfComponents << " Components\n";
+    gLog(LOG_OK) << "Saved " << name << " with " << nrOfComponents << " Components\n";
 }
 void Object::loadBin(std::ifstream &in)
 {
@@ -106,7 +106,7 @@ void Object::loadBin(std::ifstream &in)
     {
         loadAndAttach(in, this);
     }
-    log(LOG_OK) << "Loaded " << name << " (" << this << ") with " << nrOfComponents << " Components\n";
+    gLog(LOG_OK) << "Loaded " << name << " (" << this << ") with " << nrOfComponents << " Components\n";
 }
 
 #pragma endregion
@@ -138,7 +138,7 @@ Component *loadAndAttach(std::ifstream &in, Object *obj)
             // comp = new SpawnerComponent<genericBullet>();
             // break;
         default:
-            log(LOG_WARN) << "Loading SpawnerComponent failed, unknown SpawnerBulletType\n";
+            gLog(LOG_WARN) << "Loading SpawnerComponent failed, unknown SpawnerBulletType\n";
             return nullptr;
             break;
         }
@@ -154,7 +154,7 @@ Component *loadAndAttach(std::ifstream &in, Object *obj)
         break;
 
     default:
-        log(LOG_WARN) << "Loading of some Component failed, unknown ComponentType\n";
+        gLog(LOG_WARN) << "Loading of some Component failed, unknown ComponentType\n";
         return nullptr;
         break;
     }
@@ -309,11 +309,11 @@ void LayoutHelperComponent::loadBin(std::ifstream &in)
 
 bool saveBin(Object *obj, std::string filename)
 {
-    log(LOG_INFO) << "Saving " << obj->getName() << " to binary file " << filename.c_str() << "\n";
+    gLog(LOG_INFO) << "Saving " << obj->getName() << " to binary file " << filename.c_str() << "\n";
     std::ofstream out(filename, std::ios::binary);
     if (!out)
     {
-        log(LOG_WARN) << "Failed save for" << obj->getName() << ", " << filename.c_str() << " failed to open\n";
+        gLog(LOG_WARN) << "Failed save for" << obj->getName() << ", " << filename.c_str() << " failed to open\n";
         return false;
     }
     LoadFlag flag = OBJECT;
@@ -327,7 +327,7 @@ bool saveBin(Object *obj, std::string filename)
     }
     else
     {
-        log(LOG_WARN) << "saveBin failed to detect type of " << obj->getName() << ", defaulting to Object\n";
+        gLog(LOG_WARN) << "saveBin failed to detect type of " << obj->getName() << ", defaulting to Object\n";
     }
     out.write((char *)&flag, sizeof(flag));
     obj->saveBin(out);
@@ -337,13 +337,13 @@ bool saveBin(Object *obj, std::string filename)
 
 Object *loadBin(std::string filename, Scene *scene)
 {
-    log(LOG_INFO) << "Loading Object from " << filename.c_str() << "\n";
+    gLog(LOG_INFO) << "Loading Object from " << filename.c_str() << "\n";
     std::ifstream in(filename, std::ios::binary);
     LoadFlag flag;
     Object *obj = nullptr;
     if (!in)
     {
-        log(LOG_WARN) << "Failed to load object from" << filename.c_str() << " (failed to open)\n";
+        gLog(LOG_WARN) << "Failed to load object from" << filename.c_str() << " (failed to open)\n";
         return nullptr;
     }
     in.read((char *)&flag, sizeof(flag));
@@ -353,7 +353,7 @@ Object *loadBin(std::string filename, Scene *scene)
         obj = new Object(scene);
         break;
     default:
-        log(LOG_WARN) << "Failed to load file" << filename.c_str() << ", not save file or file corupted\n";
+        gLog(LOG_WARN) << "Failed to load file" << filename.c_str() << ", not save file or file corupted\n";
         return nullptr;
     }
     obj->loadBin(in);

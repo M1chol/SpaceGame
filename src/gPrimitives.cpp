@@ -103,7 +103,7 @@ Object::Object(Scene *scene)
     linkedScene = scene;
     if (!linkedScene)
     {
-        log(LOG_WARN) << "Creating detached Object, supplied nullptr Scene\n";
+        gLog(LOG_WARN) << "Creating detached Object, supplied nullptr Scene\n";
     }
     else
     {
@@ -131,11 +131,11 @@ Object::Object(Object *parent)
 
 Object::~Object()
 {
-    log(LOG_INFO) << "Destroying " << this->name << "\n";
+    gLog(LOG_INFO) << "Destroying " << this->name << "\n";
     for (int i = nrOfComponents - 1; i >= 0; i--)
     {
         Component *component = componentList[i];
-        log(LOG_INFO) << " | destoyed " << component->getName() << " (" << component << ")\n";
+        gLog(LOG_INFO) << " | destoyed " << component->getName() << " (" << component << ")\n";
         delete component;
     }
     componentList.clear();
@@ -146,9 +146,9 @@ Object::~Object()
     }
     if (!linkedScene->removeObject(this))
     {
-        log(LOG_WARN) << "Could not remove " << name << " Object from linked scene\n";
+        gLog(LOG_WARN) << "Could not remove " << name << " Object from linked scene\n";
     }
-    log(LOG_INFO) << "Removed object " << name << " (" << this << ")\n";
+    gLog(LOG_INFO) << "Removed object " << name << " (" << this << ")\n";
 }
 void Object::destroy()
 {
@@ -179,7 +179,7 @@ bool Object::addComponent(Component *comp)
     {
         if (comp == cp)
         {
-            log(LOG_WARN) << "Object::addComponent of type " << comp->getName() << " failed " << cp << " already added to " << getName() << "\n";
+            gLog(LOG_WARN) << "Object::addComponent of type " << comp->getName() << " failed " << cp << " already added to " << getName() << "\n";
             return false;
         }
     }
@@ -221,7 +221,7 @@ Scene *Object::getScene()
     }
     else
     {
-        log(LOG_WARN) << "Trying to access linked scene that does not exist (" << name << ")\n";
+        gLog(LOG_WARN) << "Trying to access linked scene that does not exist (" << name << ")\n";
         return nullptr;
     }
 }
@@ -245,7 +245,7 @@ bool Object::removeComponent(Component *comp)
         {
             if (componentList[i] == nullptr)
             {
-                log(LOG_WARN) << "Removing faulty nullptr component from " << this->getName() << "\n";
+                gLog(LOG_WARN) << "Removing faulty nullptr component from " << this->getName() << "\n";
                 componentList.erase(componentList.begin() + i);
             }
         }
@@ -272,7 +272,7 @@ void Object::render()
         {
             removeComponent(component);
 
-            log(LOG_WARN) << "Removed faulty component (" << this << ") in " << this->getName() << "\n";
+            gLog(LOG_WARN) << "Removed faulty component (" << this << ") in " << this->getName() << "\n";
         }
     }
 }
@@ -409,7 +409,7 @@ bool Scene::removeObject(Object *obj)
     auto el = std::find(objectList.begin(), objectList.end(), obj);
     if (el != objectList.end())
     {
-        log(LOG_INFO) << "Removed " << obj->getName() << " from " << this->getName() << "\n";
+        gLog(LOG_INFO) << "Removed " << obj->getName() << " from " << this->getName() << "\n";
         objectList.erase(el);
         return true;
     }

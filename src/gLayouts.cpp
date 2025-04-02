@@ -34,7 +34,7 @@ Grid::Grid(Object *parent, iVect setSize, double setCellSize, std::string name) 
     size = setSize;
     cellSize = setCellSize;
     calculateGridCenter();
-    log(LOG_INFO) << "Created " << getName() << "\n";
+    gLog(LOG_INFO) << "Created " << getName() << "\n";
 }
 
 Vect Grid::calculateGridCenter()
@@ -80,20 +80,20 @@ bool Grid::addObj(iVect loc, Object *obj)
 
     if (loc.x > size.x - 1 || loc.y > size.y - 1)
     {
-        log(LOG_WARN) << "Grid::addObj error index out of bounds for grid " << this << "\n";
+        gLog(LOG_WARN) << "Grid::addObj error index out of bounds for grid " << this << "\n";
         return false;
     }
     for (int objId : linkedObjectsId)
     {
         if (objId == iVectToId(loc))
         {
-            log(LOG_WARN) << name << "addObj error, space already occupied\n";
+            gLog(LOG_WARN) << name << "addObj error, space already occupied\n";
             return false;
         }
     }
     if (obj->getComponent<LayoutHelperComponent>() != nullptr)
     {
-        log(LOG_WARN) << name << "addObj err, obj is already part of another Layout\n";
+        gLog(LOG_WARN) << name << "addObj err, obj is already part of another Layout\n";
         return false;
     }
     obj->posLocked = true;
@@ -101,7 +101,7 @@ bool Grid::addObj(iVect loc, Object *obj)
     linkedObjectsId.push_back(iVectToId(loc));
     obj->addComponent(new LayoutHelperComponent(this, iVectToId(loc)));
     obj->move(calculateSpaceCoordinates(loc), true);
-    log(LOG_INFO) << "Object " << obj->getName() << " added to Grid " << this << "\n";
+    gLog(LOG_INFO) << "Object " << obj->getName() << " added to Grid " << this << "\n";
     return true;
 }
 
@@ -115,7 +115,7 @@ bool Grid::removeObj(int id, bool manual = true)
     iVect loc = idToIVect(id);
     if (loc.x > size.y || id < 0)
     {
-        log(LOG_WARN) << name << " removeObj error index out of bounds for grid " << this << "\n";
+        gLog(LOG_WARN) << name << " removeObj error index out of bounds for grid " << this << "\n";
         return false;
     }
     for (int i = 0; i < linkedObjects.size(); i++)
@@ -129,11 +129,11 @@ bool Grid::removeObj(int id, bool manual = true)
             }
             linkedObjects.erase(linkedObjects.begin() + i);
             linkedObjectsId.erase(linkedObjectsId.begin() + i);
-            log(LOG_INFO) << "Object of id: " << id << " removed from grid " << this << "\n";
+            gLog(LOG_INFO) << "Object of id: " << id << " removed from grid " << this << "\n";
             return true;
         }
     }
-    log(LOG_INFO) << name << " removeObj (" << this << ") failed, item not found\n";
+    gLog(LOG_INFO) << name << " removeObj (" << this << ") failed, item not found\n";
     return false;
 }
 
@@ -168,7 +168,7 @@ bool Family::addObj(Object *obj, Vect objPos)
     }
     if (obj->getComponent<LayoutHelperComponent>() != nullptr)
     {
-        log(LOG_WARN) << "Family::addObj err, obj is already part of Layout\n";
+        gLog(LOG_WARN) << "Family::addObj err, obj is already part of Layout\n";
         return false;
     }
     obj->posLocked = true;
@@ -178,7 +178,7 @@ bool Family::addObj(Object *obj, Vect objPos)
     obj->addComponent(helper);
     obj->move(objPos, true);
     familySize++;
-    log(LOG_INFO) << "Object " << obj->getName() << " added to family " << this << "\n";
+    gLog(LOG_INFO) << "Object " << obj->getName() << " added to family " << this << "\n";
     return true;
 }
 

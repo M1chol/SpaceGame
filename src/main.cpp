@@ -18,8 +18,8 @@ int main(int argc, char *args[])
 
 	// CREATE MENU
 	MainMenu *menu = new MainMenu("main-menu");
-	menu->startButton->setOnClick(loadGame);
-	menu->quitButton->setOnClick(requestEngineClose);
+	// menu->startButton->setOnClick(loadGame);
+	// menu->quitButton->setOnClick(requestEngineClose);
 
 	SDL_Event e;
 	double timer = 0.0;
@@ -44,7 +44,7 @@ int main(int argc, char *args[])
 		}
 		else
 		{
-			log(LOG_INFO) << "Current frame rate " << (double)(1 / deltaTime) << " fps. Nr of objects: " << mainScene->getNrOfObjects() << '\n';
+			gLog(LOG_INFO) << "Current frame rate " << (double)(1 / deltaTime) << " fps. Nr of objects: " << mainScene->getNrOfObjects() << '\n';
 			timer = 0.0;
 		}
 		while (SDL_PollEvent(&e) != 0)
@@ -52,16 +52,16 @@ int main(int argc, char *args[])
 			if (e.type == SDL_QUIT)
 			{
 				gameLoop = false;
-				log(LOG_INFO) << "Quit requested...\n";
+				gLog(LOG_INFO) << "Quit requested...\n";
 			}
 		}
 	}
 	EngineClose();
-	log(LOG_INFO) << "SDL Quit successfull!\n";
+	gLog(LOG_INFO) << "SDL Quit successfull!\n";
 
 	if (waitToDebug)
 	{
-		log(LOG_INFO) << "Waiting for debug is enabled\nPress enter to exit...\n";
+		gLog(LOG_INFO) << "Waiting for debug is enabled\nPress enter to exit...\n";
 		getchar();
 	}
 	return 0;

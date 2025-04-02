@@ -27,7 +27,7 @@ PlayerObject::PlayerObject(Scene *scene) : Object(scene)
     playerGrid->addObj(9, new engineBlock(scene));
     playerGrid->addObj(10, new engineBlock(scene));
 
-    log(LOG_INFO)
+    gLog(LOG_INFO)
         << "Created player object (" << this << ")" << std::endl;
 }
 
@@ -55,7 +55,7 @@ void PlayerObject::update()
     if (isKeyDown(SDL_SCANCODE_Q))
     {
         destroy();
-        log(LOG_INFO) << "Oh no! player destroyed!\n";
+        gLog(LOG_INFO) << "Oh no! player destroyed!\n";
     }
     PlayerRB->applyForce(forceToApply.normalized() * playerSpeed);
     forceToApply = {0.0, 0.0};

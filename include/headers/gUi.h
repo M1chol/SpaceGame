@@ -76,3 +76,5 @@ private:
     int fontSize;
     SDL_Color fontColor;
 };
+
+void loadUILayout(Scene *scene, const char* path);

@@ -8,7 +8,7 @@ targetObject::targetObject(Scene *scene, int number) : Object(scene)
     std::string newName = "TARGET " + std::to_string(number);
     setName(newName);
     addTag(TAG_ENEMY);
-    log(LOG_INFO) << "Created target " << newName << " (" << this << ")\n";
+    gLog(LOG_INFO) << "Created target " << newName << " (" << this << ")\n";
     rb = new RigidBodyComponent;
     addComponent(rb);
     rb->setCollision(&box);

@@ -21,17 +21,19 @@ MainMenu::MainMenu(std::string name) : Scene(name)
 
     text->setColor(mainColor);
 
-    startButton = new uiButton(this, 12, 5, 320, 80, 5, "START");
-    startButton->move({(double)SCREEN_WIDTH / 2 - startButton->getSize().x / 2, (double)SCREEN_HEIGHT / 4 + 55});
-    startButton->setColor(mainColor, 1.4);
+    // startButton = new uiButton(this, 12, 5, 320, 80, 5, "START");
+    // startButton->move({(double)SCREEN_WIDTH / 2 - startButton->getSize().x / 2, (double)SCREEN_HEIGHT / 4 + 55});
+    // startButton->setColor(mainColor, 1.4);
 
-    settingsButton = new uiButton(this, 12, 5, 320, 80, 5, "SETTINGS");
-    settingsButton->move({(double)SCREEN_WIDTH / 2 - settingsButton->getSize().x / 2, (double)SCREEN_HEIGHT / 4 + 175});
-    settingsButton->setColor(mainColor, 1.4);
+    // settingsButton = new uiButton(this, 12, 5, 320, 80, 5, "SETTINGS");
+    // settingsButton->move({(double)SCREEN_WIDTH / 2 - settingsButton->getSize().x / 2, (double)SCREEN_HEIGHT / 4 + 175});
+    // settingsButton->setColor(mainColor, 1.4);
 
-    quitButton = new uiButton(this, 12, 5, 320, 80, 5, "QUIT");
-    quitButton->move({(double)SCREEN_WIDTH / 2 - quitButton->getSize().x / 2, (double)SCREEN_HEIGHT / 4 + 295});
-    quitButton->setColor({225, 30, 30, 255}, 1.4);
+    // quitButton = new uiButton(this, 12, 5, 320, 80, 5, "QUIT");
+    // quitButton->move({(double)SCREEN_WIDTH / 2 - quitButton->getSize().x / 2, (double)SCREEN_HEIGHT / 4 + 295});
+    // quitButton->setColor({225, 30, 30, 255}, 1.4);
+
+    // loadUILayout(this, "ui.json");
 
     // Create stars
     for (int i = 0; i < 100; i++)

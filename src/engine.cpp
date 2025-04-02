@@ -29,21 +29,21 @@ bool EngineInit()
     // Try Init
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        log(LOG_ERR) << "SDL could not initialize successfuly " << SDL_GetError() << "\n";
+        gLog(LOG_ERR) << "SDL could not initialize successfuly " << SDL_GetError() << "\n";
         return false;
     }
     // Try to create window
     gWindow = SDL_CreateWindow("Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (gWindow == NULL)
     {
-        log(LOG_ERR) << "Failed creating window " << SDL_GetError() << "\n";
+        gLog(LOG_ERR) << "Failed creating window " << SDL_GetError() << "\n";
         return false;
     }
     // Try to create renderer
     gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
     if (gRenderer == NULL)
     {
-        log(LOG_ERR) << "Failed to create renderer " << SDL_GetError() << "\n";
+        gLog(LOG_ERR) << "Failed to create renderer " << SDL_GetError() << "\n";
         return false;
     }
 
@@ -51,13 +51,13 @@ bool EngineInit()
     int imageFlags = IMG_INIT_PNG;
     if (!(IMG_Init(imageFlags) & imageFlags))
     {
-        log(LOG_ERR) << "SDL_Image failed to initialize " << IMG_GetError() << "\n";
+        gLog(LOG_ERR) << "SDL_Image failed to initialize " << IMG_GetError() << "\n";
         return false;
     }
     // Try to init SDL_ttf
     if (TTF_Init() == -1)
     {
-        log(LOG_ERR) << "SDL_ttf failed to initialize" << TTF_GetError() << "\n";
+        gLog(LOG_ERR) << "SDL_ttf failed to initialize" << TTF_GetError() << "\n";
         return false;
     }
 
@@ -77,7 +77,7 @@ void EngineCapFrames(int targetFrames)
     }
     if (drawTime - drawTime * 0.05 <= deltaTime < drawTime)
     {
-        log(LOG_WARN) << "Game running at hardware limit!\n";
+        gLog(LOG_WARN) << "Game running at hardware limit!\n";
     }
 }
 
@@ -87,13 +87,13 @@ void EngineClose()
     for (int i = nrOfScenes - 1; i >= 0; i--)
     {
         Scene *scene = sceneList[i];
-        log(LOG_INFO) << "Destroying Scene " << scene->getName() << "... (" << scene << ")\n";
+        gLog(LOG_INFO) << "Destroying Scene " << scene->getName() << "... (" << scene << ")\n";
         delete scene;
         scene = nullptr;
-        log(LOG_INFO) << "Scene Destroyed\n";
+        gLog(LOG_INFO) << "Scene Destroyed\n";
     }
     sceneList.clear();
-    log(LOG_INFO) << "Quit successfull, bye bye!\n";
+    gLog(LOG_INFO) << "Quit successfull, bye bye!\n";
     SDL_Quit();
 }
 void requestEngineClose()
@@ -166,7 +166,7 @@ Scene *getSceneByName(std::string name)
     for (auto &scene : sceneList)
         if (scene->getName() == name)
             return scene;
-    log(LOG_WARN) << "Scene " << name << " not found\n";
+    gLog(LOG_WARN) << "Scene " << name << " not found\n";
     return nullptr;
 }
 

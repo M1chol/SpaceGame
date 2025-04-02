@@ -34,9 +34,9 @@ void SpriteComponent::whenLinked()
 	if (!load(path))
 	{
 		getParent()->removeComponent(this);
-		log(LOG_WARN) << "Removing faulty component (" << this << ")\n";
+		gLog(LOG_WARN) << "Removing faulty component (" << this << ")\n";
 	}
-	log(LOG_INFO) << "Sprite component (" << this << ") linked to " << parent->getName() << "\n";
+	gLog(LOG_INFO) << "Sprite component (" << this << ") linked to " << parent->getName() << "\n";
 }
 bool SpriteComponent::load(std::string setPath)
 {
@@ -49,13 +49,13 @@ bool SpriteComponent::load(std::string setPath)
 	SDL_Surface *loaded = IMG_Load(path.c_str());
 	if (loaded == NULL)
 	{
-		log(LOG_WARN) << "Failed loading media " << IMG_GetError() << "\n";
+		gLog(LOG_WARN) << "Failed loading media " << IMG_GetError() << "\n";
 		return false;
 	}
 	new_texture = SDL_CreateTextureFromSurface(gRenderer, loaded);
 	if (new_texture == NULL)
 	{
-		log(LOG_WARN) << "Failed converting media to texture " << IMG_GetError() << "\n";
+		gLog(LOG_WARN) << "Failed converting media to texture " << IMG_GetError() << "\n";
 		return false;
 	}
 	dim = {loaded->w, loaded->h};
@@ -73,7 +73,7 @@ bool SpriteComponent::render(int index, iVect newOffset, float newScale)
 {
 	if (gRenderer == nullptr)
 	{
-		log(LOG_WARN) << "gRenderer is nullptr for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
+		gLog(LOG_WARN) << "gRenderer is nullptr for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
 		return false;
 	}
 	sheetIndex = index;
@@ -108,7 +108,7 @@ bool SpriteComponent::render(int index, iVect newOffset, float newScale)
 
 	if (SDL_RenderCopyEx(gRenderer, texture, (index > -1 ? &sheet : NULL), renderBox, rotation + parent->getRotation(), NULL, SDL_FLIP_NONE))
 	{
-		log(LOG_WARN) << "Texture failed to render for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
+		gLog(LOG_WARN) << "Texture failed to render for " << parent->getName() << " in " << parent->getScene()->getName() << "\n";
 		return false;
 	}
 	return true;
@@ -176,7 +176,7 @@ void RigidBodyComponent::whenLinked()
 {
 
 	renderer = parent->getScene()->getRenderer();
-	log(LOG_INFO) << "RigidBody component (" << this << ") linked to " << parent->getName() << "\n";
+	gLog(LOG_INFO) << "RigidBody component (" << this << ") linked to " << parent->getName() << "\n";
 }
 void RigidBodyComponent::applyForce(Vect newForce)
 {
@@ -240,7 +240,7 @@ iVect RigidBodyComponent::getHitBox(int index)
 	}
 	else
 	{
-		log(LOG_WARN) << "RigidBodyComponent::getHitBox ( " << this << " ), not supported index\n";
+		gLog(LOG_WARN) << "RigidBodyComponent::getHitBox ( " << this << " ), not supported index\n";
 	}
 	return result;
 }
@@ -309,7 +309,7 @@ SpawnerComponent<bulletType>::~SpawnerComponent()
 template <typename bulletType>
 void SpawnerComponent<bulletType>::whenLinked()
 {
-	log(LOG_INFO) << "Spawner component (" << this << ") linked to " << parent->getName() << "\n";
+	gLog(LOG_INFO) << "Spawner component (" << this << ") linked to " << parent->getName() << "\n";
 }
 template <typename bulletType>
 void SpawnerComponent<bulletType>::setCooldown(double newCooldown)
@@ -404,19 +404,19 @@ bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string
 	}
 	if (font == NULL)
 	{
-		log(LOG_WARN) << "Text component failed to load font\n";
+		gLog(LOG_WARN) << "Text component failed to load font\n";
 		return false;
 	}
 	SDL_Surface *textSurface = TTF_RenderUTF8_Blended(font, path.c_str(), newColor);
 	if (textSurface == NULL)
 	{
-		log(LOG_WARN) << "Text surface failed to render in TextComponent (" << this << ") " << TTF_GetError() << "\n";
+		gLog(LOG_WARN) << "Text surface failed to render in TextComponent (" << this << ") " << TTF_GetError() << "\n";
 		return false;
 	}
 	texture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
 	if (texture == NULL)
 	{
-		log(LOG_WARN) << "Text surface failed to create texture in TextComponent (" << this << ") " << TTF_GetError() << "\n";
+		gLog(LOG_WARN) << "Text surface failed to create texture in TextComponent (" << this << ") " << TTF_GetError() << "\n";
 		return false;
 	}
 	dim = {textSurface->w, textSurface->h};
@@ -449,9 +449,9 @@ void TextComponent::whenLinked()
 	if (!load(path, color, fontPath, fontSize))
 	{
 		getParent()->removeComponent(this);
-		log(LOG_WARN) << "Removing faulty component (" << this << ")\n";
+		gLog(LOG_WARN) << "Removing faulty component (" << this << ")\n";
 	}
-	log(LOG_INFO) << "Text component (" << this << ") linked to " << parent->getName() << "\n";
+	gLog(LOG_INFO) << "Text component (" << this << ") linked to " << parent->getName() << "\n";
 }
 
 void TextComponent::setFont(std::string setFontPath, int fontSize)
@@ -461,7 +461,7 @@ void TextComponent::setFont(std::string setFontPath, int fontSize)
 	fontPath = setFontPath;
 	if (font == NULL)
 	{
-		log(LOG_WARN) << "Font file " << setFontPath << " failed to load " << TTF_GetError() << "\n";
+		gLog(LOG_WARN) << "Font file " << setFontPath << " failed to load " << TTF_GetError() << "\n";
 	}
 }
 
@@ -490,12 +490,12 @@ LayoutHelperComponent::~LayoutHelperComponent()
 
 void LayoutHelperComponent::whenLinked()
 {
-	log(LOG_INFO) << "LayoutHelper component (" << this << ") linked to " << parent->getName() << "\n";
+	gLog(LOG_INFO) << "LayoutHelper component (" << this << ") linked to " << parent->getName() << "\n";
 }
 
 void CustomUpdateComponent::whenLinked()
 {
-	log(LOG_INFO) << "CustomUpdate component (" << this << ") linked to " << parent->getName() << "\n";
+	gLog(LOG_INFO) << "CustomUpdate component (" << this << ") linked to " << parent->getName() << "\n";
 }
 
 CustomUpdateComponent::CustomUpdateComponent(Object *parent)

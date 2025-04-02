@@ -61,7 +61,7 @@ uiRoundedRect::uiRoundedRect(Object *parent, int newRes, float radius, float wid
     this->width = width;
     this->height = height;
     center = {width / 2, height / 2};
-    log(LOG_INFO) << "uiRoundedRect created\n";
+    gLog(LOG_INFO) << "uiRoundedRect created\n";
 }
 
 void uiRoundedRect::render()
@@ -115,7 +115,7 @@ uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float he
     }
     setColor({37, 150, 190, 255}, borderColorShift);
     body->move(pos);
-    log(LOG_INFO) << "uiButton created\n";
+    gLog(LOG_INFO) << "uiButton created\n";
 }
 
 void uiButton::update()
@@ -186,3 +186,33 @@ bool uiButton::buttonClicked()
 }
 
 #pragma endregion
+
+// void loadUILayout(Scene *scene, const char* path) {
+//     std::ifstream file(path);
+//     if (!file.is_open()) {
+//         gLog(LOG_WARN) << "loadUILayout failed, file locked\n";
+//         return;
+//     }
+
+//     try {
+//         json j = json::parse(file);
+        
+//         // Use .value() for safer access with defaults
+//         auto buttonWidth = j["mainMenu"]["buttons"][0]["width"].get<float>();
+//         auto buttonText = j["mainMenu"]["buttons"][0]["text"].get<std::string>();
+
+//         // Make sure 'scene' is properly defined/passed
+//         uiButton* btn = new uiButton(
+//             scene,
+//             j["resolution"].get<int>(),
+//             j["radius"].get<float>(),
+//             buttonWidth,
+//             j["height"].get<float>(),
+//             j["borderSize"].get<float>(),
+//             buttonText
+//         );
+//     }
+//     catch (const json::parse_error& e) {
+//         gLog(LOG_ERR) << scene->getName() << " " << e.what() << std::endl;
+//     }
+// }
