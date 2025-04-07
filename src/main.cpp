@@ -1,8 +1,5 @@
 #define SDL_MAIN_HANDLED
 #include "engine.h"
-#include "player.h"
-#include "targetObject.h"
-#include "mainMenu.h"
 
 void loadGame();
 
@@ -18,11 +15,6 @@ int main(int argc, char *args[])
 
 	// Setup Scenes
 	Scene *mainScene = new Scene("MAIN");
-
-	// CREATE MENU
-	MainMenu *menu = new MainMenu("main-menu");
-	menu->startButton->setOnClick(loadGame);
-	menu->quitButton->setOnClick(requestEngineClose);
 
 	SDL_Event e;
 	double timer = 0.0;
@@ -68,23 +60,4 @@ int main(int argc, char *args[])
 		getchar();
 	}
 	return 0;
-}
-
-void loadGame()
-{
-
-	Scene *mainScene = getSceneByName("MAIN");
-	MainMenu *menu = dynamic_cast<MainMenu *>(getSceneByName("main-menu"));
-
-	menu->setUiState(false);
-	// CREATE PLAYER
-	PlayerObject *player = new PlayerObject(mainScene);
-
-	// CREATE TARGETS
-	targetObject *target1 = new targetObject(mainScene, 1);
-	targetObject *target2 = new targetObject(mainScene, 2);
-	targetObject *target3 = new targetObject(mainScene, 3);
-	targetObject *target4 = new targetObject(mainScene, 4);
-	targetObject *target5 = new targetObject(mainScene, 5);
-	targetObject *target6 = new targetObject(mainScene, 6);
 }

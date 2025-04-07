@@ -66,11 +66,7 @@ enum LoadFlag
 
 #include <gPrimitives.h>
 #include <gComponents.h>
-#include <gLayouts.h>
 #include <gUi.h>
-
-// Prefab files
-#include <genericBullet.h>
 
 // Global engine variables
 extern const int SCREEN_WIDTH;
@@ -135,9 +131,6 @@ void EngineUpdateScenes();
 Scene *getSceneByName(std::string name);
 
 int LayoutGetID();
-
-bool saveBin(Object *obj, std::string filename);
-Object *loadBin(std::string filename, Scene *scene);
 
 void centerRect(SDL_Rect *box);
 

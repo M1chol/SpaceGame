@@ -281,82 +281,7 @@ void RigidBodyComponent::solveCollision(RigidBodyComponent *obj)
 #pragma endregion
 
 #pragma region SpawnerComponent
-template class SpawnerComponent<genericBullet>;
-
-// TODO: Remake SpawnerComponent to use Object * instead of template
-template <typename bulletType>
-SpawnerComponent<bulletType>::SpawnerComponent(Object *parent, Vect newPos, double setCooldown, double setBulletLifeSpan)
-{
-	name = "SpawnerComponent";
-	cooldown = setCooldown;
-	shootOffset = newPos;
-	poolsize = 0;
-	cooldownTimer = cooldown;
-	bulletLifeSpan = setBulletLifeSpan;
-	if (parent != nullptr)
-	{
-		parent->addComponent(this);
-	}
-}
-template <typename bulletType>
-SpawnerComponent<bulletType>::~SpawnerComponent()
-{
-	for (bulletType *bullet : pool)
-	{
-		delete bullet;
-	}
-}
-template <typename bulletType>
-void SpawnerComponent<bulletType>::whenLinked()
-{
-	log(LOG_INFO) << "Spawner component (" << this << ") linked to " << parent->getName() << "\n";
-}
-template <typename bulletType>
-void SpawnerComponent<bulletType>::setCooldown(double newCooldown)
-{
-	cooldown = newCooldown;
-}
-template <typename bulletType>
-bool SpawnerComponent<bulletType>::shoot(double angle)
-{
-	if (cooldownTimer < cooldown)
-	{
-		return false;
-	}
-	if (poolsize < 1 || pool[0]->isActive)
-	{
-		// Create new bullet
-		genericBullet *projectile = new bulletType(parent->getScene(), parent->getPos() + shootOffset);
-		projectile->reset(angle, 1000, parent->getPos() + shootOffset);
-		pool.push_back(projectile);
-		poolsize++;
-	}
-	else
-	{
-		// Reuse latest bullet
-		// TODO: can be optimized to not resize vector each frame use lookup table instead
-		pool[0]->reset(angle, 1000, parent->getPos() + shootOffset);
-		genericBullet *temp = pool[0];
-		pool.erase(pool.begin());
-		pool.push_back(temp);
-	}
-	cooldownTimer = 0.0;
-	return true;
-}
-template <typename bulletType>
-bool SpawnerComponent<bulletType>::update()
-{
-	cooldownTimer += deltaTime;
-	for (genericBullet *bullet : pool)
-	{
-		if (bullet->aliveFor > bulletLifeSpan)
-		{
-			bullet->isActive = false;
-			bullet->aliveFor = 0.0;
-		}
-	}
-	return true;
-}
+// TODO: Reimplement SpawnerComponent using Object *
 #pragma endregion
 
 #pragma region TextComponent
@@ -472,40 +397,5 @@ bool TextComponent::update()
 #pragma endregion
 
 #pragma region LayoutHelper
-
-LayoutHelperComponent::LayoutHelperComponent(Layout *setLayout, int setId)
-{
-	name = "LayoutHelperComponent";
-	layout = setLayout;
-	id = setId;
-	if (layout != nullptr)
-	{
-		layoutID = layout->getID();
-	}
-}
-LayoutHelperComponent::~LayoutHelperComponent()
-{
-	layout->removeObj(id, false);
-}
-
-void LayoutHelperComponent::whenLinked()
-{
-	log(LOG_INFO) << "LayoutHelper component (" << this << ") linked to " << parent->getName() << "\n";
-}
-
-void CustomUpdateComponent::whenLinked()
-{
-	log(LOG_INFO) << "CustomUpdate component (" << this << ") linked to " << parent->getName() << "\n";
-}
-
-CustomUpdateComponent::CustomUpdateComponent(Object *parent)
-{
-	name = "CustomUpdateComponent";
-	if (parent != nullptr)
-	{
-		parent->addComponent(this);
-	}
-	updateFunc = nullptr;
-}
-
+// TODO: Implement GridComponent - arranges children to specefied grid
 #pragma endregion

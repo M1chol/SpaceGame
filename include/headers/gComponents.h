@@ -45,9 +45,6 @@ public:
 
     iVect getCenter() { return center; };
 
-    void saveBin(std::ofstream &out) override;
-    void loadBin(std::ifstream &in) override;
-
     iVect offset;
 
 protected:
@@ -77,8 +74,6 @@ public:
     /* If global variable `drawHitbox` is true renders hitboxes*/
     bool render() override;
     void whenLinked() override;
-    void saveBin(std::ofstream &out) override;
-    void loadBin(std::ifstream &in) override;
     /* Apply new force on parent `Object` @param newForce new force*/
     void applyForce(Vect newForce);
     /* Set or change the mass of object @param newMass new mass*/
@@ -126,8 +121,6 @@ public:
     bool shoot(double angle = 0);
     // Set new cooldown of Spawner @param newCooldown new cooldown
     void setCooldown(double newCooldown);
-    void saveBin(std::ofstream &out) override;
-    void loadBin(std::ifstream &in) override;
 
 protected:
     bool update() override;
@@ -151,8 +144,6 @@ public:
     void setScale(float newScale) { setSize((int)newScale); };
     void setSize(int newSize);
     void setFont(std::string fontPath, int fontSize = 20);
-    void saveBin(std::ofstream &out) override;
-    void loadBin(std::ifstream &in) override;
 
 private:
     bool load(std::string newMessage = "", SDL_Color color = {255, 255, 255, 255}, std::string fontPath = "", int fontSize = 20);
@@ -166,46 +157,6 @@ private:
 
 class Layout;
 
-class LayoutHelperComponent : public Component
-{
-public:
-    LayoutHelperComponent(Layout *setLayout = nullptr, int setId = -1);
-    ~LayoutHelperComponent();
-    void whenLinked() override;
-    void saveBin(std::ofstream &out) override;
-    void loadBin(std::ifstream &in) override;
 
-private:
-    Layout *layout;
-    int layoutID;
-    int id;
-};
-
-class CustomUpdateComponent : public Component
-{
-public:
-    using UpdateFunc = std::function<bool(CustomUpdateComponent *)>;
-
-    CustomUpdateComponent(Object *parent = nullptr);
-    ;
-
-    void whenLinked() override;
-
-    bool update() override
-    {
-        if (updateFunc)
-            return updateFunc(this);
-        return true;
-    }
-
-    void setUpdateFunction(UpdateFunc func)
-    {
-        updateFunc = std::move(func);
-    }
-
-private:
-    UpdateFunc updateFunc;
-    std::string name;
-};
 
 #endif
