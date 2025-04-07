@@ -8,27 +8,29 @@ struct iVect;
 /* Primitive struct that holds to floats x and y*/
 struct Vect
 {
-    double x;
-    double y;
-
-    Vect operator+(const Vect &other);
-    Vect operator-(const Vect &other);
-    Vect operator*(double scalar);
+    double x = 0.0;
+    double y = 0.0;
+    Vect(double x_val, double y_val) : x(x_val), y(y_val) {}
+    Vect() = default;
+    Vect operator+(const Vect &other) const;
+    Vect operator-(const Vect &other) const;
+    Vect operator*(double scalar) const;
     Vect &operator+=(const Vect &other);
     Vect &operator*=(double scalar);
-    double magnitude();
-    Vect normalized();
-    Vect rotate(double angle, Vect center);
-    iVect toIVect();
+    double magnitude() const;
+    Vect normalized() const;
+    Vect rotate(double angle, Vect center) const;
+    iVect toIVect() const;
 };
 /* Primitive struct that holds to ints x and y*/
 struct iVect
 {
-    int x;
-    int y;
-
-    iVect operator+(const iVect &other);
-    iVect operator*(int scalar);
+    int x = 0;
+    int y = 0;
+    iVect(int x_val, int y_val) : x(x_val), y(y_val) {}
+    iVect() = default;
+    iVect operator+(const iVect &other) const;
+    iVect operator*(int scalar) const;
     iVect &operator+=(const iVect &other);
     iVect &operator*=(int scalar);
     iVect &operator/=(int scalar);

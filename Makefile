@@ -2,8 +2,8 @@
 
 all: clean
 ifeq ($(OS), Windows_NT)
-	g++ -Iinclude -Iinclude/sdl -Iinclude/lua -Iinclude/headers -Llib -o bin/Main \
-	src/engine/*.cpp -llua54 -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image \
+	g++ -Iinclude -Iinclude/sdl -Iinclude/lua -Iinclude/sol -Iinclude/headers -Llib -o bin/Main \
+	src/engine/*.cpp -llua53 -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image \
 	-static-libgcc -static-libstdc++ -g
 else
 	g++ src/*.cpp -o bin/Main -Iinclude/headers -Iinclude/headers/prefabs \

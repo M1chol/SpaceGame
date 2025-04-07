@@ -14,7 +14,7 @@ int main(int argc, char *args[])
 		return -1;
 	}
 
-	lua->run("src/test.lua");
+	eng.lua->run("src/test.lua");
 
 	Scene *mainScene = eng.addScene("MAIN");
 
@@ -25,6 +25,13 @@ int main(int argc, char *args[])
 	while (eng.isRunning())
 	{
 		eng.update();
+
+		// TEMP LUA TEST REMOVE LATER
+		if (eng.isKeyDown(SDL_SCANCODE_SPACE))
+		{
+			eng.lua->Lstate["mainScene"] = mainScene;
+			eng.lua->run("src/test.lua");
+		}
 
 		eng.capFrames(60);
 

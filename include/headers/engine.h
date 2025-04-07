@@ -62,12 +62,14 @@ enum LoadFlag
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
-#include <lua.hpp>
-
 // m1 engine stuff
 #include <gPrimitives.h>
 #include <gComponents.h>
 #include <gUi.h>
+
+#define SOL_ALL_SAFETIES_ON 1
+#include <lua.hpp>
+#include <sol.hpp>
 
 // Global engine variables
 extern const int SCREEN_WIDTH;
@@ -95,12 +97,12 @@ public:
     ~LuaManager();
     LuaManager();
     bool run(const char *filename);
+    void defineLuaObjects();
 
-private:
+    // TEMPORARY
     lua_State *L;
+    sol::state Lstate;
 };
-
-extern LuaManager *lua;
 
 class gEngine
 {
@@ -147,6 +149,9 @@ public:
     Scene *getSceneByName(const std::string &name);
 
     bool isRunning() const { return !m_requestClose; }
+
+    // TEMPORARY PUBLIC
+    LuaManager *lua;
 
 private:
     // Private constructor and destructor for singleton.

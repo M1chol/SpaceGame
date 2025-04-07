@@ -2,15 +2,15 @@
 
 #pragma region Vect
 
-Vect Vect::operator*(double scalar)
+Vect Vect::operator*(double scalar) const
 {
     return Vect{x * scalar, y * scalar};
 }
-Vect Vect::operator+(const Vect &other)
+Vect Vect::operator+(const Vect &other) const
 {
     return Vect{x + other.x, y + other.y};
 }
-Vect Vect::operator-(const Vect &other)
+Vect Vect::operator-(const Vect &other) const
 {
     return Vect{x - other.x, y - other.y};
 }
@@ -26,11 +26,11 @@ Vect &Vect::operator*=(double scalar)
     y *= scalar;
     return *this;
 }
-double Vect::magnitude()
+double Vect::magnitude() const
 {
     return std::sqrt(x * x + y * y);
 }
-Vect Vect::normalized()
+Vect Vect::normalized() const
 {
     double mag = magnitude();
     if (mag == 0)
@@ -43,7 +43,7 @@ Vect Vect::normalized()
     }
 }
 
-Vect Vect::rotate(double angle, Vect center)
+Vect Vect::rotate(double angle, Vect center) const
 {
     // Convert angle to radians if it's in degrees
     double radians = angle * M_PI / 180.0;
@@ -60,16 +60,16 @@ Vect Vect::rotate(double angle, Vect center)
     return {rotatedX + center.x, rotatedY + center.y};
 }
 
-iVect Vect::toIVect()
+iVect Vect::toIVect() const
 {
     return iVect{(int)x, (int)y};
 }
 
-iVect iVect::operator+(const iVect &other)
+iVect iVect::operator+(const iVect &other) const
 {
     return iVect{x + other.x, y + other.y};
 }
-iVect iVect::operator*(int scalar)
+iVect iVect::operator*(int scalar) const
 {
     return iVect{x * scalar, y * scalar};
 }

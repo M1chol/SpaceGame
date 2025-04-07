@@ -1,4 +1,4 @@
-#include "engine.h"
+#include <engine.h>
 
 // Global SDL variables and engine-related globals.
 SDL_Window *gWindow = NULL;
@@ -18,7 +18,6 @@ Uint32 mouseState = 0;
 std::string fontVideo = "res/HomeVideo.ttf";
 std::string fontVideoBold = "res/HomeVideoBold.ttf";
 std::string fontSans = "res/OpenSans-Regular.ttf";
-LuaManager *lua = nullptr;
 
 // Setup flags
 bool drawDebug = true;
@@ -183,12 +182,13 @@ bool gEngine::isKeyDown(MouseButton button)
 {
     return mouseState & SDL_BUTTON(button);
 }
-
+// FIXME: key released not working
 bool gEngine::isKeyReleased(SDL_Scancode key)
 {
     return previousKeyState[key] && !currentKeyState[key];
 }
 
+// FIXME:  key pushed not working
 bool gEngine::isKeyPushed(SDL_Scancode key)
 {
     return currentKeyState[key] && !previousKeyState[key];
@@ -265,6 +265,12 @@ LuaManager::LuaManager()
     L = luaL_newstate();
     luaL_openlibs(L);
     log(LOG_INFO) << "Lua loaded successfully\n";
+
+    sol::state_view Lstate(L);
+
+    Lstate.open_libraries(sol::lib::base, sol::lib::package);
+    defineLuaObjects();
+    log(LOG_INFO) << "Lua objects linked.\n";
 }
 
 LuaManager::~LuaManager()
@@ -285,4 +291,93 @@ bool LuaManager::run(const char *filename)
         return false;
     }
     return true;
+}
+
+void LuaManager::defineLuaObjects()
+{
+    Lstate.new_usertype<Vect>("Vect",
+                              // Constructors using sol::constructors.
+                              sol::constructors<Vect(), Vect(double, double)>(), "x", &Vect::x, "y", &Vect::y,
+                              // Bind operator+ via a lambda (note: a and b are now const)
+                              sol::meta_function::addition, [](const Vect &a, const Vect &b)
+                              { return a + b; },
+                              // Similarly for subtraction:
+                              sol::meta_function::subtraction, [](const Vect &a, const Vect &b)
+                              { return a - b; },
+                              // Multiplication (by a scalar)
+                              sol::meta_function::multiplication, [](const Vect &a, double s)
+                              { return a * s; }, "magnitude", &Vect::magnitude, "normalized", &Vect::normalized, "rotate", &Vect::rotate, "toIVect", &Vect::toIVect);
+
+    // Expose iVect
+    Lstate.new_usertype<iVect>("iVect", sol::constructors<iVect(), iVect(int, int)>(), "x", &iVect::x, "y", &iVect::y, sol::meta_function::addition, [](const iVect &a, const iVect &b)
+                               { return a + b; }, sol::meta_function::multiplication, [](const iVect &a, int s)
+                               { return a * s; });
+
+    // Expose Component (assuming abstract usage is OK)
+    Lstate.new_usertype<Component>("Component",
+                                   "getParent", &Component::getParent,
+                                   "getName", &Component::getName);
+
+    // Expose Object (only exposing selected functions)
+    Lstate.new_usertype<Object>("Object",
+                                sol::constructors<Object(Scene *), Object(Object *)>(),
+                                "destroy", &Object::destroy,
+                                "addTag", &Object::addTag,
+                                "removeComponent", &Object::removeComponent,
+                                "getChildByName", &Object::getChildByName,
+                                "setName", &Object::setName,
+                                "getName", &Object::getName,
+                                "move", &Object::move,
+                                "rotate", &Object::rotate,
+                                "getRotation", &Object::getRotation,
+                                "getPos", &Object::getPos);
+
+    // Expose Scene (be sure that SDL_Renderer is complete)
+    Lstate.new_usertype<Scene>("Scene",
+                               sol::constructors<Scene(std::string)>(),
+                               "setName", &Scene::setName,
+                               "getName", &Scene::getName,
+                               "getObjectByName", &Scene::getObjectByName,
+                               "getObjectsByTag", &Scene::getObjectsByTag,
+                               "getNrOfObjects", &Scene::getNrOfObjects,
+                               "setDrawPriority", &Scene::setDrawPriority,
+                               "getDrawPriority", &Scene::getDrawPriority);
+
+    Lstate.new_usertype<SpriteComponent>("SpriteComponent",
+                                         sol::constructors<SpriteComponent(std::string, Object *)>(),
+                                         "load", &SpriteComponent::load,
+                                         "render", sol::overload(static_cast<bool (SpriteComponent::*)(int, iVect, float)>(&SpriteComponent::render), static_cast<bool (SpriteComponent::*)(int, float)>(&SpriteComponent::render), static_cast<bool (SpriteComponent::*)()>(&SpriteComponent::render)),
+                                         "whenLinked", &SpriteComponent::whenLinked,
+                                         "getDim", &SpriteComponent::getDim,
+                                         "setScale", &SpriteComponent::setScale,
+                                         "setSheetIndex", &SpriteComponent::setSheetIndex,
+                                         "setOffset", &SpriteComponent::setOffset,
+                                         "setCentered", &SpriteComponent::setCentered,
+                                         "rotate", &SpriteComponent::rotate,
+                                         "getCenter", &SpriteComponent::getCenter);
+
+    // Expose RigidBodyComponent
+    Lstate.new_usertype<RigidBodyComponent>("RigidBodyComponent",
+                                            sol::constructors<RigidBodyComponent(double, Object *)>(),
+                                            "update", &RigidBodyComponent::update,
+                                            "render", &RigidBodyComponent::render,
+                                            "whenLinked", &RigidBodyComponent::whenLinked,
+                                            "applyForce", &RigidBodyComponent::applyForce,
+                                            "setMass", &RigidBodyComponent::setMass,
+                                            "setEnergyLoss", &RigidBodyComponent::setEnergyLoss,
+                                            "setCollision", &RigidBodyComponent::setCollision,
+                                            "getHitBox", sol::overload(static_cast<SDL_Rect *(RigidBodyComponent::*)()>(&RigidBodyComponent::getHitBox), static_cast<iVect (RigidBodyComponent::*)(int)>(&RigidBodyComponent::getHitBox)),
+                                            "isColliding", sol::overload(static_cast<RigidBodyComponent *(RigidBodyComponent::*)(RigidBodyComponent *)>(&RigidBodyComponent::isColliding), static_cast<RigidBodyComponent *(RigidBodyComponent::*)(TAG)>(&RigidBodyComponent::isColliding)),
+                                            "solveCollision", &RigidBodyComponent::solveCollision,
+                                            // Expose hasCollision as a read-only property:
+                                            "hasCollision", sol::property([](RigidBodyComponent &self)
+                                                                          { return self.hasCollision; }));
+
+    // Expose TextComponent (derived from SpriteComponent)
+    Lstate.new_usertype<TextComponent>("TextComponent",
+                                       sol::constructors<TextComponent(std::string, iVect, std::string, int, Object *)>(),
+                                       "setColor", &TextComponent::setColor,
+                                       "setScale", &TextComponent::setScale, // Note: Shadows SpriteComponent setScale
+                                       "setSize", &TextComponent::setSize,
+                                       "setFont", &TextComponent::setFont);
 }
