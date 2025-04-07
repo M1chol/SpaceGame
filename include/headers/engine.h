@@ -64,6 +64,7 @@ enum LoadFlag
 
 #include <lua.hpp>
 
+// m1 engine stuff
 #include <gPrimitives.h>
 #include <gComponents.h>
 #include <gUi.h>
@@ -101,37 +102,56 @@ private:
 
 extern LuaManager *lua;
 
-// TODO: renake the system to use singleton class
+class gEngine
+{
+public:
+    // Get the singleton instance.
+    static gEngine &getInstance();
 
-/*Initialize SDL wrapper "Engine" @return true if successfull*/
-bool EngineInit();
-// Close all Engine systems and SDL
-void EngineClose();
-// Politely request engine to close
-void requestEngineClose();
-// Updates arrays of active keys, it needs to be called each frame
-void EngineUpdateEvents();
-/* Used to cap frames per second of application @param targetFrames FPS limit */
-void EngineCapFrames(int);
-/* Check if key is beeing held @param key key to check @return true if key is beeing pressed */
-bool isKeyDown(SDL_Scancode);
-/* Check if key is beeing held @param key key to check @return true if key is beeing pressed */
-bool isKeyDown(MouseButton);
-/* Check if key has been released @param key key to check @return true if key has been released */
-bool isKeyReleased(SDL_Scancode);
-/* Check if key just has been pressed @param key key to check @return true if key just has been pressed*/
-bool isKeyPushed(SDL_Scancode);
-/* Add scene to sceneList */
-Scene *addScene(std::string name);
-/* Returns the id of Scene*/
-int getSceneID(Scene *scene);
-// Draw all scenes based on drawPriority property
-void EngineUpdateScenes();
+    // Initialize SDL wrapper and any other engine systems.
+    bool init();
 
-Scene *getSceneByName(std::string name);
+    // Close all engine systems and SDL.
+    void close();
 
-int LayoutGetID();
+    // Politely request the engine to close.
+    void requestClose();
 
-void centerRect(SDL_Rect *box);
+    // Update arrays of active keys
+    void updateEvents();
 
+    // Cap the frames per second of the application.
+    // @param targetFrames: FPS limit.
+    void capFrames(int targetFrames);
+
+    // Input functions.
+    // Check if key is being held.
+    bool isKeyDown(SDL_Scancode key);
+    // Check if mouse button is being pressed.
+    bool isKeyDown(MouseButton button);
+    // Check if key has been released.
+    bool isKeyReleased(SDL_Scancode key);
+    // Check if key has just been pressed.
+    bool isKeyPushed(SDL_Scancode key);
+
+    // Scene management.
+    // Add a scene to the scene list.
+    Scene *addScene(const std::string &name);
+    // Get the ID of a scene.
+    int getSceneID(Scene *scene);
+    // Update all scenes based on their drawPriority property.
+    void updateScenes();
+    // Get a scene by its name.
+    Scene *getSceneByName(const std::string &name);
+
+    bool isRunning() const { return !m_requestClose; }
+
+private:
+    // Private constructor and destructor for singleton.
+    gEngine();
+    ~gEngine();
+
+    // Internal flag to indicate a close request.
+    bool m_requestClose;
+};
 #endif

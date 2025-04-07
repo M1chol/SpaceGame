@@ -147,7 +147,7 @@ void uiButton::update()
             border->setColor(borderColor);
         }
     }
-    clicked = hover && isKeyDown(MOUSE_LEFT);
+    clicked = hover && gEngine::getInstance().isKeyDown(MOUSE_LEFT);
     prevClicked = clicked && prevClicked;
     if (buttonClicked())
     {
