@@ -28,7 +28,7 @@ bool gameLoop = true;
 
 #pragma region Engine
 
-gEngine::gEngine() : m_requestClose(false) {}
+gEngine::gEngine() : m_requestClose(false), timer(0) {}
 
 gEngine::~gEngine()
 {
@@ -94,7 +94,28 @@ bool gEngine::init()
     }
 
     currentKeyState = SDL_GetKeyboardState(NULL);
+
+    previousTime = SDL_GetTicks();
+    currentTime = 0;
+
     return true;
+}
+
+void gEngine::update()
+{
+    currentTime = SDL_GetTicks();
+    deltaTime = static_cast<double>(currentTime - previousTime) / 1000.0;
+
+    // Update engine events (keyboard, mouse, etc.)
+    updateEvents();
+
+    // Update scenes.
+    updateScenes();
+
+    // Calculate draw time.
+    drawTime = static_cast<double>(SDL_GetTicks() - currentTime) / 1000.0;
+
+    previousTime = currentTime;
 }
 
 void gEngine::capFrames(int targetFrames)
@@ -108,6 +129,15 @@ void gEngine::capFrames(int targetFrames)
     if (deltaTime >= drawTime - drawTime * 0.05 && deltaTime < drawTime)
     {
         log(LOG_WARN) << "Game running at hardware limit!\n";
+    }
+    if (timer < 5.0)
+    {
+        timer += deltaTime;
+    }
+    else
+    {
+        log(LOG_INFO) << "Current frame rate " << (1.0 / deltaTime) << " fps\n";
+        timer = 0.0;
     }
 }
 
@@ -132,6 +162,7 @@ void gEngine::close()
 
 void gEngine::requestClose()
 {
+    log(LOG_INFO) << "Quit requested...\n";
     gameLoop = false;
     m_requestClose = true;
 }

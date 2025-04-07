@@ -114,6 +114,8 @@ public:
     // Close all engine systems and SDL.
     void close();
 
+    void update();
+
     // Politely request the engine to close.
     void requestClose();
 
@@ -153,5 +155,8 @@ private:
 
     // Internal flag to indicate a close request.
     bool m_requestClose;
+    float timer;
+    uint32_t previousTime;
+    uint32_t currentTime;
 };
 #endif
