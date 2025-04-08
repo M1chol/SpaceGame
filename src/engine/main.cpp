@@ -14,9 +14,9 @@ int main(int argc, char *args[])
 		return -1;
 	}
 
-	eng.lua->run("src/test.lua");
-
 	Scene *mainScene = eng.addScene("MAIN");
+	eng.lua->Lstate["mainScene"] = mainScene;
+	eng.lua->run("src/test.lua");
 
 	SDL_Event e;
 	double timer = 0.0;

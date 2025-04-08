@@ -115,6 +115,7 @@ Object::Object(Scene *scene)
     isActive = true;
     posLocked = false;
     rotation = 0;
+    log(LOG_INFO) << "Created object for " << scene->getName() << "\n";
 }
 
 Object::Object(Object *parent)
@@ -127,6 +128,7 @@ Object::Object(Object *parent)
     posLocked = false;
     rotation = 0;
     parent->addChild(this);
+    log(LOG_INFO) << "Created object for " << parent->getName() << "\n";
 }
 
 Object::~Object()
@@ -339,7 +341,6 @@ Scene::Scene(std::string name)
     this->name = name;
     drawPriority = 0;
     sceneList.push_back(this);
-    nrOfScenes++;
 }
 Scene::~Scene()
 {

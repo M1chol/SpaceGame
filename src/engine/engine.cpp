@@ -24,6 +24,7 @@ bool drawDebug = true;
 bool waitToDebug = true;
 bool showDebugNames = false;
 bool gameLoop = true;
+bool useSafeLuaCall = true;
 
 #pragma region Engine
 
@@ -83,6 +84,7 @@ bool gEngine::init()
         log(LOG_ERR) << "SDL_ttf failed to initialize: " << TTF_GetError() << "\n";
         return false;
     }
+    log(LOG_INFO) << "SDL init complete\n";
 
     // Create LuaManager instance
     lua = new LuaManager();
@@ -96,7 +98,7 @@ bool gEngine::init()
 
     previousTime = SDL_GetTicks();
     currentTime = 0;
-
+    log(LOG_INFO) << "Engine init complete\n";
     return true;
 }
 
@@ -145,12 +147,8 @@ void gEngine::close()
     // Clean up scenes
     for (int i = nrOfScenes - 1; i >= 0; i--)
     {
-        Scene *scene = sceneList[i];
-        log(LOG_INFO) << "Destroying Scene " << scene->getName() << "... ("
-                      << scene << ")\n";
-        delete scene;
-        sceneList[i] = nullptr;
-        log(LOG_INFO) << "Scene Destroyed\n";
+        log(LOG_INFO) << "Scene Destroyed (" << sceneList[i]->getName() << ")\n";
+        delete sceneList[i];
     }
     sceneList.clear();
     log(LOG_INFO) << "Quit successful, bye bye!\n";
@@ -197,6 +195,7 @@ bool gEngine::isKeyPushed(SDL_Scancode key)
 Scene *gEngine::addScene(const std::string &name)
 {
     Scene *newScene = new Scene();
+    log(LOG_INFO) << "Added Scene " << newScene << "\n";
     newScene->setName(name);
     // Assume that scenes are unsorted upon adding a new scene.
     sceneList.push_back(newScene);
@@ -260,37 +259,34 @@ Scene *gEngine::getSceneByName(const std::string &name)
 
 #pragma region LuaManager
 
-LuaManager::LuaManager()
+LuaManager::LuaManager() : Lstate(sol::default_at_panic)
 {
-    L = luaL_newstate();
-    luaL_openlibs(L);
-    log(LOG_INFO) << "Lua loaded successfully\n";
-
-    sol::state_view Lstate(L);
-
-    Lstate.open_libraries(sol::lib::base, sol::lib::package);
+    // TODO: Not sure about those libraries
+    Lstate.open_libraries(sol::lib::base, sol::lib::io);
+    L = Lstate.lua_state();
     defineLuaObjects();
-    log(LOG_INFO) << "Lua objects linked.\n";
+    log(LOG_INFO) << "Lua init complete\n";
 }
 
 LuaManager::~LuaManager()
 {
-    if (L)
-    {
-        lua_close(L);
-        log(LOG_INFO) << "Lua closed\n";
-    }
+    log(LOG_INFO) << "Lua closed\n";
 }
 
 bool LuaManager::run(const char *filename)
 {
-    int status = luaL_dofile(L, filename);
-    if (status != LUA_OK)
+    try
     {
-        log(LOG_WARN) << lua_tostring(L, -1) << "\n";
+        if (useSafeLuaCall)
+            auto status = Lstate.safe_script_file(filename);
+        else
+            auto status = Lstate.script_file(filename);
+        return true;
+    }
+    catch (sol::error &e)
+    {
         return false;
     }
-    return true;
 }
 
 void LuaManager::defineLuaObjects()
