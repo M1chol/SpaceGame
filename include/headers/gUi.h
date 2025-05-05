@@ -13,6 +13,7 @@ public:
     void setResolution(int newResolution) { resolution = newResolution; };
     void setRadius(float newRadius) { radius = newRadius; };
     void setColor(SDL_Color newColor) { color = newColor; };
+    void setColorSimple(Uint8 r, Uint8 g, Uint8 b, Uint8 a) { setColor({r, g, b, a}); };
     void setOffset(Vect newOffset) { offset = newOffset; };
 
 protected:

@@ -110,6 +110,7 @@ public:
     std::vector<Object *> *getChildrenList() { return &childrenList; };
     /*Move `Object` to `Scene` coordinets @param newPos position to be moved to @param Forced use only when `Object` should ignore `posLocked` state*/
     bool move(Vect newPos, bool Forced = false);
+    bool simpleMove(Vect newPos) { move(newPos, false); };
     void rotate(double angle) { rotation = angle; };
     double getRotation() { return rotation; };
     /*Returns `Scene` coordinates of an Object*/

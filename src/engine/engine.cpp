@@ -323,7 +323,7 @@ void LuaManager::defineLuaObjects()
                                 "getChildByName", &Object::getChildByName,
                                 "setName", &Object::setName,
                                 "getName", &Object::getName,
-                                "move", &Object::move,
+                                "move", &Object::simpleMove,
                                 "rotate", &Object::rotate,
                                 "getRotation", &Object::getRotation,
                                 "getPos", &Object::getPos);
@@ -376,4 +376,13 @@ void LuaManager::defineLuaObjects()
                                        "setScale", &TextComponent::setScale, // Note: Shadows SpriteComponent setScale
                                        "setSize", &TextComponent::setSize,
                                        "setFont", &TextComponent::setFont);
+
+    Lstate.new_usertype<uiSphere>("uiSphere",
+                                  sol::constructors<uiSphere(Object *, float, float)>(),
+                                  "setColor", &uiSphere::setColorSimple);
+
+    Lstate.new_usertype<uiRoundedRect>("uiRoundedRect", sol::constructors<uiRoundedRect(Object *, int, float, float, float)>(),
+                                       "setColor", &uiRoundedRect::setColorSimple
+
+    );
 }
