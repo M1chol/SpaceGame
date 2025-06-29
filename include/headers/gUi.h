@@ -3,7 +3,7 @@
 class uiSphere : public Object
 {
 public:
-    uiSphere(Object *parent, int resolution, float radius);
+    uiSphere(Scene *scene, int resolution, float radius);
     ~uiSphere() override
     {
         delete[] vertices;
@@ -33,7 +33,7 @@ private:
 class uiRoundedRect : public uiSphere
 {
 public:
-    uiRoundedRect(Object *parent, int resolution, float radius, float width, float height);
+    uiRoundedRect(Scene *scene, int resolution, float radius, float width, float height);
     void render() override;
     void setWidth(float newWidth) { width = newWidth; };
     void setHeight(float newHeight) { height = newHeight; };

@@ -350,14 +350,13 @@ void LuaManager::defineLuaObjects()
 
     // Expose Object (only exposing selected functions)
     Lstate.new_usertype<Object>("Object",
-                                sol::constructors<Object(Scene *), Object(Object *)>(),
+                                sol::constructors<Object(Scene *)>(),
                                 "destroy", &Object::destroy,
                                 "addTag", &Object::addTag,
                                 "removeComponent", &Object::removeComponent,
-                                "getChildByName", &Object::getChildByName,
                                 "setName", &Object::setName,
                                 "getName", &Object::getName,
-                                "move", &Object::simpleMove,
+                                "move", &Object::move,
                                 "rotate", &Object::rotate,
                                 "getRotation", &Object::getRotation,
                                 "getPos", &Object::getPos);
@@ -412,11 +411,27 @@ void LuaManager::defineLuaObjects()
                                        "setFont", &TextComponent::setFont);
 
     Lstate.new_usertype<uiSphere>("uiSphere",
-                                  sol::constructors<uiSphere(Object *, float, float)>(),
-                                  "setColor", &uiSphere::setColorSimple);
+                                  sol::constructors<uiSphere(Scene *, float, float)>(),
+                                  "setColor", &uiSphere::setColorSimple,
+                                  "destroy", &Object::destroy,
+                                  "addTag", &Object::addTag,
+                                  "removeComponent", &Object::removeComponent,
+                                  "setName", &Object::setName,
+                                  "getName", &Object::getName,
+                                  "move", &Object::move,
+                                  "rotate", &Object::rotate,
+                                  "getRotation", &Object::getRotation,
+                                  "getPos", &Object::getPos);
 
-    Lstate.new_usertype<uiRoundedRect>("uiRoundedRect", sol::constructors<uiRoundedRect(Object *, int, float, float, float)>(),
-                                       "setColor", &uiRoundedRect::setColorSimple
-
-    );
+    Lstate.new_usertype<uiRoundedRect>("uiRoundedRect", sol::constructors<uiRoundedRect(Scene *, int, float, float, float)>(),
+                                       "setColor", &uiRoundedRect::setColorSimple,
+                                       "destroy", &Object::destroy,
+                                       "addTag", &Object::addTag,
+                                       "removeComponent", &Object::removeComponent,
+                                       "setName", &Object::setName,
+                                       "getName", &Object::getName,
+                                       "move", &Object::move,
+                                       "rotate", &Object::rotate,
+                                       "getRotation", &Object::getRotation,
+                                       "getPos", &Object::getPos);
 }

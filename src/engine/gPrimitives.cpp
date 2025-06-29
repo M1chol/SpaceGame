@@ -118,19 +118,6 @@ Object::Object(Scene *scene)
     log(LOG_INFO) << "Created object for " << scene->getName() << "\n";
 }
 
-Object::Object(Object *parent)
-{
-    linkedScene = parent->getScene();
-    pos = {0, 0};
-    name = "unnamed";
-    nrOfComponents = 0;
-    isActive = true;
-    posLocked = false;
-    rotation = 0;
-    parent->addChild(this);
-    log(LOG_INFO) << "Created object for " << parent->getName() << "\n";
-}
-
 Object::~Object()
 {
     log(LOG_INFO) << "Destroying " << this->name << "\n";
@@ -142,10 +129,6 @@ Object::~Object()
     }
     componentList.clear();
     componentList.shrink_to_fit();
-    for (int i = 0; i < childrenList.size(); i++)
-    {
-        delete childrenList[i];
-    }
     if (!linkedScene->removeObject(this))
     {
         log(LOG_WARN) << "Could not remove " << name << " Object from linked scene\n";
@@ -164,12 +147,13 @@ Vect Object::getPos()
 {
     return pos;
 }
-bool Object::move(Vect newPos, bool Forced)
+bool Object::moveAdv(Vect newPos, bool Forced)
 {
-    for (Object *child : childrenList)
-    {
-        child->move(newPos, Forced);
-    }
+    // TODO: Reimplement this stuck to mechanic
+    // for (Object *child : childrenList)
+    // {
+    //     child->move(newPos, Forced);
+    // }
 
     if (!Forced && posLocked)
     {
@@ -194,21 +178,7 @@ bool Object::addComponent(Component *comp)
     nrOfComponents++;
     return true;
 }
-void Object::addChild(Object *child)
-{
-    childrenList.push_back(child);
-}
 
-bool Object::removeChild(Object *child)
-{
-    auto el = std::find(childrenList.begin(), childrenList.end(), child);
-    if (el != childrenList.end())
-    {
-        childrenList.erase(el);
-        return true;
-    }
-    return false;
-}
 void Object::addTag(TAG newTag)
 {
     linkedTags.push_back(newTag);
@@ -266,11 +236,6 @@ bool Object::removeComponent(Component *comp)
 }
 void Object::render()
 {
-    for (auto &child : childrenList)
-    {
-        child->render();
-    }
-
     for (Component *component : componentList)
     {
         if (!component->render())
@@ -283,11 +248,6 @@ void Object::render()
 }
 void Object::update()
 {
-    for (auto &child : childrenList)
-    {
-        child->update();
-    }
-
     for (auto &component : componentList)
     {
         if (component == nullptr)
@@ -299,13 +259,6 @@ void Object::update()
     }
 }
 void Object::lateUpdate() {}
-
-Object *Object::getChildByName(std::string name)
-{
-    for (auto &child : childrenList)
-        if (child->getName() == name)
-            return child;
-}
 
 #pragma endregion
 

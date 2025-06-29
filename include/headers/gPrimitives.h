@@ -65,8 +65,7 @@ class Object
 public:
     /* Creates object linked to a scene @param scene Object will be updated and rendered by this scene @param parent sets the parent*/
     Object(Scene *scene);
-    /* Creates Object that is updated and rendered by its parent @param parent*/
-    Object(Object *parent);
+
     virtual ~Object();
 
     // virtual void destroy();
@@ -86,8 +85,7 @@ public:
     /* remove Component from vector componentList of Object @param comp Component to be removed
     @return `true` if successfull and `false` if component was not found */
     bool removeComponent(Component *comp);
-    bool removeChild(Object *child);
-    Object *getChildByName(std::string name);
+
     /* Get pointer to component of a specified type */
     template <typename CompType>
     CompType *getComponent()
@@ -107,10 +105,9 @@ public:
     Scene *getScene();
     void setName(std::string newName);
     std::string getName();
-    std::vector<Object *> *getChildrenList() { return &childrenList; };
     /*Move `Object` to `Scene` coordinets @param newPos position to be moved to @param Forced use only when `Object` should ignore `posLocked` state*/
-    bool move(Vect newPos, bool Forced = false);
-    bool simpleMove(Vect newPos) { move(newPos, false); };
+    bool moveAdv(Vect newPos, bool Forced = false);
+    bool move(Vect newPos) { moveAdv(newPos, false); };
     void rotate(double angle) { rotation = angle; };
     double getRotation() { return rotation; };
     /*Returns `Scene` coordinates of an Object*/
@@ -124,15 +121,11 @@ protected:
     Vect pos;
     double rotation;
     std::string name;
-    /* add Child to childList @param child pointer to child*/
-    void addChild(Object *child);
 
 private:
     Scene *linkedScene;
     std::vector<Component *> componentList;
-    std::vector<Object *> childrenList;
     int nrOfComponents;
-    Object *parent;
 };
 
 class Scene

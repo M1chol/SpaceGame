@@ -198,13 +198,13 @@ bool RigidBodyComponent::update()
 	collisionList.clear();
 	if (mass == 0.0)
 	{
-		parent->move(parent->getPos() + force * deltaTime);
+		parent->moveAdv(parent->getPos() + force * deltaTime);
 		return true;
 	}
 	Vect acceleration = {force.x / mass, force.y / mass};
 	velocity += acceleration * deltaTime;
 	velocity *= std::pow(1 - energyLoss, deltaTime);
-	parent->move(parent->getPos() + velocity * deltaTime);
+	parent->moveAdv(parent->getPos() + velocity * deltaTime);
 	// momentum = velocity * mass;
 	return true;
 }

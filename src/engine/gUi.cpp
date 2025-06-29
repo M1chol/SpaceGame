@@ -2,7 +2,7 @@
 
 #pragma region uiSphere
 
-uiSphere::uiSphere(Object *parent, int newRes, float newRad) : Object(parent)
+uiSphere::uiSphere(Scene *scene, int newRes, float newRad) : Object(scene)
 {
     radius = newRad;
     resolution = newRes;
@@ -55,7 +55,7 @@ int *uiSphere::generateIndexes()
 
 #pragma region uiRoundedRect
 
-uiRoundedRect::uiRoundedRect(Object *parent, int newRes, float radius, float width, float height) : uiSphere(parent, newRes, radius)
+uiRoundedRect::uiRoundedRect(Scene *scene, int newRes, float radius, float width, float height) : uiSphere(scene, newRes, radius)
 {
     resolution = newRes;
     this->width = width;
@@ -101,11 +101,11 @@ uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float he
 
     if (borderSize > 0)
     {
-        border = new uiRoundedRect(this, newRes, radius, width + borderSize, height + borderSize);
+        border = new uiRoundedRect(scene, newRes, radius, width + borderSize, height + borderSize);
         border->setOffset({-borderSize / 2, -borderSize / 2});
-        border->move(pos);
+        border->moveAdv(pos);
     }
-    body = new uiRoundedRect(this, newRes, radius, width, height);
+    body = new uiRoundedRect(scene, newRes, radius, width, height);
     if (text != "")
     {
         Vect center = {width / 2, height / 2};
@@ -114,7 +114,7 @@ uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float he
         textComp->setOffset(textComp->getCenter() + center.toIVect());
     }
     setColor({37, 150, 190, 255}, borderColorShift);
-    body->move(pos);
+    body->moveAdv(pos);
     log(LOG_INFO) << "uiButton created\n";
 }
 
