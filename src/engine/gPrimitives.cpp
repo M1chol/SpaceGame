@@ -143,10 +143,6 @@ void Object::destroy()
     isActive = false;
     this->linkedScene->toBeRemoved.push_back(this);
 }
-Vect Object::getPos()
-{
-    return pos;
-}
 bool Object::moveAdv(Vect newPos, bool Forced)
 {
     // TODO: Reimplement this stuck to mechanic
@@ -178,7 +174,6 @@ bool Object::addComponent(Component *comp)
     nrOfComponents++;
     return true;
 }
-
 void Object::addTag(TAG newTag)
 {
     linkedTags.push_back(newTag);
@@ -189,7 +184,6 @@ void Object::setScene(Scene *parentScene)
 }
 Scene *Object::getScene()
 {
-
     if (linkedScene != nullptr)
     {
         return linkedScene;
@@ -341,7 +335,8 @@ int Scene::Update(bool skipPresent, bool skipClear)
     }
     handleCollisions();
     //  Late Update
-    //  HACK: create list of objects for late update to optimize
+    // TODO: rework whole physics system
+    // HACK: create list of objects for late update to optimize
     for (int i = 0; i < objectList.size(); i++)
     {
         Object *obj = objectList[i];
@@ -362,7 +357,6 @@ SDL_Renderer *Scene::getRenderer()
 }
 bool Scene::removeObject(Object *obj)
 {
-
     auto el = std::find(objectList.begin(), objectList.end(), obj);
     if (el != objectList.end())
     {

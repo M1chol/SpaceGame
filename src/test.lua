@@ -17,5 +17,5 @@ local menuBase = uiRoundedRect.new(mainScene, 12, 5, 300, 500)
 
 -- local sphereTest = uiSphere.new(myObject, 12, 30)
 print(menuBase:getName())
-menuBase:move(Vect.new(300, 300))
+menuBase:move(Vect.new(150, 100))
 menuBase:setColor(150, 212, 175, 255)

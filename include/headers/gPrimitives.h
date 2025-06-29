@@ -111,7 +111,7 @@ public:
     void rotate(double angle) { rotation = angle; };
     double getRotation() { return rotation; };
     /*Returns `Scene` coordinates of an Object*/
-    Vect getPos();
+    Vect getPos() { return pos; };
     bool isActive;
     std::vector<TAG> linkedTags;
     /*If true `Object` will ignore move commands*/

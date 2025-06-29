@@ -110,31 +110,6 @@ private:
     SDL_Renderer *renderer;
 };
 
-template <typename bulletType>
-class SpawnerComponent : public Component
-{
-public:
-    // Create SpawnerComponent @param setShootOffset sets shoot offset @param setCooldown sets shoot cooldown @param setBulletLifeSpan sets Bullet time to deconstruction
-    SpawnerComponent(Object *parent, Vect setShootOffset = {0, 0}, double setCooldown = 1.0, double setBulletLifeSpan = 1.0);
-    ~SpawnerComponent();
-    // Handles shooting
-    bool shoot(double angle = 0);
-    // Set new cooldown of Spawner @param newCooldown new cooldown
-    void setCooldown(double newCooldown);
-
-protected:
-    bool update() override;
-    void whenLinked() override;
-
-private:
-    double cooldown;
-    double cooldownTimer;
-    int poolsize;
-    double bulletLifeSpan;
-    Vect shootOffset;
-    std::vector<bulletType *> pool;
-};
-
 class TextComponent : public SpriteComponent
 {
 public:
@@ -156,7 +131,5 @@ private:
 };
 
 class Layout;
-
-
 
 #endif

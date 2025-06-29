@@ -4,8 +4,6 @@
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
 
-const int SCREEN_WIDTH = 1440;
-const int SCREEN_HEIGHT = 810;
 std::vector<Scene *> sceneList;
 double deltaTime = 0.0;
 double drawTime = 0.0;
@@ -19,12 +17,15 @@ std::string fontVideo = "res/HomeVideo.ttf";
 std::string fontVideoBold = "res/HomeVideoBold.ttf";
 std::string fontSans = "res/OpenSans-Regular.ttf";
 
-// Setup flags
+// TODO: create system for loading setup from file
+// User setup
 bool drawDebug = true;
 bool waitToDebug = true;
 bool showDebugNames = false;
 bool gameLoop = true;
 bool useSafeLuaCall = true;
+const int SCREEN_WIDTH = 1440;
+const int SCREEN_HEIGHT = 810;
 
 #pragma region Engine
 
@@ -32,7 +33,7 @@ gEngine::gEngine() : m_requestClose(false), timer(0) {}
 
 gEngine::~gEngine()
 {
-    // Ideally, call close() first to ensure cleanup.
+    close();
 }
 
 gEngine &gEngine::getInstance()
@@ -192,13 +193,12 @@ bool gEngine::isKeyDown(MouseButton button)
 {
     return mouseState & SDL_BUTTON(button);
 }
-// FIXME: key released not working
+
 bool gEngine::isKeyReleased(SDL_Scancode key)
 {
     return previousKeyState[key] && !currentKeyState[key];
 }
 
-// FIXME:  key pushed not working
 bool gEngine::isKeyPushed(SDL_Scancode key)
 {
     return currentKeyState[key] && !previousKeyState[key];
@@ -209,7 +209,6 @@ Scene *gEngine::addScene(const std::string &name)
     Scene *newScene = new Scene();
     log(LOG_INFO) << "Added Scene " << newScene << "\n";
     newScene->setName(name);
-    // Assume that scenes are unsorted upon adding a new scene.
     sceneList.push_back(newScene);
     nrOfScenes++;
     return newScene;

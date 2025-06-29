@@ -29,7 +29,6 @@ SpriteComponent::~SpriteComponent()
 }
 void SpriteComponent::whenLinked()
 {
-
 	gRenderer = parent->getScene()->getRenderer();
 	if (!load(path))
 	{
@@ -281,7 +280,7 @@ void RigidBodyComponent::solveCollision(RigidBodyComponent *obj)
 #pragma endregion
 
 #pragma region SpawnerComponent
-// TODO: Reimplement SpawnerComponent using Object *
+// TODO: Reimplement SpawnerComponent
 #pragma endregion
 
 #pragma region TextComponent
@@ -397,5 +396,5 @@ bool TextComponent::update()
 #pragma endregion
 
 #pragma region LayoutHelper
-// TODO: Implement GridComponent - arranges children to specefied grid
+
 #pragma endregion
