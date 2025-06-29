@@ -14,8 +14,7 @@ int main(int argc, char *args[])
 		return -1;
 	}
 
-	Scene *mainScene = eng.addScene("MAIN");
-	eng.lua->Lstate["mainScene"] = mainScene;
+	Scene *mainScene = eng.addScene("mainScene");
 	eng.lua->run("src/test.lua");
 
 	SDL_Event e;
@@ -25,13 +24,6 @@ int main(int argc, char *args[])
 	while (eng.isRunning())
 	{
 		eng.update();
-
-		// TEMP LUA TEST REMOVE LATER
-		if (eng.isKeyDown(SDL_SCANCODE_SPACE))
-		{
-			eng.lua->Lstate["mainScene"] = mainScene;
-			eng.lua->run("src/test.lua");
-		}
 
 		eng.capFrames(60);
 

@@ -16,5 +16,5 @@ myObject:setName("LuaObject")
 local menuBase = uiRoundedRect.new(myObject, 12, 5, 300, 500)
 
 -- local sphereTest = uiSphere.new(myObject, 12, 30)
-myObject:move(Vect.new(200, 300))
+myObject:move(Vect.new(100, 200))
 menuBase:setColor(212, 212, 212, 255)

@@ -102,6 +102,17 @@ bool gEngine::init()
     return true;
 }
 
+void gEngine::updateEngine()
+{
+    if (isKeyPushed(SDL_SCANCODE_F5))
+    {
+        lua->reload();
+    }
+
+    // Set previous state for keyboard
+    memcpy(previousKeyState, currentKeyState, SDL_NUM_SCANCODES);
+}
+
 void gEngine::update()
 {
     currentTime = SDL_GetTicks();
@@ -112,6 +123,8 @@ void gEngine::update()
 
     // Update scenes.
     updateScenes();
+
+    updateEngine();
 
     // Calculate draw time.
     drawTime = static_cast<double>(SDL_GetTicks() - currentTime) / 1000.0;
@@ -168,7 +181,6 @@ void gEngine::updateEvents()
 {
     SDL_PumpEvents();
     mouseState = SDL_GetMouseState(&mousePos.x, &mousePos.y);
-    memcpy(previousKeyState, currentKeyState, SDL_NUM_SCANCODES);
 }
 
 bool gEngine::isKeyDown(SDL_Scancode key)
@@ -261,9 +273,7 @@ Scene *gEngine::getSceneByName(const std::string &name)
 
 LuaManager::LuaManager() : Lstate(sol::default_at_panic)
 {
-    // TODO: Not sure about those libraries
-    Lstate.open_libraries(sol::lib::base, sol::lib::io);
-    L = Lstate.lua_state();
+    reload();
     defineLuaObjects();
     log(LOG_INFO) << "Lua init complete\n";
 }
@@ -273,20 +283,44 @@ LuaManager::~LuaManager()
     log(LOG_INFO) << "Lua closed\n";
 }
 
+void LuaManager::reload()
+{
+    log(LOG_INFO) << "LUA reload initiated\n";
+    // Create new state
+    Lstate = sol::state();
+
+    // Link existing scenes
+    for (auto &scene : sceneList)
+    {
+        Lstate[scene->getName()] = scene;
+    }
+
+    // TODO: Not sure about those libraries
+    Lstate.open_libraries(sol::lib::base, sol::lib::io);
+    defineLuaObjects();
+
+    for (auto &path : scriptList)
+    {
+        sol::load_result chunk = Lstate.load_file(path);
+        if (!chunk.valid())
+        {
+            sol::error err = chunk;
+            log(LOG_ERR) << "LUA error loading " << err.what() << "\n";
+            continue;
+        }
+        sol::protected_function_result result = chunk();
+        if (!result.valid())
+        {
+            sol::error err = result;
+            log(LOG_ERR) << "LUA error running " << err.what() << "\n";
+        }
+    }
+}
+
 bool LuaManager::run(const char *filename)
 {
-    try
-    {
-        if (useSafeLuaCall)
-            auto status = Lstate.safe_script_file(filename);
-        else
-            auto status = Lstate.script_file(filename);
-        return true;
-    }
-    catch (sol::error &e)
-    {
-        return false;
-    }
+    scriptList.push_back(filename);
+    reload();
 }
 
 void LuaManager::defineLuaObjects()

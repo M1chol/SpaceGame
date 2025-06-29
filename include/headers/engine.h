@@ -97,11 +97,14 @@ public:
     ~LuaManager();
     LuaManager();
     bool run(const char *filename);
+    void reload();
     void defineLuaObjects();
-
-    // TEMPORARY
+    // TEMPORARY // for now public to manually add scene
     lua_State *L;
     sol::state Lstate;
+
+private:
+    std::vector<std::string> scriptList;
 };
 
 class gEngine
@@ -117,6 +120,9 @@ public:
     void close();
 
     void update();
+
+    // Misc engine updates
+    void updateEngine();
 
     // Politely request the engine to close.
     void requestClose();

@@ -150,7 +150,10 @@ Object::~Object()
     {
         log(LOG_WARN) << "Could not remove " << name << " Object from linked scene\n";
     }
-    log(LOG_INFO) << "Removed object " << name << " (" << this << ")\n";
+    else
+    {
+        log(LOG_INFO) << "Removed object " << name << " (" << this << ")\n";
+    }
 }
 void Object::destroy()
 {
