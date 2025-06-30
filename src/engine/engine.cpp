@@ -16,14 +16,15 @@ Uint32 mouseState = 0;
 std::string fontVideo = "res/HomeVideo.ttf";
 std::string fontVideoBold = "res/HomeVideoBold.ttf";
 std::string fontSans = "res/OpenSans-Regular.ttf";
+bool gameLoop = true;
 
 // TODO: create system for loading setup from file
 // User setup
-bool drawDebug = true;
-bool waitToDebug = true;
-bool showDebugNames = false;
-bool gameLoop = true;
-bool useSafeLuaCall = true;
+bool SETUP_drawDebug = true;
+bool SETUP_waitToDebug = true;
+bool SETUP_showDebugNames = false;
+bool SETUP_useSafeLuaCall = true;
+
 const int SCREEN_WIDTH = 1440;
 const int SCREEN_HEIGHT = 810;
 
@@ -33,7 +34,7 @@ gEngine::gEngine() : m_requestClose(false), timer(0) {}
 
 gEngine::~gEngine()
 {
-    close();
+    // close();
 }
 
 gEngine &gEngine::getInstance()
@@ -44,6 +45,16 @@ gEngine &gEngine::getInstance()
 
 bool gEngine::init()
 {
+    // Warn user about setup
+    if (SETUP_drawDebug)
+        log(LOG_WARN) << "DrawDebug is enabled this is not default\n";
+    if (SETUP_showDebugNames)
+        log(LOG_WARN) << "ShowDebugNames is enabled this is not default\n";
+    if (SETUP_waitToDebug)
+        log(LOG_WARN) << "WaitToDebug is enabled this is not default\n";
+    if (!SETUP_useSafeLuaCall)
+        log(LOG_WARN) << "UseSafeLuaCall is disabled this is not default";
+
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {

@@ -37,7 +37,6 @@ enum LoadFlag
 
 // Core libraries
 #include <iostream>
-
 #include <algorithm>
 #include <cstring>
 #include <sstream>
@@ -67,6 +66,7 @@ enum LoadFlag
 #include <gComponents.h>
 #include <gUi.h>
 
+// Lua and lua bind
 #define SOL_ALL_SAFETIES_ON 1
 #include <lua.hpp>
 #include <sol.hpp>
@@ -78,9 +78,9 @@ extern std::vector<Scene *> sceneList;
 extern SDL_Renderer *gRenderer;
 extern double deltaTime;
 extern double drawTime;
-extern bool drawDebug;
-extern bool waitToDebug;
-extern bool showDebugNames;
+extern bool SETUP_drawDebug;
+extern bool SETUP_waitToDebug;
+extern bool SETUP_showDebugNames;
 extern bool gameLoop;
 extern int nrOfScenes;
 extern int nrOfLayouts;
@@ -98,10 +98,10 @@ public:
     LuaManager();
     bool run(const char *filename);
     /*- Clear cached refs FIRST.
-- Recreate sol::state.
-- Re-open libs & re-bind C++ functions.
-- Re-load Lua scripts.
-- Re-acquire new refs.*/
+    - Recreate sol::state.
+    - Re-open libs & re-bind C++ functions.
+    - Re-load Lua scripts.
+    - Re-acquire new refs.*/
     void reload();
     void update()
     {

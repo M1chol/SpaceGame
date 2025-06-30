@@ -38,7 +38,7 @@ int main(int argc, char *args[])
 
 	eng.close();
 
-	if (waitToDebug)
+	if (SETUP_waitToDebug)
 	{
 		log(LOG_INFO) << "Wait for debug is enabled\nPress enter to exit...\n";
 		getchar();

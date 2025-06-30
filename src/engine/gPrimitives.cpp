@@ -196,7 +196,7 @@ Scene *Object::getScene()
 void Object::setName(std::string newName)
 {
     name = newName;
-    if (showDebugNames)
+    if (SETUP_showDebugNames)
     {
         new TextComponent(name, pos.toIVect(), "res/Pixellettersfull-BnJ5.ttf", 20, this);
     }
