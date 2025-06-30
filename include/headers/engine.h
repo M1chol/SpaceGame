@@ -97,14 +97,25 @@ public:
     ~LuaManager();
     LuaManager();
     bool run(const char *filename);
+    /*- Clear cached refs FIRST.
+- Recreate sol::state.
+- Re-open libs & re-bind C++ functions.
+- Re-load Lua scripts.
+- Re-acquire new refs.*/
     void reload();
+    void update()
+    {
+        if (onUpdate.valid())
+            onUpdate(deltaTime);
+    };
     void defineLuaObjects();
-    // TEMPORARY // for now public to manually add scene
-    lua_State *L;
-    sol::state Lstate;
 
 private:
     std::vector<std::string> scriptList;
+    lua_State *L;
+    sol::state Lstate;
+    sol::protected_function onStart;
+    sol::protected_function onUpdate;
 };
 
 class gEngine

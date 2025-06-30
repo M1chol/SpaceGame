@@ -115,6 +115,7 @@ Object::Object(Scene *scene)
     isActive = true;
     posLocked = false;
     rotation = 0;
+    posParent = nullptr;
     log(LOG_INFO) << "Created object for " << scene->getName() << "\n";
 }
 
@@ -145,17 +146,15 @@ void Object::destroy()
 }
 bool Object::moveAdv(Vect newPos, bool Forced)
 {
-    // TODO: Reimplement this stuck to mechanic
-    // for (Object *child : childrenList)
-    // {
-    //     child->move(newPos, Forced);
-    // }
-
     if (!Forced && posLocked)
     {
         return false;
     }
     pos = newPos;
+    if (posParent)
+    {
+        pos += posParent->pos;
+    }
     return true;
 }
 bool Object::addComponent(Component *comp)

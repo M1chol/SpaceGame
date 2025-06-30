@@ -119,11 +119,12 @@ void gEngine::update()
     currentTime = SDL_GetTicks();
     deltaTime = static_cast<double>(currentTime - previousTime) / 1000.0;
 
-    // Update engine events (keyboard, mouse, etc.)
+    // Events (keyboard, mouse, etc.)
     updateEvents();
 
-    // Update scenes.
     updateScenes();
+
+    lua->update();
 
     updateEngine();
 
@@ -285,6 +286,10 @@ LuaManager::~LuaManager()
 void LuaManager::reload()
 {
     log(LOG_INFO) << "LUA reload initiated\n";
+
+    onStart = sol::protected_function();
+    onUpdate = sol::protected_function();
+
     // Create new state
     Lstate = sol::state();
 
@@ -295,7 +300,7 @@ void LuaManager::reload()
     }
 
     // TODO: Not sure about those libraries
-    Lstate.open_libraries(sol::lib::base, sol::lib::io);
+    Lstate.open_libraries(sol::lib::base, sol::lib::io, sol::lib::math);
     defineLuaObjects();
 
     for (auto &path : scriptList)
@@ -313,6 +318,13 @@ void LuaManager::reload()
             sol::error err = result;
             log(LOG_ERR) << "LUA error running " << err.what() << "\n";
         }
+    }
+    onStart = Lstate["onStart"];
+    onUpdate = Lstate["onUpdate"];
+
+    if (onStart.valid())
+    {
+        onStart();
     }
 }
 
@@ -352,6 +364,8 @@ void LuaManager::defineLuaObjects()
                                 sol::constructors<Object(Scene *)>(),
                                 "destroy", &Object::destroy,
                                 "addTag", &Object::addTag,
+                                "setPosParent", &Object::setPosParent,
+                                "removePosParent", &Object::removePosParent,
                                 "removeComponent", &Object::removeComponent,
                                 "setName", &Object::setName,
                                 "getName", &Object::getName,

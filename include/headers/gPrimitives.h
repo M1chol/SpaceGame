@@ -86,6 +86,9 @@ public:
     @return `true` if successfull and `false` if component was not found */
     bool removeComponent(Component *comp);
 
+    void setPosParent(Object *setPosParent) { posParent = setPosParent; };
+    void removePosParent() { posParent = nullptr; };
+
     /* Get pointer to component of a specified type */
     template <typename CompType>
     CompType *getComponent()
@@ -112,6 +115,8 @@ public:
     double getRotation() { return rotation; };
     /*Returns `Scene` coordinates of an Object*/
     Vect getPos() { return pos; };
+
+    // TODO: Probably should not be public
     bool isActive;
     std::vector<TAG> linkedTags;
     /*If true `Object` will ignore move commands*/
@@ -126,6 +131,7 @@ private:
     Scene *linkedScene;
     std::vector<Component *> componentList;
     int nrOfComponents;
+    Object *posParent;
 };
 
 class Scene
