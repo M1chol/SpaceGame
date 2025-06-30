@@ -1,6 +1,6 @@
 #include "engine.h"
 #include <SDL.h>
-#include <cstdio> // For getchar()
+#include <cstdio>
 
 int main(int argc, char *args[])
 {
