@@ -110,7 +110,7 @@ public:
     std::string getName();
     /*Move `Object` to `Scene` coordinets @param newPos position to be moved to @param Forced use only when `Object` should ignore `posLocked` state*/
     bool moveAdv(Vect newPos, bool Forced = false);
-    bool move(Vect newPos) { moveAdv(newPos, false); };
+    bool move(Vect newPos) { return moveAdv(newPos, false); };
     void rotate(double angle) { rotation = angle; };
     double getRotation() { return rotation; };
     /*Returns `Scene` coordinates of an Object*/

@@ -339,7 +339,7 @@ void LuaManager::reload()
     }
 }
 
-bool LuaManager::run(const char *filename)
+void LuaManager::run(const char *filename)
 {
     scriptList.push_back(filename);
     reload();
@@ -437,25 +437,25 @@ void LuaManager::defineLuaObjects()
     Lstate.new_usertype<uiSphere>("uiSphere",
                                   sol::constructors<uiSphere(Scene *, float, float)>(),
                                   "setColor", &uiSphere::setColorSimple,
-                                  "destroy", &Object::destroy,
-                                  "addTag", &Object::addTag,
-                                  "removeComponent", &Object::removeComponent,
-                                  "setName", &Object::setName,
-                                  "getName", &Object::getName,
-                                  "move", &Object::move,
-                                  "rotate", &Object::rotate,
-                                  "getRotation", &Object::getRotation,
-                                  "getPos", &Object::getPos);
+                                  "destroy", &uiSphere::destroy,
+                                  "addTag", &uiSphere::addTag,
+                                  "removeComponent", &uiSphere::removeComponent,
+                                  "setName", &uiSphere::setName,
+                                  "getName", &uiSphere::getName,
+                                  "move", &uiSphere::move,
+                                  "rotate", &uiSphere::rotate,
+                                  "getRotation", &uiSphere::getRotation,
+                                  "getPos", &uiSphere::getPos);
 
     Lstate.new_usertype<uiRoundedRect>("uiRoundedRect", sol::constructors<uiRoundedRect(Scene *, int, float, float, float)>(),
                                        "setColor", &uiRoundedRect::setColorSimple,
-                                       "destroy", &Object::destroy,
-                                       "addTag", &Object::addTag,
-                                       "removeComponent", &Object::removeComponent,
-                                       "setName", &Object::setName,
-                                       "getName", &Object::getName,
-                                       "move", &Object::move,
-                                       "rotate", &Object::rotate,
-                                       "getRotation", &Object::getRotation,
-                                       "getPos", &Object::getPos);
+                                       "destroy", &uiRoundedRect::destroy,
+                                       "addTag", &uiRoundedRect::addTag,
+                                       "removeComponent", &uiRoundedRect::removeComponent,
+                                       "setName", &uiRoundedRect::setName,
+                                       "getName", &uiRoundedRect::getName,
+                                       "move", &uiRoundedRect::move,
+                                       "rotate", &uiRoundedRect::rotate,
+                                       "getRotation", &uiRoundedRect::getRotation,
+                                       "getPos", &uiRoundedRect::getPos);
 }

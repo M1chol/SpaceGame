@@ -96,7 +96,7 @@ class LuaManager
 public:
     ~LuaManager();
     LuaManager();
-    bool run(const char *filename);
+    void run(const char *filename);
     /*- Clear cached refs FIRST.
     - Recreate sol::state.
     - Re-open libs & re-bind C++ functions.

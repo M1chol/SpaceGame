@@ -5,8 +5,10 @@ local sphere
 
 function onStart()
     menuBase = uiRoundedRect.new(mainScene, 12, 5, 300, 500)
+    menuBase:setName("uiBase")
     sphere = uiSphere.new(mainScene, 64, 120)
     sphere:move(Vect.new(200, 200))
+    sphere:setName("Sphere")
     menuBase:setColor(150, 212, 175, 255)
     menuBase:setName("LuaTest")
     print(menuBase:getName())
