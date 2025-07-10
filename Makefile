@@ -4,7 +4,6 @@
 # Compiler and flags
 CXX := g++
 CXXFLAGS := -g -Iinclude -Iinclude/sdl -Iinclude/lua -Iinclude/sol -Iinclude/headers
-LDFLAGS := -Llib
 LIBS := -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -static-libgcc -static-libstdc++ -g
 
 # Source and output directories
@@ -27,8 +26,8 @@ ifneq ($(OS),Windows_NT)
 endif
 
 $(OUTPUT): $(SRC_DIR)/*.cpp
-ifeq ($(PLATFORM),windows)
-	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS) -llua53 $(LDFLAGS)
+ifeq ($(OS),Windows_NT)
+	$(CXX) -o $@ $^ $(CXXFLAGS) -Llib -lmingw32 $(LIBS) -llua53 $(LDFLAGS)
 else
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS) -llua5.3 
 endif

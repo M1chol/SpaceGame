@@ -5,12 +5,12 @@ SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
 
 std::vector<Scene *> sceneList;
-double deltaTime = 0.0;
-double drawTime = 0.0;
-int nrOfScenes = 0;
-int nrOfLayouts = 0;
+double deltaTime;
+double drawTime;
+int nrOfScenes;
 iVect mousePos;
 const Uint8 *currentKeyState = nullptr;
+TextComponent *frameRateText = nullptr;
 Uint8 previousKeyState[SDL_NUM_SCANCODES] = {0};
 Uint32 mouseState = 0;
 std::string fontVideo = "res/HomeVideo.ttf";
@@ -23,14 +23,14 @@ bool gameLoop = true;
 bool SETUP_drawDebug = true;
 bool SETUP_waitToDebug = true;
 bool SETUP_showDebugNames = false;
-bool SETUP_useSafeLuaCall = true;
+bool SETUP_showFrameRate = true;
 
 const int SCREEN_WIDTH = 1440;
 const int SCREEN_HEIGHT = 810;
 
 #pragma region Engine
 
-gEngine::gEngine() : m_requestClose(false), timer(0) {}
+gEngine::gEngine() : m_requestClose(false) {}
 
 gEngine::~gEngine()
 {
@@ -45,6 +45,10 @@ gEngine &gEngine::getInstance()
 
 bool gEngine::init()
 {
+    nrOfScenes = 0;
+    drawTime = 0.0;
+    deltaTime = 0.0;
+
     // Warn user about setup
     if (SETUP_drawDebug)
         log(LOG_WARN) << "DrawDebug is enabled this is not default\n";
@@ -52,8 +56,8 @@ bool gEngine::init()
         log(LOG_WARN) << "ShowDebugNames is enabled this is not default\n";
     if (SETUP_waitToDebug)
         log(LOG_WARN) << "WaitToDebug is enabled this is not default\n";
-    if (!SETUP_useSafeLuaCall)
-        log(LOG_WARN) << "UseSafeLuaCall is disabled this is not default";
+    if (SETUP_showFrameRate)
+        log(LOG_WARN) << "showFrameRate is enabled this is not default\n";
 
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -110,6 +114,15 @@ bool gEngine::init()
 
     previousTime = SDL_GetTicks();
     currentTime = 0;
+
+    if (SETUP_showFrameRate)
+    {
+        Scene *debugScene = addScene("debugScene");
+        debugScene->setDrawPriority(1);
+        Object *frameRateObject = new Object(debugScene);
+        frameRateText = new TextComponent("XX FPS", {0, 0}, fontVideo, 20, frameRateObject);
+    }
+
     log(LOG_INFO) << "Engine init complete\n";
     return true;
 }
@@ -157,26 +170,22 @@ void gEngine::capFrames(int targetFrames)
     {
         log(LOG_WARN) << "Game running at hardware limit!\n";
     }
-    if (timer < 5.0)
+
+    // Update FPS text
+    if (SETUP_showFrameRate)
     {
-        timer += deltaTime;
-    }
-    else
-    {
-        log(LOG_INFO) << "Current frame rate " << (1.0 / deltaTime) << " fps\n";
-        timer = 0.0;
+        frameRateText->setText(vformat("%i FPS", (int)(1.0 / deltaTime)));
     }
 }
 
 void gEngine::close()
 {
     // Clean up scenes
-    for (int i = nrOfScenes - 1; i >= 0; i--)
+    for (auto &scene : sceneList)
     {
-        log(LOG_INFO) << "Scene Destroyed (" << sceneList[i]->getName() << ")\n";
-        delete sceneList[i];
+        log(LOG_INFO) << "Destroying scene (" << scene->getName() << ")\n";
+        delete scene;
     }
-    sceneList.clear();
     log(LOG_INFO) << "Quit successful, bye bye!\n";
 
     // Quit SDL and related libraries
@@ -251,11 +260,9 @@ void gEngine::updateScenes()
     }
 
     // Sort scenes based on draw priority if necessary.
-    if (nrOfScenes > (int)sceneList.size())
-    {
-        std::sort(sceneList.begin(), sceneList.end(), [](Scene *a, Scene *b)
-                  { return a->getDrawPriority() < b->getDrawPriority(); });
-    }
+    // TODO: Chage it so it runs only when needed not every frame
+    std::sort(sceneList.begin(), sceneList.end(), [](Scene *a, Scene *b)
+              { return a->getDrawPriority() < b->getDrawPriority(); });
 
     sceneList[0]->Update(true);
     for (int i = 1; i < nrOfScenes - 1; i++)
@@ -282,6 +289,7 @@ Scene *gEngine::getSceneByName(const std::string &name)
 
 #pragma region LuaManager
 
+// TODO: It seems that reloading scripts using F5 leaks memory
 LuaManager::LuaManager() : Lstate(sol::default_at_panic)
 {
     reload();
@@ -311,7 +319,12 @@ void LuaManager::reload()
     }
 
     // TODO: Not sure about those libraries
-    Lstate.open_libraries(sol::lib::base, sol::lib::io, sol::lib::math);
+    Lstate.open_libraries(
+        sol::lib::base,
+        sol::lib::io,
+        sol::lib::math,   // needed for math floor
+        sol::lib::package // needed for require
+    );
     defineLuaObjects();
 
     for (auto &path : scriptList)
@@ -330,8 +343,8 @@ void LuaManager::reload()
             log(LOG_ERR) << "LUA error running " << err.what() << "\n";
         }
     }
-    onStart = Lstate["onStart"];
-    onUpdate = Lstate["onUpdate"];
+    onStart = Lstate["OnStart"];
+    onUpdate = Lstate["OnUpdate"];
 
     if (onStart.valid())
     {
@@ -437,25 +450,48 @@ void LuaManager::defineLuaObjects()
     Lstate.new_usertype<uiSphere>("uiSphere",
                                   sol::constructors<uiSphere(Scene *, float, float)>(),
                                   "setColor", &uiSphere::setColorSimple,
-                                  "destroy", &uiSphere::destroy,
-                                  "addTag", &uiSphere::addTag,
-                                  "removeComponent", &uiSphere::removeComponent,
-                                  "setName", &uiSphere::setName,
-                                  "getName", &uiSphere::getName,
-                                  "move", &uiSphere::move,
-                                  "rotate", &uiSphere::rotate,
-                                  "getRotation", &uiSphere::getRotation,
-                                  "getPos", &uiSphere::getPos);
+                                  sol::base_classes, sol::bases<Object>());
 
     Lstate.new_usertype<uiRoundedRect>("uiRoundedRect", sol::constructors<uiRoundedRect(Scene *, int, float, float, float)>(),
                                        "setColor", &uiRoundedRect::setColorSimple,
-                                       "destroy", &uiRoundedRect::destroy,
-                                       "addTag", &uiRoundedRect::addTag,
-                                       "removeComponent", &uiRoundedRect::removeComponent,
-                                       "setName", &uiRoundedRect::setName,
-                                       "getName", &uiRoundedRect::getName,
-                                       "move", &uiRoundedRect::move,
-                                       "rotate", &uiRoundedRect::rotate,
-                                       "getRotation", &uiRoundedRect::getRotation,
-                                       "getPos", &uiRoundedRect::getPos);
+                                       sol::base_classes, sol::bases<uiSphere>());
+
+    Lstate.new_usertype<uiButton>("uiButton", sol::constructors<uiButton(Scene *, int, float, float, float, float, std::string)>(),
+                                  "setText", &uiButton::setText,
+                                  "setColor", &uiButton::setColor,
+                                  "setOnClick", &uiButton::setOnClick,
+                                  sol::base_classes, sol::bases<Object>());
+    Lstate.new_usertype<SDL_Color>("SDL_Color",
+                                   "r", &SDL_Color::r,
+                                   "g", &SDL_Color::g,
+                                   "b", &SDL_Color::b,
+                                   "a", &SDL_Color::a,
+                                   // SDL_Color does not have constructor so I need to create one
+                                   "new", sol::factories([](Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+                                                         { return SDL_Color{r, g, b, a}; }));
+}
+
+#pragma endregion
+
+const std::string vformat(const char *const zcFormat, ...)
+{
+
+    // initialize use of the variable argument array
+    va_list vaArgs;
+    va_start(vaArgs, zcFormat);
+
+    // reliably acquire the size
+    // from a copy of the variable argument array
+    // and a functionally reliable call to mock the formatting
+    va_list vaArgsCopy;
+    va_copy(vaArgsCopy, vaArgs);
+    const int iLen = std::vsnprintf(NULL, 0, zcFormat, vaArgsCopy);
+    va_end(vaArgsCopy);
+
+    // return a formatted string without risking memory mismanagement
+    // and without assuming any compiler or platform specific behavior
+    std::vector<char> zc(iLen + 1);
+    std::vsnprintf(zc.data(), zc.size(), zcFormat, vaArgs);
+    va_end(vaArgs);
+    return std::string(zc.data(), iLen);
 }

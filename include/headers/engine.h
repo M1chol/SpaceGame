@@ -83,7 +83,6 @@ extern bool SETUP_waitToDebug;
 extern bool SETUP_showDebugNames;
 extern bool gameLoop;
 extern int nrOfScenes;
-extern int nrOfLayouts;
 // Current position of a mouse
 extern iVect mousePos;
 
@@ -177,8 +176,10 @@ private:
 
     // Internal flag to indicate a close request.
     bool m_requestClose;
-    float timer;
     uint32_t previousTime;
     uint32_t currentTime;
 };
+
+const std::string vformat(const char *const zcFormat, ...);
+
 #endif

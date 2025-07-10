@@ -50,6 +50,7 @@ class uiButton : public Object
 public:
     /*Creates rounded button @param scene scene pointer @param resolution for rounded corner @param radius for rounded corners @param width @param height @param borderSize if 0 no border @param text if empty no text*/
     uiButton(Scene *scene, int resolution, float radius, float width, float height, float borderSize = 0, std::string text = "");
+    ~uiButton();
     void update() override;
     void setText(std::string newText) { buttonText = newText; };
     void setColor(SDL_Color setColor, float borderShift);

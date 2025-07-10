@@ -313,15 +313,19 @@ TextComponent::TextComponent(std::string setMessage, iVect newOffset, std::strin
 		gRenderer = parent->getScene()->getRenderer();
 	}
 }
+void TextComponent::setText(std::string newText)
+{
+	loadText(newText, color, fontPath, fontSize);
+}
 
-bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string setFontPath, int fontSize)
+bool TextComponent::loadText(std::string newMessage, SDL_Color newColor, std::string setFontPath, int fontSize)
 {
 	color = newColor;
 	if (newMessage != "")
 	{
 		path = newMessage;
 	}
-	if (setFontPath != "")
+	if (setFontPath != "" && setFontPath != fontPath)
 	{
 		fontPath = setFontPath;
 		setFont(setFontPath, fontSize);
@@ -337,6 +341,7 @@ bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string
 		log(LOG_WARN) << "Text surface failed to render in TextComponent (" << this << ") " << TTF_GetError() << "\n";
 		return false;
 	}
+	SDL_DestroyTexture(texture);
 	texture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
 	if (texture == NULL)
 	{
@@ -353,13 +358,13 @@ bool TextComponent::load(std::string newMessage, SDL_Color newColor, std::string
 void TextComponent::setColor(SDL_Color newColor)
 {
 	color = newColor;
-	load(path, color, fontPath, fontSize);
+	loadText(path, color, fontPath, fontSize);
 }
 
 void TextComponent::setSize(int newSize)
 {
 	fontSize = newSize;
-	load(path, color, fontPath, fontSize);
+	loadText(path, color, fontPath, fontSize);
 }
 
 void TextComponent::whenLinked()
@@ -367,10 +372,10 @@ void TextComponent::whenLinked()
 	if (path == "")
 	{
 		path = parent->getName();
-		load(path);
+		loadText(path);
 	}
 	gRenderer = parent->getScene()->getRenderer();
-	if (!load(path, color, fontPath, fontSize))
+	if (!loadText(path, color, fontPath, fontSize))
 	{
 		getParent()->removeComponent(this);
 		log(LOG_WARN) << "Removing faulty component (" << this << ")\n";

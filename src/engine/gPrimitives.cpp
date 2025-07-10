@@ -125,7 +125,7 @@ Object::~Object()
     for (int i = nrOfComponents - 1; i >= 0; i--)
     {
         Component *component = componentList[i];
-        log(LOG_INFO) << " | destoyed " << component->getName() << " (" << component << ")\n";
+        log(LOG_INFO) << this->name << " destoyed " << component->getName() << " (" << component << ")\n";
         delete component;
     }
     componentList.clear();
@@ -289,7 +289,6 @@ Scene::Scene(std::string name)
 {
     this->name = name;
     drawPriority = 0;
-    sceneList.push_back(this);
 }
 Scene::~Scene()
 {

@@ -66,8 +66,6 @@ uiRoundedRect::uiRoundedRect(Scene *scene, int newRes, float radius, float width
 
 void uiRoundedRect::render()
 {
-    Object::render();
-
     Vect centers[4] = {
         {width - radius + offset.x, height - radius + offset.y}, // Bottom Right
         {width - radius + offset.x, radius + offset.y},
@@ -86,6 +84,7 @@ void uiRoundedRect::render()
     }
     // SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
     SDL_RenderGeometry(gRenderer, NULL, vertices, resolution, indexes, nrOfIndexes);
+    Object::render();
 }
 
 #pragma endregion
@@ -98,7 +97,6 @@ uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float he
     fontSize = 30;
     borderColorShift = 1.2;
     prevClicked = false;
-
     if (borderSize > 0)
     {
         border = new uiRoundedRect(scene, newRes, radius, width + borderSize, height + borderSize);
@@ -109,24 +107,27 @@ uiButton::uiButton(Scene *scene, int newRes, float radius, float width, float he
     if (text != "")
     {
         Vect center = {width / 2, height / 2};
-        TextComponent *textComp = new TextComponent(text, {20, 20}, fontVideo, fontSize, this);
-        textComp->setColor({255, 255, 255, 255});
+        TextComponent *textComp = new TextComponent(text, {0, 0}, fontVideo, fontSize, body);
         textComp->setOffset(textComp->getCenter() + center.toIVect());
     }
     setColor({37, 150, 190, 255}, borderColorShift);
     body->moveAdv(pos);
     log(LOG_INFO) << "uiButton created\n";
 }
+uiButton::~uiButton()
+{
+    delete border;
+    delete body;
+}
 
 void uiButton::update()
 {
-    // TODO: not needed if ui is not moving after creation
-    // Object::update();
-    // if (border)
-    // {
-    //     border->move(pos);
-    // }
-    // body->move(pos);
+    Object::update();
+    if (border)
+    {
+        border->move(pos);
+    }
+    body->move(pos);
 
     Vect size = body->getSize();
     hover = mousePos.x > pos.x && mousePos.x < pos.x + size.x && mousePos.y > pos.y && mousePos.y < pos.y + size.y;

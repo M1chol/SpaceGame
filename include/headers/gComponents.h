@@ -119,9 +119,11 @@ public:
     void setScale(float newScale) { setSize((int)newScale); };
     void setSize(int newSize);
     void setFont(std::string fontPath, int fontSize = 20);
+    // Chenges text while preserving other atrubiutes
+    void setText(std::string newText);
 
 private:
-    bool load(std::string newMessage = "", SDL_Color color = {255, 255, 255, 255}, std::string fontPath = "", int fontSize = 20);
+    bool loadText(std::string newMessage = "", SDL_Color color = {255, 255, 255, 255}, std::string fontPath = "", int fontSize = 20);
     void whenLinked() override;
     bool update() override;
     TTF_Font *font;
